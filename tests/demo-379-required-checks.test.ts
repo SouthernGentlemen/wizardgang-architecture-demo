@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 const workflow = fs.readFileSync(path.join(process.cwd(), '.github/workflows/ci.yml'), 'utf8');
 const lines = workflow.split('\n');
-function job(name) {
+function job(name: string): string {
   const start = lines.findIndex((line) => line === `  ${name}:`);
   if (start < 0) return '';
   const end = lines.findIndex((line, index) => index > start && /^  [a-z0-9-]+:$/.test(line));

@@ -6,12 +6,12 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 const validator = resolve('scripts/validate-documentation-cleanup.ts');
 const plannedChange = ['DEMO', '999'].join('-');
-const fixtures = [];
+const fixtures: string[] = [];
 
-function fixture(markdown) {
+function fixture(markdown: Record<string, string>): string {
   const root = mkdtempSync(join(tmpdir(), 'demo-322-'));
   fixtures.push(root);
-  const files = {
+  const files: Record<string, string> = {
     'package.json': JSON.stringify({ scripts: { check: 'npm run validate:documentation' } }),
     [['docs', 'governance', 'REFERENCE-REGISTRY.json'].join('/')]: JSON.stringify({ records: [] }),
     [['docs', 'route-manifest.json'].join('/')]: '[]\n',
@@ -28,7 +28,7 @@ function fixture(markdown) {
   return root;
 }
 
-function validate(root) {
+function validate(root: string) {
   return spawnSync(process.execPath, [validator], { cwd: root, encoding: 'utf8' });
 }
 

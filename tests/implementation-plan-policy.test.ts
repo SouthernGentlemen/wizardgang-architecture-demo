@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { validateImplementationPlan } from '../scripts/validate-implementation-plan.ts';
+import { validateImplementationPlan as validateUntyped } from '../scripts/validate-implementation-plan.ts';
 import { readFileSync } from 'node:fs';
+
+const validateImplementationPlan = validateUntyped as (markdown: string, acceptedIds?: Set<string>) => string[];
 
 const task = (id = 'DEMO-999') => `# Active implementation plan
 

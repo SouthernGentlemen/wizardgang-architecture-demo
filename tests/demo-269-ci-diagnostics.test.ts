@@ -1,14 +1,26 @@
-import { execFileSync, spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync, type SpawnSyncOptions } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import { createCiValidationCommands } from '../scripts/lib/acceptance-plan.ts';
-import { runDiagnosticCommands } from '../scripts/lib/ci-diagnostics.ts';
+import { runDiagnosticCommands as runUntypedDiagnosticCommands } from '../scripts/lib/ci-diagnostics.ts';
 import { runGeneratedArtifactParity } from '../scripts/validate-generated-artifacts.ts';
 import { migrationArguments, runCleanLocalMigrations } from '../scripts/validate-migrations.ts';
 
-const temporaryDirectories = [];
+type DiagnosticCommand = { label: string; file: string; args: string[]; env?: Record<string, string> };
+type DiagnosticOptions = {
+  cwd: string;
+  diagnosticsDir: string;
+  commands: DiagnosticCommand[];
+  environment: NodeJS.ProcessEnv;
+  emitAnnotations: boolean;
+};
+type DiagnosticReport = { status: string; commands: unknown[]; failure: { exitCode: number } | null };
+type MigrationInvocation = { file: string; args: string[]; options: SpawnSyncOptions; persistenceDirectory: string };
+
+const runDiagnosticCommands = runUntypedDiagnosticCommands as unknown as (options: DiagnosticOptions) => Promise<DiagnosticReport>;
+const temporaryDirectories: string[] = [];
 
 function temporaryGitRepository() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-269-ci-'));
@@ -41,7 +53,7 @@ describe('DEMO-269 CI diagnostics', () => {
       emitAnnotations: false,
     });
     expect(report.status).toBe('failure');
-    expect(report.failure.exitCode).toBe(7);
+    expect(report.failure!.exitCode).toBe(7);
     expect(report.commands).toHaveLength(1);
     expect(fs.existsSync(marker)).toBe(false);
     expect(fs.readFileSync(path.join(cwd, '.ci-diagnostics', 'validation.log'), 'utf8')).toContain('everything green');
@@ -107,7 +119,7 @@ describe('DEMO-269 CI diagnostics', () => {
     const cwd = temporaryGitRepository();
     const script = path.join(process.cwd(), 'scripts', 'validate-patch-whitespace.ts');
     const baseSha = execFileSync('git', ['rev-parse', 'HEAD'], { cwd, encoding: 'utf8' }).trim();
-    const runPatchCheck = (base, includeBase = true) => {
+    const runPatchCheck = (base: string | undefined, includeBase = true) => {
       const environment = { ...process.env };
       if (includeBase) environment.BASE_SHA = base;
       else delete environment.BASE_SHA;
@@ -140,8 +152,8 @@ describe('DEMO-269 CI diagnostics', () => {
   it('uses fresh disposable local persistence for every D1 migration validation', () => {
     const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-migrations-'));
     temporaryDirectories.push(temporaryRoot);
-    const invocations = [];
-    const run = (file, args, options) => {
+    const invocations: MigrationInvocation[] = [];
+    const run = (file: string, args: string[], options: SpawnSyncOptions) => {
       const persistIndex = args.indexOf('--persist-to');
       const persistenceDirectory = args[persistIndex + 1];
       invocations.push({ file, args, options, persistenceDirectory });
@@ -167,7 +179,7 @@ describe('DEMO-269 CI diagnostics', () => {
     const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-shared-migrations-'));
     temporaryDirectories.push(temporaryRoot);
     const persistenceDirectory = fs.mkdtempSync(path.join(temporaryRoot, 'shared-'));
-    const run = (_file, args) => {
+    const run = (_file: string, args: string[]) => {
       expect(args).toEqual(migrationArguments(persistenceDirectory));
       fs.writeFileSync(path.join(persistenceDirectory, 'migration-proof.txt'), 'ready');
       return { status: 0 };
@@ -191,7 +203,7 @@ describe('DEMO-269 CI diagnostics', () => {
   it('preserves a migration failure status and still removes disposable state', () => {
     const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'demo-349-migrations-failure-'));
     temporaryDirectories.push(temporaryRoot);
-    let persistenceDirectory;
+    let persistenceDirectory: string | undefined;
 
     const status = runCleanLocalMigrations({
       temporaryRoot,
@@ -202,7 +214,7 @@ describe('DEMO-269 CI diagnostics', () => {
     });
 
     expect(status).toBe(7);
-    expect(fs.existsSync(persistenceDirectory)).toBe(false);
+    expect(fs.existsSync(persistenceDirectory!)).toBe(false);
   });
 
 });
