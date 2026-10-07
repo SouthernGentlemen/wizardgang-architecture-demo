@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-490 — [TEST] Port release and deployment tests to TypeScript
-- Dependency: DEMO-489.
-- Why: Protected release and deploy tests remain MJS.
-- Scope: Convert published-release, provider-identity, live-release, and exact-tag tests.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: Protected release and deploy structural checks remain equivalent.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-366-published-immutable-release-deployment.test.mjs; tests/demo-367-release-deployment-provider-identity.test.mjs; tests/demo-391-history.test.mjs; tests/demo-391-live-release.test.mjs; tests/demo-395-exact-tag-release.test.mjs
-
 ### DEMO-491 — [TEST] Port remaining security and settings tests to TypeScript
 - Dependency: DEMO-490.
 - Why: A small residual test set still uses MJS.

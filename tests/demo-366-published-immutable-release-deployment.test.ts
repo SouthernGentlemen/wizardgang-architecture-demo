@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import process from 'node:process';
 import { describe, expect, it } from 'vitest';
 
-const read = (file) => fs.readFileSync(file, 'utf8');
+const read = (file: string) => fs.readFileSync(file, 'utf8');
 const pkg = JSON.parse(read('package.json'));
 const releaseWorkflow = read('.github/workflows/release.yml');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');

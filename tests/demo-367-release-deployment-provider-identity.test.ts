@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
-const read = (file) => fs.readFileSync(file, 'utf8');
+const read = (file: string) => fs.readFileSync(file, 'utf8');
 const releaseWorkflow = read('.github/workflows/release.yml');
 const wrangler = read('wrangler.jsonc');
 const worker = read('src/index.ts');

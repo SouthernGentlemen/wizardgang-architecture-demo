@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
 import { nextLiveReleaseId, validateLiveReleaseIdentity } from '../scripts/lib/live-release-identity.ts';
 
-const task = (id) => `### ${id} — [BUILD] Queued change\n\n- Dependency: none.\n`;
+const task = (id: string) => `### ${id} — [BUILD] Queued change\n\n- Dependency: none.\n`;
 const plan = `# Implementation plan\n\n## Open tasks\n\n${task('DEMO-391')}\n${task('DEMO-392')}\n${task('DEMO-395')}`;
 const title = '[DEMO-393] [BUILD] Demonstrate v0.29.0 release lifecycle';
 const body = `Change:\nVersion metadata.\n\nReason:\nLive lifecycle.\n\nImpact:\nPackage metadata.\n\nRisk:\nMedium\n\nControls:\n- Four checks.\n\nValidation:\n- CI.\n\nEvidence:\n- package.json.\n\nSource:\ndirect.\n\nRelease:\nv0.29.0\n\nLive-Release: true\n`;
@@ -11,7 +11,7 @@ const beforePackage = { name: 'demo', version: '0.28.0', scripts: { check: 'node
 const afterPackage = { ...beforePackage, version: '0.29.0' };
 const beforeLock = { name: 'demo', version: '0.28.0', packages: { '': { name: 'demo', version: '0.28.0' }, dep: { version: '1.0.0' } } };
 const afterLock = { ...beforeLock, version: '0.29.0', packages: { ...beforeLock.packages, '': { ...beforeLock.packages[''], version: '0.29.0' } } };
-const release = (overrides = {}) => ({
+const release = (overrides: Partial<Parameters<typeof validateLiveReleaseIdentity>[0]> = {}) => ({
   title, body, branchName: 'demo-393-live-v0-29-0-123e4567',
   changedFiles: ['package-lock.json', 'package.json'],
   beforePackage: JSON.stringify(beforePackage), afterPackage: JSON.stringify(afterPackage),

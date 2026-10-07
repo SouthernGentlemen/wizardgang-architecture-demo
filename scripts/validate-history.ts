@@ -73,7 +73,8 @@ const liveReleaseSquashSuffixExceptions = new Map([
 // Plan changes that renumbered queued, never-delivered IDs, which are therefore never consumed:
 // DEMO-460 moved the platform tasks ahead of the remaining TypeScript port, renumbering DEMO-435..442 to DEMO-461..468
 // and DEMO-444..452 to DEMO-469..477 and dropping DEMO-443. DEMO-481 moved the usage-reporting fix and the deployment
-// records ahead of the rest of the port, renumbering DEMO-474..477 to DEMO-484..487.
+// records ahead of the rest of the port, renumbering DEMO-474..477 to DEMO-484..487. DEMO-488 moved Durable Objects reporting ahead of
+// the remaining port, renumbering never-delivered DEMO-485..487 to DEMO-490..492.
 const renumberedQueues = [
   {
     sha: 'ecc557aaa0a5e8c766c0020d5aa59357f27ef81e',
@@ -86,6 +87,12 @@ const renumberedQueues = [
     first: 474,
     last: 477,
     reason: 'DEMO-481 renumbered the never-delivered queued DEMO-474..477 to DEMO-484..487; those IDs are never consumed.',
+  },
+  {
+    sha: 'f6ff2665a643719c9b84da8ed7ea8e94b644c4b2',
+    first: 485,
+    last: 487,
+    reason: 'DEMO-488 renumbered the never-delivered queued DEMO-485..487 to DEMO-490..492; those IDs are never consumed.',
   },
 ];
 const controlled = [];
