@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-491 — [TEST] Port remaining security and settings tests to TypeScript
-- Dependency: DEMO-490.
-- Why: A small residual test set still uses MJS.
-- Scope: Convert Worker-secret, public-history-secret, GitHub settings, and footer-contract tests.
-- Non-goals: Do not remove unique behavioral, security, or release regression coverage.
-- Acceptance: All retained executable tests are TS and security/settings assertions remain.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: tests/demo-297-worker-secret-verification.test.mjs; tests/demo-368-public-history-secrets.test.mjs; tests/github-settings.cases.mjs; tests/demo-277-footer-contract.test.mjs
-
 ### DEMO-492 — [BUILD] Enforce the TypeScript-only authored-source boundary
 - Dependency: DEMO-491.
 - Why: Without a guard, authored JavaScript can return after migration.
