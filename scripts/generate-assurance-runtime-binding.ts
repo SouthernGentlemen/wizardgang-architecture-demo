@@ -237,21 +237,10 @@ export function renderRuntimeBinding(registry, root = process.cwd()) {
 
 function main() {
   const root = process.cwd();
-  const checkOnly = process.argv.includes('--check');
+  if (process.argv.length > 2) throw new Error('Assurance runtime binding generator does not accept arguments.');
   const registry = loadAssuranceRegistry(root);
   const renderedBinding = renderRuntimeBinding(registry, root);
   const bindingAbsolute = path.join(root, RUNTIME_BINDING_PATH);
-
-  if (checkOnly) {
-    const currentBinding = fs.existsSync(bindingAbsolute) ? fs.readFileSync(bindingAbsolute, 'utf8') : '';
-    if (currentBinding !== renderedBinding) {
-      console.error(`${RUNTIME_BINDING_PATH}: generated runtime import binding is stale or does not agree with ${ASSURANCE_REGISTRY_PATH}, source revisions, and schema dependencies`);
-      process.exit(1);
-    }
-    console.log(`Assurance runtime import binding agrees with ${ASSURANCE_REGISTRY_PATH}, source revisions, and schema dependencies.`);
-    console.log(`Frozen lifecycle baseline membership remains pinned to Git blob ${LIFECYCLE_BASELINE_MEMBERSHIP_BLOB}.`);
-    return;
-  }
 
   fs.mkdirSync(path.dirname(bindingAbsolute), { recursive: true });
   fs.writeFileSync(bindingAbsolute, renderedBinding);

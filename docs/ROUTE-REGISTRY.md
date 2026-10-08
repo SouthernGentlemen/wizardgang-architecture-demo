@@ -117,6 +117,6 @@ The manifest records route ID, published pattern, methods, kind, visibility, bro
 
 ## Validation
 
-`npm run validate:routes` verifies manifest parity with active declarations. Application and registry tests additionally cover sitemap projection, navigation projection, route-ID URL generation, method handling, page-hierarchy validity, shared policy completeness, collision rejection, compatible page registration, active-state semantics, unreachable/undocumented route rejection, and ordinary `404` behavior for removed or arbitrary unknown paths.
+`npm run validate:generated-artifacts` is the sole generated-manifest freshness and two-pass determinism check. `npm run validate:routes` runs focused canonical serializer tests without rewriting or comparing the tracked manifest. Application and registry tests additionally cover sitemap projection, navigation projection, route-ID URL generation, method handling, page-hierarchy validity, shared policy completeness, collision rejection, compatible page registration, active-state semantics, unreachable/undocumented route rejection, and ordinary `404` behavior for removed or arbitrary unknown paths.
 
 Route changes must update declarations first, regenerate `docs/route-manifest.json`, and pass route/contract validation without introducing duplicate route inventories.

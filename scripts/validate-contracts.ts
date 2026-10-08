@@ -1,10 +1,15 @@
-import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const failures: string[] = [];
 const HTTP_METHODS = new Set(['get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace']);
 const openapi = JSON.parse(fs.readFileSync('contracts/openapi/openapi.json', 'utf8'));
 const reporting = JSON.parse(fs.readFileSync('contracts/assurance/reporting.schema.json', 'utf8'));
+const routeManifest = JSON.parse(fs.readFileSync('docs/route-manifest.json', 'utf8')) as Array<{
+  id: string;
+  route: string;
+  methods: string[];
+}>;
+const routesById = new Map(routeManifest.map((route) => [route.id, route]));
 
 function fail(message: string): void {
   failures.push(message);
@@ -48,6 +53,10 @@ const serverPath = (() => {
   }
 })();
 if (serverPath !== '/') fail('OpenAPI server URL must use the application root; documented paths own their complete runtime URL.');
+if (!Array.isArray(openapi.servers) || openapi.servers.length !== 1
+  || openapi.servers[0]?.url !== 'https://demo.wizardgang.ai') {
+  fail('OpenAPI server URL must use the canonical public demo origin.');
+}
 if (!openapi.components?.securitySchemes?.BearerToken) fail('BearerToken security scheme is missing');
 if (openapi.components?.['x-assurance-query-responses']) {
   fail('OpenAPI must not reuse a Responses Object through components.x-assurance-query-responses');
@@ -55,6 +64,11 @@ if (openapi.components?.['x-assurance-query-responses']) {
 
 for (const name of ['ReportingContract', 'AssuranceQueryResult', 'AssuranceRegistryContract', 'AssuranceRegistryDiscovery']) {
   if (openapi.components?.schemas?.[name]) fail(`OpenAPI must not duplicate the canonical reporting contract through ${name}`);
+}
+if (typeof reporting.$id !== 'string' || !reporting.$id) {
+  fail('Canonical reporting schema must declare a nonempty $id.');
+} else if (JSON.stringify(openapi.components?.schemas ?? {}).includes(reporting.$id)) {
+  fail('OpenAPI components must not duplicate or wrap the canonical reporting schema.');
 }
 const reportingRefs = [
   openapi.paths?.['/api/reporting']?.get?.responses?.['200']?.content?.['application/json']?.schema?.$ref,
@@ -79,8 +93,21 @@ for (const [path, pathItem] of Object.entries(openapi.paths ?? {})) {
       fail(`invalid OpenAPI operation: ${method.toUpperCase()} ${path}`);
       continue;
     }
-    if (typeof operation['x-route-id'] !== 'string' || !operation['x-route-id'].trim()) {
+    const routeId = operation['x-route-id'];
+    if (typeof routeId !== 'string' || !routeId.trim()) {
       fail(`documented operation is missing x-route-id: ${method.toUpperCase()} ${path}`);
+    } else {
+      const declaredRoute = routesById.get(routeId);
+      if (!declaredRoute) {
+        fail(`OpenAPI operation references unknown route ID ${routeId}: ${method.toUpperCase()} ${path}`);
+      } else {
+        if (declaredRoute.route !== path) {
+          fail(`OpenAPI path for route ${routeId} differs from registered route ${declaredRoute.route}: ${path}`);
+        }
+        if (!declaredRoute.methods.includes(method.toUpperCase())) {
+          fail(`OpenAPI method ${method.toUpperCase()} is not registered for route ${routeId}`);
+        }
+      }
     }
     if (!operation.responses || typeof operation.responses !== 'object' || Array.isArray(operation.responses)) {
       fail(`documented operation is missing a Responses Object: ${method.toUpperCase()} ${path}`);

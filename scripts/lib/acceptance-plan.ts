@@ -25,12 +25,20 @@ export function npmRunName(command) {
     : null;
 }
 
+// Accepted outputs of the existing full check, for a future same-head browser-job handoff.
+// These paths are metadata only; they do not upload, cache, copy, or rebuild anything.
+export const acceptedBuildOutputPaths = Object.freeze({
+  clientAssets: 'dist/client',
+  workerBundle: 'dist/worker',
+  workerEntry: 'src/worker-entry.mjs',
+});
+
 export function createCiValidationCommands({ nodeExecutable, npmExecutable, checkEnvironment }) {
   if (!nodeExecutable || !npmExecutable) throw new TypeError('CI command planning requires Node and npm executables.');
   return [
     { id: 'toolchain', label: 'Validate pinned Node/npm toolchain', file: nodeExecutable, args: ['scripts/validate-toolchain.ts'] },
     { id: 'install', label: 'Install locked dependencies', file: npmExecutable, args: ['ci'] },
-    { id: 'check', label: 'Full repository check', file: npmExecutable, args: ['run', 'check'], env: checkEnvironment },
+    { id: 'check', label: 'Full repository check', file: npmExecutable, args: ['run', 'check'], env: checkEnvironment, acceptedBuildOutputPaths },
     { id: 'patch-whitespace', label: 'Validate committed patch whitespace', file: npmExecutable, args: ['run', 'validate:patch-whitespace'] },
   ];
 }
