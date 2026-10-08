@@ -450,3 +450,29 @@ Each record ties one production deployment to one annotated release tag. A deplo
 **Rollback:** Deploy v0.31.1.
 
 **Note:** This was the first deploy with the rotated `wg-cloudflare-deploy` token in the demo's `production` environment. Cloudflare usage reporting is `partial`: Durable Objects analytics and billable usage remain unavailable.
+
+---
+
+## DEP-DEMO-017
+
+**Product:** WizardGang Architecture Demo
+
+**Release:** v0.32.0
+
+**Commit:** `497a9288d39550c3a7368de15a0138a70a69b035`
+
+**Environment:** production
+
+**Date:** 2026-10-08
+
+**URL:** https://demo.wizardgang.ai
+
+**Changes:** Accepted changes in `v0.31.2..v0.32.0`: DEMO-483, DEMO-484, DEMO-488, DEMO-493, DEMO-489 through DEMO-492, and DEMO-494. This includes the completed TypeScript authored-source migration, test ports, Durable Objects reporting repair, and release metadata.
+
+**Validation:** PASS for the governed release and production identity — exact-head PR CI #1632 and merged-main CI #1633 passed; Release Cutter #89 created the annotated v0.32.0 tag at the exact accepted commit. Release workflow 37790745852 reproduced the tag, published the GitHub Release with `registry-v0.32.0.json`, and completed its baseline verify and protected deploy jobs. Deploy job 113360547117 deployed Worker `demo` as Worker Version ID `5844db0a-b167-4cb0-9a00-db1047182a86`, verified 100% production traffic at 14:23:37 UTC, and read back `/version.json` as 0.32.0 at the full tagged commit at 14:23:48 UTC. The production `/api/reporting/operations` usage read-back has **not** been independently verified in this record: requests from this session could not resolve the host. No usage-result claim is made.
+
+**Previous:** v0.31.2
+
+**Rollback:** Deploy the published immutable v0.31.2 tag.
+
+**Note:** The production environment approval was recorded before the protected deploy completed. The earlier v0.31.2 record reported partial provider usage, with Durable Objects analytics and billable usage unavailable. This record does not infer that those limitations changed; live usage read-back remains outstanding.
