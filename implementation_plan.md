@@ -4,15 +4,6 @@
 
 Each task is one bounded controlled delivery. If its listed scope proves too large for one session, split it through a plan-only change before implementation. Preserve the public product and the four required CI statuses. TypeScript-only means authored executable source; ignored build output and third-party packages still contain JavaScript.
 
-### DEMO-492 — [BUILD] Enforce the TypeScript-only authored-source boundary
-- Dependency: DEMO-491.
-- Why: Without a guard, authored JavaScript can return after migration.
-- Scope: Add a tracked-source check for src, scripts, tests, and workflow application logic; permit only explicit non-executable fixtures, ignored generated/third-party output, and the vendored baseline platform/ that DEMO-455 adds and platform/vendor.lock.json pins.
-- Non-goals: Do not change required CI names, credential boundaries, release identity, or deployment protection.
-- Acceptance: No authored executable .js, .mjs, or .cjs remains; guard fails on a new one; check and required CI pass.
-- Validation: Focused affected checks; pinned npm ci; credential-free npm run check; separate advisory and committed-patch gates; exact-head PR CI and merged-main CI.
-- Authorities: src/; scripts/; tests/; .github/workflows/; package.json; docs/REPOSITORY-BOUNDARIES.md
-
 ### DEMO-494 — [BUILD] Release v0.32.0 after the TypeScript migration
 - Dependency: DEMO-492.
 - Why: The owner authorizes one final release after all preceding queued implementation work is complete.

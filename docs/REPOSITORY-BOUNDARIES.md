@@ -13,6 +13,13 @@
 - `npm run validate:typescript-execution` is the representative direct-run smoke check. The canonical `npm run check` executes it, while focused execution-path coverage proves ESM TypeScript imports, CLI argument forwarding, zero/non-zero exit behavior, and useful `.ts` stack traces.
 - The execution path is intentionally dependency-free: the exact Node `26.10.0` pin and npm `12.1.0` package-manager pin are the runner authority. A future task may port a bounded tool family onto this path, but must not introduce a competing runner without a new controlled decision.
 
+## TypeScript-only authored-source boundary
+
+- Tracked executable source under `src/`, `scripts/`, `tests/`, and `.github/workflows/` must not use authored `.js`, `.mjs`, or `.cjs` files. Use TypeScript for executable repository-owned logic.
+- `npm run validate:typescript-source-boundary` derives its inventory from `git ls-files`, so ignored generated output and third-party output are outside the authored-source authority. Any non-executable JavaScript fixture must be exempted by its exact path in that validator; a fixture directory is not a blanket exception.
+- Vendored `platform/` JavaScript is permitted only when the exact path is pinned by `platform/vendor.lock.json`. `npm run check:platform` remains the separate byte-level vendoring/conformance authority.
+- The canonical `npm run check` runs the tracked-source guard before platform conformance so a newly tracked authored JavaScript file fails the ordinary acceptance path.
+
 ## Architecture invariants
 
 Preserve these invariants:
