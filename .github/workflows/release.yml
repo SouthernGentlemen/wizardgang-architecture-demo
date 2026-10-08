@@ -47,9 +47,7 @@ jobs:
           export WG_LOCAL_D1_PERSIST_TO="$local_d1_dir"
           npm run check
           unset WG_LOCAL_D1_PERSIST_TO
-          npm run validate:migrations
           npm run security:dependency-advisories
-          npm run build
       - name: Verify annotated semantic release identity
         id: release
         env:

@@ -1,8 +1,8 @@
 # CI diagnostics and complete failure evidence
 
-The [`validate` job](../.github/workflows/ci.yml) runs `npm run validate:ci`. [`package.json`](../package.json) owns exact script composition, while [the acceptance plan](../scripts/lib/acceptance-plan.ts) owns the ordered executable CI steps. The diagnostics wrapper stops at the first non-zero command, preserves that exit code, streams redacted output to the ordinary Actions log, and retains the same complete redacted output in the failure artifact.
+The [`validate` job](../.github/workflows/ci.yml) runs `npm run validate:ci`. [`package.json`](../package.json) owns exact script composition, while [the acceptance plan](../scripts/lib/acceptance-plan.ts) owns the ordered executable CI steps. The diagnostics wrapper stops at the first non-zero command, preserves that exit code, streams redacted output to the ordinary Actions log, and retains the same complete redacted output in the failure artifact. Its CI command plan installs the pinned toolchain and locked dependencies, executes the full expanded `npm run check` once, then validates the committed patch once. Nested `check` scripts own migrations, the unbound client/Worker build, history, Worker secrets, repository settings, documentation, and assurance validators; their successful real-checkout subprocess repetitions are not acceptance gates.
 
-The site-wide browser command reports the start, completion, and duration of the surviving main audit. Focus, content review, WCAG text spacing, 200%/400% reflow, reduced-motion, and forced-colors checks run inside that same Wrangler/Chromium process and reuse its canonical page/state visits; failures identify the affected path, locale, and audit phase.
+The site-wide browser command reports the start, completion, and duration of the surviving main audit. Compare before/after CI cost from existing successful `validate` job logs and their stage timestamps: use the exact-head run, record the duration of `npm run check`, the browser audit, the Vitest suite, and other instrumented stages, and distinguish job scheduling/install variance from removed subprocess cost. Success diagnostics are in the live Actions log; `.ci-diagnostics/` artifacts are uploaded only on failure. Do not treat missing timing evidence as a speedup. Focus, content review, WCAG text spacing, 200%/400% reflow, reduced-motion, and forced-colors checks run inside that same Wrangler/Chromium process and reuse its canonical page/state visits; failures identify the affected path, locale, and audit phase.
 
 ## Committed patch-integrity gate
 
@@ -16,9 +16,9 @@ The diagnostics wrapper captures the helper's ordinary stdout/stderr and preserv
 
 ## Dependency advisory gate
 
-`npm run security:dependency-advisories` is the network-dependent advisory gate used by CI and pre-PR validation; [`package.json`](../package.json) owns its exact query. It remains separate from credential-free `npm run check`.
+`npm run audit:dependencies` invokes `npm run security:dependency-advisories` (`npm audit --audit-level=high`). The CI `security` job is the sole CI advisory owner; `validate:ci` does not repeat the query. Run `npm run security:dependency-advisories` explicitly for local pre-PR advisory validation, separate from credential-free `npm run check`.
 
-The audit requires npm registry/network access. A high/critical advisory finding is a failing result. A registry, DNS, TLS, timeout, or other transport/query error is also fatal, but it means the advisory result is **unknown/unavailable**, not clean. The diagnostics wrapper preserves the exact non-zero exit code and complete redacted npm stdout/stderr in `.ci-diagnostics/validation.log`, so investigation must use that retained output to distinguish an advisory finding from an unavailable query.
+The audit requires npm registry/network access. A high/critical advisory finding is a failing result. A registry, DNS, TLS, timeout, or other transport/query error is also fatal, but it means the advisory result is **unknown/unavailable**, not clean. The `security` job fails on either an advisory finding or an unavailable query; inspect that job's complete Actions log to distinguish them. The `validate` job's `.ci-diagnostics/validation.log` covers its separate local acceptance and committed-range checks, not the advisory query.
 
 ## Pinned Node/npm toolchain
 

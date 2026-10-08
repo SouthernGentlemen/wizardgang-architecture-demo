@@ -1,5 +1,4 @@
 import { readFileSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 import { reportingCollectionResponse } from '../src/api/reporting';
 import type { Env } from '../src/types';
@@ -7,14 +6,6 @@ import type { Env } from '../src/types';
 const env = { GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo', GITHUB_BRANCH: 'main' } as Env;
 
 describe('assurance integrity current-contract invariants', () => {
-  it('passes the repository cross-dataset integrity validator on the checked-in canonical sources', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-assurance-integrity.ts'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
-    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
-  });
-
   it('publishes only canonical relationships and never flattened aliases', async () => {
     const responses = await Promise.all([
       reportingCollectionResponse(new Request('https://demo.wizardgang.ai/api/reporting/compliance?limit=3'), env, 'compliance'),

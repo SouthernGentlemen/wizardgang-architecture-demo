@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
-import process from 'node:process';
-import { spawnSync } from 'node:child_process';
 import { waitForAssuranceRecordPane } from '../scripts/lib/demo-289-content-review.ts';
 import { routeUrl } from '../src/routing/application-routes';
 
@@ -68,12 +66,7 @@ describe('DEMO-305 release operations acceptance', () => {
     expect(monitorWorkflow).toContain("state: 'closed'");
   });
 
-  it('checks the committed repository-settings baseline and documents a read-only live comparison', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-github-repository-settings.ts'], {
-      encoding: 'utf8',
-    });
-    expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain('Validated committed GitHub repository-settings baseline');
+  it('retains the committed repository-settings baseline and read-only live comparison contract', () => {
     expect(repositorySettingsValidator).toContain('config/github-repository-settings.json');
     expect(repositorySettingsValidator).toContain("process.argv.includes('--live')");
   });

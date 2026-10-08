@@ -79,12 +79,6 @@ describe('DEMO-290 assurance assessment acceptance', () => {
       if (record.kind === 'clause') expect(record.status, record.id + ': clause applicability').not.toBe('not-applicable');
     }
 
-    const documentationValidation = execFileSync(process.execPath, ['scripts/validate-assurance-documentation.ts'], {
-      cwd: process.cwd(),
-      encoding: 'utf8',
-    });
-    expect(documentationValidation).toContain('Assurance documentation reference validation passed for 287 compliance records');
-    expect(documentationValidation).toContain('structured compliance relationships to tracked Markdown headings');
   });
 
   it('keeps the retired check UI out of the public assurance output', async () => {

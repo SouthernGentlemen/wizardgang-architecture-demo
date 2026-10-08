@@ -15,28 +15,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 
 ## Open tasks
 
-### DEMO-497 — [TEST] Remove repeated acceptance executions
-
-- Dependency: DEMO-496
-- Why: Reduce repeated work immediately while retaining an execution owner for every current assertion.
-- Scope: Demo acceptance wiring, duplicate positive checkout tests, Release reproduction, and their current command/documentation contracts.
-- Non-goals: Do not change required status names yet, remove current rejection coverage, change versions, or publish/deploy.
-- Acceptance: CI queries dependency advisories once; Release runs migration/build acceptance once; repeated real-checkout validator subprocesses are removed; failures and unavailable queries still fail.
-- Validation: Focused acceptance-plan, reproduction and affected validator tests; inspect expanded command ownership; final exact-head canonical CI under the currently active checks.
-- Authorities: package.json; scripts/lib/acceptance-plan.ts; scripts/ci-validation.ts; .github/workflows/ci.yml; .github/workflows/release.yml; docs/CI-DIAGNOSTICS.md; docs/RELEASE-MANAGEMENT.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Read recent authoritative CI stage timings during delivery and identify repeated successful-path commands; use existing diagnostics, not a new metrics file or workflow.
-- [ ] 02. Remove the advisory invocation from validate:ci while the existing security job remains its sole CI owner; keep the explicit local advisory interface.
-- [ ] 03. Remove the second migration invocation from Release reproduction; retain the one fresh D1 directory shared by migration and browser acceptance and its cleanup.
-- [ ] 04. Remove the second unbound build from Release reproduction; retain check-owned build/bundle validation and the separate production identity-bound build.
-- [ ] 05. Remove repeated real-history positive subprocess calls in the DEMO-366/422/478 tests; leave the real checkout gate once until forward cutover replaces it.
-- [ ] 06. Remove the positive real-checkout Worker-inventory subprocess test; preserve current mismatch/rejection cases as focused fixtures or pure-function tests.
-- [ ] 07. Remove duplicate real-checkout documentation, repository-settings and assurance validator launches from positive tests; retain distinct current invalid-input cases.
-- [ ] 08. Rewrite acceptance ownership tests to evaluate expanded commands rather than freeze the redundant sequence; delete old fixtures that mandate duplicate work.
-- [ ] 09. Update Release rules and diagnostics prose to match the reduced sequence, run focused verification, and compare the changed stage timings in existing CI.
-
 ### DEMO-498 — [BUILD] Give generation and builds one execution owner
 
 - Dependency: DEMO-497

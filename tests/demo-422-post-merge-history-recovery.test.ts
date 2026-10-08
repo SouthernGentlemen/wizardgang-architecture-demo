@@ -1,4 +1,3 @@
-import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
@@ -30,16 +29,5 @@ describe('DEMO-422 post-merge history recovery', () => {
       expect(Number(headings[0].slice('DEMO-'.length))).toBeGreaterThan(422);
     }
     expect(headings).not.toContain('DEMO-422');
-  });
-
-  it('accepts immutable history through the bounded DEMO-422 recovery', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-history.ts'], {
-      cwd: root,
-      encoding: 'utf8',
-      env: process.env,
-    });
-    expect(result.status).toBe(0);
-    expect(result.stdout).toContain('immutable published-history exception');
-    expect(result.stderr).toBe('');
   });
 });

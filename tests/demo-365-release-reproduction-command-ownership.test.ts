@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
+import { expandedNpmRunSequence } from '../scripts/lib/acceptance-plan.ts';
 
 const read = (file: string) => fs.readFileSync(file, 'utf8');
 const pkg = JSON.parse(read('package.json'));
@@ -23,20 +24,40 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
     expect(reproduce).not.toBe('');
     const commands = [...reproduce.matchAll(/^\s+npm run ([A-Za-z0-9:_-]+)\s*$/gm)].map((match) => match[1]);
 
-    expect(commands).toEqual([
-      'check',
-      'validate:migrations',
-      canonicalAdvisory,
-      'build',
-    ]);
+    expect(commands.filter((command) => command === 'check')).toHaveLength(1);
+    expect(commands.filter((command) => command === canonicalAdvisory)).toHaveLength(1);
+    expect(commands).toHaveLength(2);
+    expect(commands.indexOf('check')).toBeLessThan(commands.indexOf(canonicalAdvisory));
     for (const command of commands) {
       expect(pkg.scripts?.[command], `missing package.json script: ${command}`).toEqual(expect.any(String));
       expect(pkg.scripts[command].trim()).not.toBe('');
     }
     expect(commands.filter((command) => command === canonicalAdvisory)).toHaveLength(1);
+    expect(commands).not.toContain('validate:migrations');
+    const expanded = expandedNpmRunSequence(pkg.scripts, 'check');
+    for (const run of ['validate:migrations', 'build', 'validate:worker-bundle', 'test:site-accessibility']) {
+      expect(expanded.filter((candidate) => candidate === run), run).toHaveLength(1);
+    }
+    expect(pkg.scripts.check.indexOf('npm run validate:migrations')).toBeLessThan(
+      pkg.scripts.check.indexOf('npm run test:site-accessibility'),
+    );
   });
 
-  it('shares a fresh migrated local D1 store with browser audits and clears it before the independent migration gate', () => {
+  it('keeps unbound build and bundle acceptance check-owned, leaving production build to the pinned deploy workflow', () => {
+    const reproduce = namedStep(releaseWorkflow, 'Reproduce the tagged state');
+    expect(reproduce.split('\n').map((line) => line.trim())).not.toContain('npm run build');
+    expect(expandedNpmRunSequence(pkg.scripts, 'check').filter((run) => run === 'build')).toHaveLength(1);
+    expect(pkg.scripts.build).toBe('npm run build:client && npm run build:worker');
+    expect(pkg.scripts['build:client']).toBe('npm run generate:assets');
+    expect(pkg.scripts['build:worker']).toContain('wrangler deploy --dry-run --outdir dist/worker');
+    expect(pkg.scripts['build:worker']).toContain('npm run validate:worker-bundle');
+    expect(releaseWorkflow).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@5e3847c8cf0072fa9698aa8e5e141f96e00d73bb');
+    expect(releaseWorkflow).toContain('expected_sha: ${{ github.sha }}');
+    expect(releaseManagement).toContain('does not invoke a second unbound build');
+    expect(releaseManagement).toContain('production identity-bound build using `WG_VERSION` and `WG_COMMIT`');
+  });
+
+  it('shares one fresh migrated local D1 store with browser audits and cleans it up after check', () => {
     const reproduce = namedStep(releaseWorkflow, 'Reproduce the tagged state');
     const ordered = [
       'local_d1_dir="$(mktemp -d)"',
@@ -44,7 +65,7 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
       'export WG_LOCAL_D1_PERSIST_TO="$local_d1_dir"',
       'npm run check',
       'unset WG_LOCAL_D1_PERSIST_TO',
-      'npm run validate:migrations',
+      'npm run security:dependency-advisories',
     ];
     let position = -1;
     for (const part of ordered) {
@@ -52,7 +73,10 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
       expect(next, `${part} must follow the preceding release reproduction step`).toBeGreaterThan(position);
       position = next;
     }
+    expect(reproduce).not.toContain('npm run validate:migrations');
     expect(releaseManagement).toContain('one fresh temporary local D1 persistence directory');
+    expect(releaseManagement).toContain('no second standalone migration runs during reproduction');
+    expect(releaseManagement).toContain("EXIT trap removes that temporary directory on success or failure");
   });
 
   it('starts generated notes at the closest published release when an intervening tag did not publish', () => {
