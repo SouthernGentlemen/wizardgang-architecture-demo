@@ -57,12 +57,6 @@ afterEach(() => {
 });
 
 describe('assurance registry completeness and schema enforcement', () => {
-  it('registers every canonical assurance JSON file and validates every registered dataset against its declared schema', () => {
-    const result = run(repositoryRoot, 'scripts/validate-assurance-registry.ts');
-    expect(result.status, output(result)).toBe(0);
-    expect(result.stdout).toContain('all canonical assurance JSON registered and schema-valid');
-  });
-
   it('reports dataset path and schema violation for invalid registered structured data', () => {
     const fixtureRoot = createFixture();
     const claims = readJson(fixtureRoot, 'assurance/claims/claims.json');
@@ -112,10 +106,7 @@ describe('assurance registry completeness and schema enforcement', () => {
     expect(output(result)).toContain('registered schema is missing');
   });
 
-  it('keeps the generated Worker runtime import binding mechanically aligned with the registry', () => {
-    const current = run(repositoryRoot, 'scripts/generate-assurance-runtime-binding.ts', ['--check']);
-    expect(current.status, output(current)).toBe(0);
-
+  it('rejects stale generated Worker runtime import bindings against the registry', () => {
     const fixtureRoot = createFixture();
     const bindingPath = join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts');
     writeFileSync(bindingPath, `${readFileSync(bindingPath, 'utf8')}\n// drift\n`);

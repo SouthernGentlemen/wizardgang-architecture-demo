@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
-import { spawnSync } from 'node:child_process';
-import process from 'node:process';
+import { forbiddenWorkerSecretVars, missingRequiredProvisionedWorkerSecrets, undeclaredProvisionedWorkerSecrets, workerSecretNameDifferences } from '../scripts/lib/worker-secret-inventory.ts';
 
 const inventory = JSON.parse(fs.readFileSync('config/worker-secrets.json', 'utf8'));
 const release = fs.readFileSync('.github/workflows/release.yml', 'utf8');
@@ -40,12 +39,35 @@ describe('DEMO-297 Worker secret verification', () => {
     expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);
   });
 
-  it('executes the inventory parity validator across Env, local examples, SECURITY.md and the vendored registry', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-worker-secrets.ts'], {
-      encoding: 'utf8',
-      env: { ...process.env, NO_UPDATE_NOTIFIER: '1' },
+  it('rejects missing or undeclared Worker secret names in focused inventory fixtures', () => {
+    const declared = ['DEMO_WEBHOOK_SECRET', 'GITHUB_WEBHOOK_SECRET'];
+    expect(workerSecretNameDifferences(['DEMO_WEBHOOK_SECRET'], declared)).toEqual({
+      missing: ['GITHUB_WEBHOOK_SECRET'],
+      extra: [],
     });
-    expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain('Worker secret names across inventory, Env, .dev.vars.example, and SECURITY.md');
+    expect(workerSecretNameDifferences([...declared, 'EXTRA_SECRET'], declared)).toEqual({
+      missing: [],
+      extra: ['EXTRA_SECRET'],
+    });
+    expect(workerSecretNameDifferences([...declared].reverse(), declared)).toEqual({ missing: [], extra: [] });
+  });
+
+  it('rejects committed secrets in Worker vars across the inventory, registry and Secrets Store', () => {
+    expect(forbiddenWorkerSecretVars(
+      ['PUBLIC_CLIENT_ID', 'DEMO_WEBHOOK_SECRET', 'REGISTRY_ONLY', 'WG_OPS_TOKEN'],
+      ['DEMO_WEBHOOK_SECRET'],
+      ['REGISTRY_ONLY'],
+      ['WG_OPS_TOKEN'],
+    )).toEqual(['DEMO_WEBHOOK_SECRET', 'REGISTRY_ONLY', 'WG_OPS_TOKEN']);
+    expect(forbiddenWorkerSecretVars(['PUBLIC_CLIENT_ID'], ['DEMO_WEBHOOK_SECRET'], [], ['WG_OPS_TOKEN'])).toEqual([]);
+  });
+
+  it('rejects missing required provisioned names while preserving optional and undeclared reporting', () => {
+    const declared = ['REQUIRED_A', 'REQUIRED_B', 'OPTIONAL'];
+    const required = ['REQUIRED_A', 'REQUIRED_B'];
+    expect(missingRequiredProvisionedWorkerSecrets(['REQUIRED_A'], required)).toEqual(['REQUIRED_B']);
+    expect(missingRequiredProvisionedWorkerSecrets(required, required)).toEqual([]);
+    expect(undeclaredProvisionedWorkerSecrets(['REQUIRED_A', 'EXTRA'], declared)).toEqual(['EXTRA']);
+    expect(undeclaredProvisionedWorkerSecrets(required, declared)).toEqual([]);
   });
 });

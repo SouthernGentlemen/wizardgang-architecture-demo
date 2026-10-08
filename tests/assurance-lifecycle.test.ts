@@ -108,11 +108,7 @@ afterEach(() => {
 });
 
 describe('normalized assurance lifecycle history', () => {
-  it('validates the migrated current contract without legacy-format readers', () => {
-    const result = runLifecycle(repositoryRoot);
-    expect(result.status, output(result)).toBe(0);
-    expect(result.stdout).toContain('frozen historical IDs verified through the normalized migration bridge');
-
+  it('keeps migrated lifecycle implementation free of legacy-format readers', () => {
     const historySource = readFileSync('scripts/lib/assurance-lifecycle-history.ts', 'utf8');
     expect(historySource).not.toContain('LEGACY_V014');
     expect(historySource).not.toContain('decodeLegacyIso');

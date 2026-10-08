@@ -1,4 +1,3 @@
-import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
@@ -21,12 +20,5 @@ describe('DEMO-478 post-merge live release recovery', () => {
     expect(history).toContain(`marker: 'Post-Merge-Recovery: ${releaseMerge}'`);
     expect(history).toContain('id: 478');
     expect(history).toContain('does not consume DEMO-479');
-  });
-
-  it('accepts immutable history through the bounded DEMO-478 recovery', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-history.ts'], { cwd: root, encoding: 'utf8', env: process.env });
-    expect(result.status).toBe(0);
-    expect(result.stdout).toContain('pull-request suffix on its live release title');
-    expect(result.stderr).toBe('');
   });
 });

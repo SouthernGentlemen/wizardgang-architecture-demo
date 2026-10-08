@@ -15,12 +15,12 @@ A release may be published only when the exact tagged state reproduces successfu
 ```text
 npm ci
 npm run check
-npm run validate:migrations
 npm run security:dependency-advisories
-npm run build
 ```
 
-During `npm run check`, Release provides one fresh temporary local D1 persistence directory to both migration validation and browser audits. It clears that directory after reproduction. The separate migration gate still runs independently.
+Release reproduction installs locked dependencies once, then runs `npm run check` and `npm run security:dependency-advisories` in that order. During `npm run check`, Release provides one fresh temporary local D1 persistence directory to migration validation and the later browser audits. `npm run check` owns the single migration invocation; no second standalone migration runs during reproduction. The step's EXIT trap removes that temporary directory on success or failure. `npm run check` also owns the sole unbound `npm run build`, covering client assets, the Worker dry run and bundle validation. Release does not invoke a second unbound build. The pinned baseline deploy workflow separately performs the production identity-bound build using `WG_VERSION` and `WG_COMMIT` for the exact tagged commit.
+
+The tagged-state gate does not launch standalone successful-checkout history, Worker-inventory, documentation, repository-settings, or assurance validators after `check`. Those checks retain one execution owner inside the expanded `check` command, and their distinct invalid-input and fail-closed fixtures remain in the Vitest suite. Release's explicit advisory query is separate from the CI `security` job's sole CI advisory query; neither is a credential-free `check` command. The committed-range patch gate remains separate in `validate:ci`, while protected production authentication, tag identity, and post-deploy verification remain independent of reproduction.
 
 Release tags use `vMAJOR.MINOR.PATCH`, are annotated, and must point to the exact checked-out commit whose `package.json` version matches the tag. Published tags are never moved or deleted during ordinary development. Corrections move forward under a new controlled change and version.
 

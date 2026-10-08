@@ -1,4 +1,3 @@
-import { spawnSync } from 'node:child_process';
 import {
   mkdirSync,
   mkdtempSync,
@@ -87,15 +86,6 @@ function validateAdvisory(value: unknown) {
 }
 
 describe('shared assurance schema contracts', () => {
-  it('validates registered datasets through repository-relative shared schema references', () => {
-    const result = spawnSync(process.execPath, ['scripts/validate-assurance-registry.ts'], {
-      cwd: root,
-      encoding: 'utf8',
-    });
-    expect(`${result.stdout}\n${result.stderr}`).not.toContain('unsupported non-local JSON Schema reference');
-    expect(result.status).toBe(0);
-  });
-
   it('resolves metadata through the same local and external reference semantics as structural validation', () => {
     const localSchema = {
       type: 'object',

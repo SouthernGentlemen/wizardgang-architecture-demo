@@ -4,6 +4,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import { DESIRED } from '../platform/conformance/desired.mjs';
 import { parseJsonc } from '../platform/conformance/jsonc.mjs';
+import { forbiddenWorkerSecretVars, missingRequiredProvisionedWorkerSecrets, undeclaredProvisionedWorkerSecrets, uniqueWorkerSecretNames, workerSecretNameDifferences } from './lib/worker-secret-inventory.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const inventory = JSON.parse(fs.readFileSync(path.join(root, 'config', 'worker-secrets.json'), 'utf8'));
@@ -13,15 +14,8 @@ function fail(message: string): void {
   process.exitCode = 1;
 }
 
-function sorted(values: string[]): string[] {
-  return [...new Set(values)].sort();
-}
-
 function sameNames(label: string, actual: string[], expected: string[]): void {
-  const a = sorted(actual);
-  const e = sorted(expected);
-  const missing = e.filter((name) => !a.includes(name));
-  const extra = a.filter((name) => !e.includes(name));
+  const { missing, extra } = workerSecretNameDifferences(actual, expected);
   if (missing.length || extra.length) {
     fail(`${label} does not match config/worker-secrets.json.`);
     if (missing.length) fail(`${label} is missing: ${missing.join(', ')}`);
@@ -82,10 +76,8 @@ sameNames('Baseline secret registry demo Worker secrets (vendored platform/)', i
 // A Worker cannot hold a secret and a var of the same name, and a registry secret must never be committed as a var.
 const wrangler = parseJsonc(fs.readFileSync(path.join(root, 'wrangler.jsonc'), 'utf8'));
 const committedVars = Object.keys(wrangler.vars ?? {});
-for (const name of committedVars) {
-  if (inventoryNames.includes(name) || registryNames.includes(name) || DESIRED.secretsStoreSecrets.includes(name)) {
-    fail(`wrangler.jsonc var ${name} is a secret name; set it with wrangler secret put or bind it from the Secrets Store.`);
-  }
+for (const name of forbiddenWorkerSecretVars(committedVars, inventoryNames, registryNames, DESIRED.secretsStoreSecrets)) {
+  fail(`wrangler.jsonc var ${name} is a secret name; set it with wrangler secret put or bind it from the Secrets Store.`);
 }
 
 const args = process.argv.slice(2);
@@ -94,10 +86,10 @@ if (!args.length) {
 } else if (args[0] === '--provisioned' && args[1] && args.length === 2) {
   const raw = JSON.parse(fs.readFileSync(path.resolve(args[1]), 'utf8'));
   if (!Array.isArray(raw)) throw new Error('wrangler secret list --format json output must be an array.');
-  const provisioned = sorted(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
+  const provisioned = uniqueWorkerSecretNames(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
   const required = inventory.secrets.filter((entry) => entry.required).map((entry) => entry.name);
-  const missingRequired = required.filter((name) => !provisioned.includes(name));
-  const undeclared = provisioned.filter((name) => !inventoryNames.includes(name));
+  const missingRequired = missingRequiredProvisionedWorkerSecrets(provisioned, required);
+  const undeclared = undeclaredProvisionedWorkerSecrets(provisioned, inventoryNames);
 
   if (undeclared.length) {
     process.stdout.write(`Undeclared provisioned Worker secret names: ${undeclared.join(', ')}\n`);
@@ -112,7 +104,7 @@ if (!args.length) {
   // because a Worker cannot hold a secret and a var of the same name.
   const raw = JSON.parse(fs.readFileSync(path.resolve(args[1]), 'utf8'));
   if (!Array.isArray(raw)) throw new Error('wrangler secret list --format json output must be an array.');
-  const provisioned = sorted(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
+  const provisioned = uniqueWorkerSecretNames(raw.map((entry) => typeof entry === 'string' ? entry : entry?.name).filter((name) => typeof name === 'string'));
   for (const name of provisioned.filter((candidate) => committedVars.includes(candidate))) process.stdout.write(`${name}\n`);
 } else {
   throw new Error('Usage: node scripts/validate-worker-secrets.ts [--provisioned|--superseded <wrangler-secret-list.json>]');
