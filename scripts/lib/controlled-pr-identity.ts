@@ -18,6 +18,11 @@ export function acceptedControlledIds(subjects = []) {
   return new Set(subjects.map(parseControlledSubject).filter(Boolean).map((entry) => entry.id));
 }
 
+export function parsePortfolioPlanTasks(markdown = '') {
+  return [...markdown.matchAll(/^### ([A-Z][A-Z0-9]*-\d{3,}) — \[([A-Z][A-Z0-9-]*)\] (\S.*)$/gm)]
+    .map((match) => ({ id: match[1], type: match[2], title: match[3] }));
+}
+
 export function parsePlanTasks(markdown = '') {
   const matches = [...markdown.matchAll(taskPattern)];
   const tasks = matches.map((match, index) => {

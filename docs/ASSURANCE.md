@@ -67,3 +67,7 @@ The exhaustive structured HTTP boundary is `/api/reporting`. Reporting discovery
 `npm run validate:assurance` and the broader `npm run check` suite enforce the current registry, schema, lifecycle, publication, disclosure, integrity, provenance, documentation-reference, and operational boundaries described above.
 
 `npm run validate:contracts` verifies the reporting/OpenAPI contract relationship. `npm run validate:generated-artifacts` verifies generated assurance/runtime artifacts remain current. Tests exercise those boundaries without creating another source of truth.
+
+## Validation execution ownership
+
+`npm run validate:assurance` runs `scripts/validate-assurance-suite.ts` once. The command reuses canonical registry, structured records, schemas, and documentation via a root-scoped reader and the injected `ASSURANCE_VALIDATION_NOW` clock. Its current owners cover registry/schema and resource validity, risks/evidence, advisories and fixed-release tags, projection URL boundaries, tracked Markdown anchors and actual documentation relationships, ISO/IEC 27001, ISO/IEC 42001, WCAG 2.2, publication and disclosure approval, lifecycle history and tombstones, global identity/relationships and observation expiry, and operations/security reporting. Integrity owns required public route IDs, derived fields and unsafe public keys; projection owns the separate absolute-URL prohibition. Direct focused entrypoints retain their existing rejection contracts. `monitor:assurance` performs separate explicit live checks and remains outside credential-free `check`.

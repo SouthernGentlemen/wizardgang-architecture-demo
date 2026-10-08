@@ -22,9 +22,9 @@ function deriveIsoPosture(controls) {
   return counts;
 }
 
-export function validateNormalizedIso({ root = process.cwd(), standard, edition, framework, idPrefix, sourceSoaId, expectedClauseRefs, expectedAnnexRefs, extraValidate }) {
+export function validateNormalizedIso({ root = process.cwd(), context = null, standard, edition, framework, idPrefix, sourceSoaId, expectedClauseRefs, expectedAnnexRefs, extraValidate }) {
   const errors = [];
-  const registry = loadAssuranceRegistry(root);
+  const registry = context?.registry() ?? loadAssuranceRegistry(root);
   const inventory = loadAssuranceRecordInventory(root, registry);
   const resource = requireRegistryResource(
     registry,
@@ -104,8 +104,9 @@ export function finishIsoValidation(label, result) {
   if (result.errors.length) {
     console.error(`${label} public compliance validation failed:`);
     for (const error of result.errors) console.error(`- ${error}`);
-    process.exit(1);
+    return false;
   }
   const posture = ISO_POSTURE_STATUSES.map((status) => `${result.postureCounts[status]} ${status}`).join(', ');
   console.log(`${label} public compliance validation passed from canonical normalized data: ${result.clauses.length} clause references and ${result.controls.length} Annex A controls (${posture}).`);
+  return true;
 }

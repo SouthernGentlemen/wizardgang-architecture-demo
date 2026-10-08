@@ -9,10 +9,10 @@ const plannedChange = ['DEMO', '999'].join('-');
 const fixtures: string[] = [];
 
 function fixture(markdown: Record<string, string>): string {
-  const root = mkdtempSync(join(tmpdir(), 'demo-322-'));
+  const root = mkdtempSync(join(tmpdir(), 'current-documentation-'));
   fixtures.push(root);
   const files: Record<string, string> = {
-    'package.json': JSON.stringify({ scripts: { check: 'npm run validate:documentation' } }),
+    'package.json': JSON.stringify({ scripts: { check: 'npm run validate:governance' } }),
     [['docs', 'governance', 'REFERENCE-REGISTRY.json'].join('/')]: JSON.stringify({ records: [] }),
     [['docs', 'route-manifest.json'].join('/')]: '[]\n',
     [['docs', 'history', 'DEPLOYMENTS.md'].join('/')]: `# Deployments\n\nRecorded by ${plannedChange}.\n`,
@@ -36,7 +36,7 @@ afterEach(() => {
   for (const root of fixtures.splice(0)) rmSync(root, { recursive: true, force: true });
 });
 
-describe('DEMO-322 temporary implementation plan', () => {
+describe('current documentation and root queue history boundaries', () => {
   it('lets the root implementation plan name the change IDs it reserves', () => {
     const result = validate(fixture({ 'implementation_plan.md': `# Plan\n\n### ${plannedChange} — DOCS — Reserve a change\n` }));
     expect(result.stderr).toBe('');

@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { currentAssuranceValidationContext } from './assurance-validation-context.ts';
 import path from 'node:path';
 import {
   assuranceRecordCollectionPath,
@@ -38,7 +39,8 @@ export {
 };
 
 export function readJsonFile(root, relative) {
-  return JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
+  return currentAssuranceValidationContext(root)?.readJson(relative)
+    ?? JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
 }
 
 export function loadAssuranceRegistry(root = process.cwd()) {
@@ -46,6 +48,14 @@ export function loadAssuranceRegistry(root = process.cwd()) {
 }
 
 export function loadAssuranceRecordInventory(root = process.cwd(), registry = loadAssuranceRegistry(root)) {
+  const context = currentAssuranceValidationContext(root);
+  if (context && registry === context.registry()) {
+    return context.memo('recordInventory', () => createRecordInventory(root, registry));
+  }
+  return createRecordInventory(root, registry);
+}
+
+function createRecordInventory(root, registry) {
   const resources = assuranceRecordResources(registry);
   const documentsByResourceId = new Map(resources.map((resource) => [resource.id, readJsonFile(root, resource.path)]));
   const entries = assuranceRecordEntries(registry, (resource) => documentsByResourceId.get(resource.id));

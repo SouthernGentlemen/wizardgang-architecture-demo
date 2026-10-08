@@ -21,16 +21,16 @@ function hasAnnotatedReleaseTag(root, release) {
   return result.status === 0 && result.stdout.trim() === 'tag';
 }
 
-export function validateAdvisories(root = process.cwd()) {
+export function validateAdvisories(root = process.cwd(), context = null) {
   const errors = [];
   let registry;
   let advisoryResource;
   let advisories;
 
   try {
-    registry = loadAssuranceRegistry(root);
+    registry = context?.registry() ?? loadAssuranceRegistry(root);
     advisoryResource = primaryRegistryDataset(registry, 'advisories');
-    advisories = readJsonFile(root, advisoryResource.path);
+    advisories = context?.readJson(advisoryResource.path) ?? readJsonFile(root, advisoryResource.path);
   } catch (error) {
     return {
       errors: [`advisories: unable to discover canonical dataset through assurance/registry.json: ${error instanceof Error ? error.message : String(error)}`],
@@ -44,7 +44,7 @@ export function validateAdvisories(root = process.cwd()) {
   }
 
   const relationshipFamilies = new Map();
-  for (const kind of ['evidence', 'incidents']) {
+  if (!context) for (const kind of ['evidence', 'incidents']) {
     try {
       const family = registeredRelationshipFamily(root, registry, kind);
       relationshipFamilies.set(kind, family.identities);
@@ -58,7 +58,7 @@ export function validateAdvisories(root = process.cwd()) {
     if (advisoryIds.has(record.id)) errors.push(`${record.id}: duplicate published GHSA ID`);
     advisoryIds.add(record.id);
 
-    errors.push(...validateRelationshipSet(
+    if (!context) errors.push(...validateRelationshipSet(
       record.relationships,
       relationshipFamilies,
       `${advisoryResource.path}:${record.id}`,
@@ -75,8 +75,8 @@ export function validateAdvisories(root = process.cwd()) {
   return { errors, count: advisoryIds.size };
 }
 
-export function runAdvisoryValidation(root = process.cwd()) {
-  const result = validateAdvisories(root);
+export function runAdvisoryValidation(root = process.cwd(), context = null) {
+  const result = validateAdvisories(root, context);
   if (result.errors.length) {
     console.error('Public advisory validation failed:');
     for (const error of result.errors) console.error(`- ${error}`);

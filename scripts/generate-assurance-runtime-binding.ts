@@ -13,6 +13,7 @@ import {
   resolveAssuranceResourceOwner,
 } from './lib/assurance-registry.ts';
 import { createAssuranceSchemaLoader } from './lib/assurance-validation.ts';
+import { currentAssuranceValidationContext } from './lib/assurance-validation-context.ts';
 import {
   collectJsonSchemaDependencies,
   resolveJsonSchemaProperty,
@@ -40,7 +41,7 @@ function gitBlobSha(source) {
 }
 
 export function gitBlobShaForFile(root, relative) {
-  return gitBlobSha(fs.readFileSync(path.join(root, relative)));
+  return gitBlobSha(currentAssuranceValidationContext(root)?.readBytes(relative) ?? fs.readFileSync(path.join(root, relative)));
 }
 
 function addFilterValue(values, value) {
@@ -156,7 +157,7 @@ export function verifyLifecycleBaselineMembership(registry, root = process.cwd()
   }
 
   const absolute = path.join(root, LIFECYCLE_BASELINE_MEMBERSHIP_PATH);
-  const source = fs.readFileSync(absolute);
+  const source = currentAssuranceValidationContext(root)?.readBytes(LIFECYCLE_BASELINE_MEMBERSHIP_PATH) ?? fs.readFileSync(absolute);
   const actualBlob = gitBlobSha(source);
   if (actualBlob !== LIFECYCLE_BASELINE_MEMBERSHIP_BLOB) {
     throw new Error(`${LIFECYCLE_BASELINE_MEMBERSHIP_PATH}: frozen membership artifact changed; expected Git blob ${LIFECYCLE_BASELINE_MEMBERSHIP_BLOB}, found ${actualBlob}.`);
