@@ -5,7 +5,7 @@ const taskPattern = new RegExp(`^### (DEMO-(\\d{3,})) — \\[(${TYPES})\\] ([^\\
 
 export function parseControlledSubject(value) {
   const match = controlledSubjectPattern.exec(value || '');
-  if (!match) return null;
+  if (!match || /\s\(#\d+\)$/.test(match[3])) return null;
   return {
     id: `DEMO-${match[1]}`,
     number: Number(match[1]),
@@ -29,6 +29,7 @@ export function parsePlanTasks(markdown = '') {
       type: match[3],
       title: match[4],
       dependency,
+      section,
       dependencies: [...new Set([...dependency.matchAll(/DEMO-\d{3,}/g)].map((item) => item[0]))],
     };
   });
@@ -61,6 +62,61 @@ function futureIdsPreserved(baseTasks, headTasks, errors) {
   }
 }
 
+
+export const requiredPlanFields = ['Dependency', 'Why', 'Scope', 'Non-goals', 'Acceptance', 'Validation', 'Authorities'];
+
+export function validateQueueDelivery({ id, type, basePlanMarkdown, headPlanMarkdown, baseAcceptedIds = new Set() }) {
+  const errors = [];
+  if (basePlanMarkdown === null) {
+    errors.push('A non-maintenance controlled PR requires an active implementation plan on its base.');
+    return errors;
+  }
+  const baseTasks = parsePlanTasks(basePlanMarkdown);
+  if (!baseTasks.length) {
+    errors.push('Base implementation plan has no open task to select.');
+    return errors;
+  }
+  validatePlanOrder(baseTasks, errors, 'Base plan');
+  const first = baseTasks[0];
+  if (baseAcceptedIds.has(first.id)) {
+    errors.push('First open task ' + first.id + ' is already accepted on the PR base and must be retired before selecting work.');
+  }
+  const missing = first.dependencies.filter((dependency) => !baseAcceptedIds.has(dependency));
+  if (missing.length) {
+    errors.push('First open task ' + first.id + ' is blocked by unmet controlled dependency: ' + missing.join(', ') + '.');
+  } else if (first.dependency && !/^none\b/i.test(first.dependency) && !first.dependencies.length) {
+    errors.push('First open task ' + first.id + ' is blocked by unresolved dependency: ' + first.dependency);
+  }
+  if (id !== first.id) errors.push('Selected ' + id + ' skips first open task ' + first.id + '.');
+  if (id === first.id && type !== first.type) {
+    errors.push('Selected ' + id + ' must use plan type [' + first.type + '], not [' + type + '].');
+  }
+  if (headPlanMarkdown === null) {
+    errors.push('implementation_plan.md must remain tracked after delivery.');
+  } else {
+    const headTasks = parsePlanTasks(headPlanMarkdown);
+    validatePlanOrder(headTasks, errors, 'Head plan');
+    if (headTasks.some((task) => task.id === first.id)) errors.push(first.id + ' must be retired from implementation_plan.md in the same delivery.');
+    futureIdsPreserved(baseTasks, headTasks, errors);
+  }
+  return errors;
+}
+
+export function validateMaintenanceQueue({ id, basePlanMarkdown, headPlanMarkdown, baseAcceptedIds = new Set() }) {
+  const errors = [];
+  const before = parsePlanTasks(basePlanMarkdown ?? '');
+  const after = parsePlanTasks(headPlanMarkdown ?? '');
+  if (headPlanMarkdown === null) errors.push('Maintenance must leave implementation_plan.md tracked.');
+  if (baseAcceptedIds.has(id) || before.some((task) => task.id === id)) {
+    errors.push('Maintenance identity ' + id + ' is already accepted or reserved.');
+  }
+  validatePlanOrder(after, errors, 'Head plan');
+  let cursor = 0;
+  for (const task of after) if (task.id === before[cursor]?.id) cursor++;
+  if (cursor !== before.length) errors.push('Maintenance must preserve all already queued identities in order.');
+  return errors;
+}
+
 export function validateControlledPullRequestIdentity({
   branchName,
   title,
@@ -78,7 +134,7 @@ export function validateControlledPullRequestIdentity({
   const headIdentity = parseControlledSubject(headSubject);
   const branchMatch = branchPattern.exec(branchName || '');
   const maintenance = /^Portfolio-Plan-Maintenance:\s*true$/m.test(headBody);
-  const recoveryMatch = /^Post-Merge-Recovery:\s*([0-9a-f]{40})$/m.exec(headBody);
+  const recovery = /^Post-Merge-Recovery:/m.test(headBody);
 
   if (!titleIdentity) errors.push('PR title must match [DEMO-###] [TYPE] <imperative summary>.');
   if (!headIdentity) errors.push('Exact head commit subject must match [DEMO-###] [TYPE] <imperative summary>.');
@@ -110,62 +166,19 @@ export function validateControlledPullRequestIdentity({
     return errors;
   }
 
-  if (recoveryMatch) {
-    if (!titleIdentity || !baseAcceptedIds.has(titleIdentity.id)) {
-      errors.push('Post-merge recovery must reuse a controlled ID already accepted on the PR base.');
-    }
-    if (!baseSha || recoveryMatch[1] !== baseSha) {
-      errors.push(`Post-merge recovery marker must equal the exact PR base SHA ${baseSha || '(missing)'}.`);
-    }
-    if (basePlanMarkdown === null || headPlanMarkdown === null) {
-      errors.push('Post-merge recovery requires the implementation plan to remain tracked.');
-    } else if (headPlanMarkdown !== basePlanMarkdown) {
-      errors.push('Post-merge recovery must not change implementation_plan.md or consume the next queued task.');
-    }
-    return errors;
+  if (recovery) errors.push('Post-merge recovery is retired; use a new controlled identity.');
+  if (titleIdentity && baseAcceptedIds.has(titleIdentity.id)) {
+    errors.push('Controlled identity ' + titleIdentity.id + ' is already accepted on the PR base.');
   }
-
-  if (!maintenance) {
-    if (basePlanMarkdown === null) {
-      errors.push('A non-maintenance controlled PR requires an active implementation plan on its base.');
-      return errors;
-    }
-
-    const baseTasks = parsePlanTasks(basePlanMarkdown);
-    if (!baseTasks.length) {
-      errors.push('Base implementation plan has no open task to select.');
-      return errors;
-    }
-    validatePlanOrder(baseTasks, errors, 'Base plan');
-
-    const first = baseTasks[0];
-    if (baseAcceptedIds.has(first.id)) {
-      errors.push(`First open task ${first.id} is already accepted on the PR base and must be retired before selecting work.`);
-    }
-    const missingDependencies = first.dependencies.filter((id) => !baseAcceptedIds.has(id));
-    if (missingDependencies.length) {
-      errors.push(`First open task ${first.id} is blocked by unmet controlled dependency: ${missingDependencies.join(', ')}.`);
-    } else if (first.dependency && !/^none\b/i.test(first.dependency) && first.dependencies.length === 0) {
-      errors.push(`First open task ${first.id} is blocked by unresolved dependency: ${first.dependency}`);
-    }
-
-    if (titleIdentity && titleIdentity.id !== first.id) {
-      errors.push(`Selected ${titleIdentity.id} skips first open task ${first.id}.`);
-    }
-    if (titleIdentity && titleIdentity.id === first.id && titleIdentity.type !== first.type) {
-      errors.push(`Selected ${titleIdentity.id} must use plan type [${first.type}], not [${titleIdentity.type}].`);
-    }
-
-    if (headPlanMarkdown === null) {
-      errors.push('implementation_plan.md must remain tracked after delivery.');
-    } else {
-      const headTasks = parsePlanTasks(headPlanMarkdown);
-      validatePlanOrder(headTasks, errors, 'Head plan');
-      if (headTasks.some((task) => task.id === first.id)) {
-        errors.push(`${first.id} must be retired from implementation_plan.md in the same delivery.`);
-      }
-      futureIdsPreserved(baseTasks, headTasks, errors);
-    }
+  if (maintenance) {
+    errors.push(...validateMaintenanceQueue({
+      id: titleIdentity?.id, basePlanMarkdown, headPlanMarkdown, baseAcceptedIds,
+    }));
+  } else {
+    errors.push(...validateQueueDelivery({
+      id: titleIdentity?.id, type: titleIdentity?.type,
+      basePlanMarkdown, headPlanMarkdown, baseAcceptedIds,
+    }));
   }
 
   return errors;

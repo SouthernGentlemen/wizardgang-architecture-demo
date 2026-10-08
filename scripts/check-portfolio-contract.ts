@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parsePlanTasks } from "./lib/controlled-pr-identity.ts";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const expectedHashes = {
@@ -23,6 +24,8 @@ const requiredAgentContract = [
 ];
 
 export function openTasks(source) {
+  const demo = parsePlanTasks(source);
+  if (demo.length) return demo.map(({ id, type, title }) => ({ id, type, title }));
   return [...source.matchAll(/^### ([A-Z][A-Z0-9]*-\d{3,}) — \[([A-Z][A-Z0-9-]*)\] (\S.*)$/gm)]
     .map((match) => ({ id: match[1], type: match[2], title: match[3] }));
 }

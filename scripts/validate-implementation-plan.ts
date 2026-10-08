@@ -3,17 +3,16 @@ import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { parsePlanTasks, requiredPlanFields } from './lib/controlled-pr-identity.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const planPath = path.join(root, 'implementation_plan.md');
 const emptyPlanHash = '59cdf5f8622ee928364b5647474b3a83f502c949bde9562d0a53a33291b090d0';
-const taskPattern = /^### (DEMO-\d{3,}) — \[(INIT|FEAT|FIX|SEC|API|A11Y|I18N|AI|DB|OPS|TEST|DOCS|REFACTOR|PERF|BUILD|REVERT|CHORE)\] ([^\n]+)$/gm;
-const fields = ['Dependency', 'Why', 'Scope', 'Non-goals', 'Acceptance', 'Validation', 'Authorities'];
 
 export function validateImplementationPlan(markdown, acceptedIds = new Set()) {
   const errors = [];
   const headings = [...markdown.matchAll(/^### .+$/gm)];
-  const tasks = [...markdown.matchAll(taskPattern)];
+  const tasks = parsePlanTasks(markdown);
   if (!tasks.length && createHash('sha256').update(markdown).digest('hex') !== emptyPlanHash) {
     errors.push('An empty implementation plan must use the shared permanent queue template.');
   }
@@ -24,13 +23,13 @@ export function validateImplementationPlan(markdown, acceptedIds = new Set()) {
 
   let previous = 0;
   for (const [index, task] of tasks.entries()) {
-    const id = task[1];
-    const number = Number(id.slice(5));
+    const id = task.id;
+    const number = task.number;
     if (number <= previous) errors.push(`${id}: tasks must have unique ascending IDs.`);
     previous = number;
     if (acceptedIds.has(id)) errors.push(`${id}: an accepted controlled change cannot remain in the active plan; retire it in the delivering PR.`);
-    const section = markdown.slice(task.index + task[0].length, tasks[index + 1]?.index ?? markdown.length);
-    for (const field of fields) {
+    const section = task.section;
+    for (const field of requiredPlanFields) {
       if (!new RegExp(`^- ${field}:\\s*\\S`, 'm').test(section)) errors.push(`${id}: missing non-empty ${field} field.`);
     }
     if (/^\s*- (?:Status|Merged|Completed|PR|Merge SHA):/im.test(section)) {
