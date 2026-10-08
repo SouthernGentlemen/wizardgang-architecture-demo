@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
+  acceptedBuildOutputPaths,
   commandSequence,
   createCiValidationCommands,
   expandedNpmRunSequence,
@@ -25,7 +26,7 @@ const ciWorkflow = fs.readFileSync(path.join(process.cwd(), '.github/workflows/c
 const REQUIRED_CHECK_OWNERS = [
   ['generated-artifact parity', 'validate:generated-artifacts'],
   ['clean local migrations', 'validate:migrations'],
-  ['production build', 'build'],
+  ['Worker build from accepted client', 'build:worker'],
   ['scaffold validation', 'validate:scaffold'],
   ['controlled history', 'validate:history'],
   ['active-plan validation', 'validate:implementation-plan'],
@@ -62,6 +63,43 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(expandedCiRuns.filter((name) => name === 'validate:generated-artifacts')).toHaveLength(1);
     expect(expandedCiRuns.filter((name) => name === 'validate:assurance-documentation')).toHaveLength(1);
     expect(expandedCiRuns.filter((name) => name === 'validate:worker-secrets')).toHaveLength(1);
+  });
+
+  it('exposes accepted same-head build output paths on the existing full-check owner only', () => {
+    const check = ciCommands.find(({ id }) => id === 'check');
+    expect(acceptedBuildOutputPaths).toEqual({
+      clientAssets: 'dist/client',
+      workerBundle: 'dist/worker',
+      workerEntry: 'src/worker-entry.mjs',
+    });
+    expect(Object.isFrozen(acceptedBuildOutputPaths)).toBe(true);
+    expect(check?.acceptedBuildOutputPaths).toBe(acceptedBuildOutputPaths);
+    expect(ciCommands.filter((command) => 'acceptedBuildOutputPaths' in command)).toHaveLength(1);
+
+    // A future browser job may transfer these ignored outputs from the *same validated head*.
+    // This metadata does not add a build step, cache, upload or a second execution owner.
+    expect(ciCommands.map(({ id }) => id)).toEqual(['toolchain', 'install', 'check', 'patch-whitespace']);
+    expect(check).toMatchObject({ file: 'npm', args: ['run', 'check'] });
+    expect(ciWorkflow).toContain('ci-diagnostics-'); // Existing failure diagnostics are retained.
+    expect(ciWorkflow).not.toContain('name: accepted-build-outputs');
+    expect(ciWorkflow).not.toMatch(/path:\s*(?:\.\/)?dist\//);
+    expect(ciWorkflow).not.toContain('actions/cache');
+    const paths = Object.values(acceptedBuildOutputPaths);
+    expect(new Set(paths).size).toBe(paths.length);
+    for (const output of paths) {
+      expect(path.posix.isAbsolute(output)).toBe(false);
+      expect(output.split('/')).not.toContain('..');
+    }
+    const ignored = fs.readFileSync(path.join(process.cwd(), '.gitignore'), 'utf8');
+    expect(ignored).toContain('dist/');
+    expect(ignored).toContain('src/worker-entry.mjs');
+    const wrangler = fs.readFileSync(path.join(process.cwd(), 'wrangler.jsonc'), 'utf8');
+    expect(wrangler).toContain('"main": "src/worker-entry.mjs"');
+    expect(wrangler).toContain('"directory": "./dist/client"');
+    expect(commandSequence(packageJson.scripts['build:worker'])).toContain('wrangler deploy --dry-run --outdir dist/worker');
+    expect(checkRuns.indexOf('validate:generated-artifacts')).toBeLessThan(checkRuns.indexOf('build:worker'));
+    expect(checkRuns.indexOf('build:worker')).toBeLessThan(checkRuns.indexOf('test:site-accessibility'));
+    expect(expandedCheckRuns.filter((run) => run === 'build:worker')).toHaveLength(1);
   });
 
   it('keeps separate CI toolchain, installation, check and committed-patch validation gates', () => {
@@ -101,6 +139,13 @@ describe('DEMO-354 acceptance gate ownership', () => {
 
   it('keeps build and browser ownership nested under their check gates', () => {
     const buildRuns = expandedNpmRunSequence(packageJson.scripts, 'build');
+    const parityIndex = checkRuns.indexOf('validate:generated-artifacts');
+    const workerBuildIndex = checkRuns.indexOf('build:worker');
+    expect(parityIndex).toBeGreaterThan(-1);
+    expect(workerBuildIndex).toBeGreaterThan(parityIndex);
+    expect(checkRuns).not.toContain('build');
+    expect(expandedCheckRuns).not.toContain('build:client');
+    expect(expandedCheckRuns).not.toContain('generate:assets');
     for (const run of ['build:client', 'generate:assets', 'build:worker', 'validate:worker-bundle']) {
       expect(buildRuns.filter((candidate) => candidate === run), run).toHaveLength(1);
     }
@@ -117,6 +162,51 @@ describe('DEMO-354 acceptance gate ownership', () => {
     const runner = fs.readFileSync(path.join(process.cwd(), 'scripts', 'run-site-accessibility-audits.ts'), 'utf8');
     expect(runner.match(/scripts\/site-browser-audit\.ts/g) ?? []).toHaveLength(1);
     expect(runner).not.toContain('demo-289-site-evaluation');
+  });
+
+  it('hands the accepted two-pass client output to Worker compilation without another Vite build', () => {
+    const flatten = (name: string, ancestors: string[] = []): string[] => {
+      if (ancestors.includes(name)) throw new Error('Cyclic build script: ' + [...ancestors, name].join(' -> '));
+      return commandSequence(packageJson.scripts[name]).flatMap((command) => {
+        const nested = /^npm run ([A-Za-z0-9:_-]+)$/.exec(command);
+        return nested ? flatten(nested[1], [...ancestors, name]) : [command];
+      });
+    };
+    const accepted = flatten('check');
+    // The parity owner runs both clean client passes before the sole Worker build.
+    const runner = fs.readFileSync(path.join(process.cwd(), 'scripts/validate-generated-artifacts.ts'), 'utf8');
+    expect(packageJson.scripts['validate:generated-artifacts']).toBe('node scripts/validate-generated-artifacts.ts');
+    expect(runner.split('const first = runGenerator(definition, cwd)').length - 1).toBe(1);
+    expect(runner.split('const second = runGenerator(definition, cwd)').length - 1).toBe(1);
+    expect(runner.split("if (definition.id === 'assets') fs.rmSync(path.join(cwd, 'dist/client')").length - 1).toBe(2);
+    expect(checkRuns.filter((run) => run === 'validate:generated-artifacts')).toHaveLength(1);
+    expect(checkRuns.filter((run) => run === 'build:worker')).toHaveLength(1);
+    expect(checkRuns).not.toContain('build:client');
+    expect(checkRuns).not.toContain('generate:assets');
+    const parity = 'node scripts/validate-generated-artifacts.ts';
+    const entry = 'node scripts/generate-worker-entry.ts';
+    const compile = 'wrangler deploy --dry-run --outdir dist/worker';
+    const bundle = 'node scripts/validate-react-presentation.ts --worker-bundle';
+
+    for (const command of [parity, entry, compile, bundle]) {
+      expect(accepted.filter((candidate) => candidate === command), command).toHaveLength(1);
+    }
+    expect(accepted.indexOf(parity)).toBeLessThan(accepted.indexOf(entry));
+    expect(accepted.indexOf(entry) + 1).toBe(accepted.indexOf(compile));
+    expect(accepted.indexOf(compile) + 1).toBe(accepted.indexOf(bundle));
+    expect(accepted.filter((command) => /\bvite\s+build\b/.test(command))).toEqual([]);
+
+    // Standalone builds still produce a fresh client distribution before the same Worker chain.
+    expect(packageJson.scripts.build).toBe('npm run build:client && npm run build:worker');
+    expect(packageJson.scripts['build:client']).toBe('npm run generate:assets');
+    expect(packageJson.scripts['generate:assets']).toBe('ASSET_MANIFEST_WRITE=1 vite build');
+    const standalone = flatten('build');
+    expect(standalone.filter((command) => /\bvite\s+build\b/.test(command))).toEqual([
+      'ASSET_MANIFEST_WRITE=1 vite build',
+    ]);
+    expect(standalone.indexOf('ASSET_MANIFEST_WRITE=1 vite build')).toBeLessThan(standalone.indexOf(entry));
+    expect(standalone.indexOf(entry) + 1).toBe(standalone.indexOf(compile));
+    expect(standalone.indexOf(compile) + 1).toBe(standalone.indexOf(bundle));
   });
 
   it('runs static accessibility and localization once through the full Vitest suite while retaining focused commands', () => {
@@ -136,12 +226,9 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(expandedCheckRuns.filter((run) => run === 'validate:generated-artifacts')).toHaveLength(1);
     expect(expandedCheckRuns.filter((run) => run === 'test')).toHaveLength(1);
     expect(checkRuns).not.toContain('validate:routes');
-    expect(packageJson.scripts['generate:routes']).toBe('ROUTE_ARTIFACTS_WRITE=1 vitest run tests/route-artifacts.test.ts');
+    expect(packageJson.scripts['generate:routes']).toBe('node scripts/generate-route-manifest.ts');
     expect(packageJson.scripts['validate:routes']).toBe('vitest run tests/route-artifacts.test.ts');
     expect(packageJson.scripts.test).toBe('vitest run');
   });
 
-  it('does not restore retired standalone asset validation to check', () => {
-    expect(expandedCheckRuns).not.toContain('validate:assets');
-  });
 });

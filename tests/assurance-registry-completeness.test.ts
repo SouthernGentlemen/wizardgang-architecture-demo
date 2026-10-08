@@ -3,6 +3,7 @@ import { cpSync, mkdtempSync, readFileSync, renameSync, rmSync, symlinkSync, unl
 import { tmpdir } from 'node:os';
 import { join, relative, sep } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
+import { generatedArtifactDefinitions, runGeneratedArtifactParity } from '../scripts/validate-generated-artifacts.ts';
 
 const repositoryRoot = process.cwd();
 const fixtureRoots: string[] = [];
@@ -106,11 +107,23 @@ describe('assurance registry completeness and schema enforcement', () => {
     expect(output(result)).toContain('registered schema is missing');
   });
 
-  it('rejects stale generated Worker runtime import bindings against the registry', () => {
+  it('rejects stale Worker runtime bindings through generated parity without a registry re-render', () => {
     const fixtureRoot = createFixture();
-    const bindingPath = join(fixtureRoot, 'src/assurance/generated/registry-bindings.ts');
+    const bindingRelative = 'src/assurance/generated/registry-bindings.ts';
+    const bindingPath = join(fixtureRoot, bindingRelative);
     writeFileSync(bindingPath, `${readFileSync(bindingPath, 'utf8')}\n// drift\n`);
-    expectRejected(run(fixtureRoot, 'scripts/generate-assurance-runtime-binding.ts', ['--check']), 'generated runtime import binding is stale');
+    const bindingDefinition = generatedArtifactDefinitions.find((entry) => entry.id === 'assurance-runtime-binding');
+    expect(bindingDefinition).toBeDefined();
+    const report = runGeneratedArtifactParity({
+      cwd: fixtureRoot,
+      definitions: [bindingDefinition!],
+      diagnosticsDirectory: '.ci-diagnostics',
+    });
+    expect(report.status).toBe('failure');
+    expect(report.failures[0].firstChanged).toContain(bindingRelative);
+    expect(report.failures[0].secondChanged).toEqual([]);
+    expect(report.definitions[0].firstPass.exitCode).toBe(0);
+    expect(report.definitions[0].secondPass.exitCode).toBe(0);
   });
 
   it('loads relocated lifecycle control-plane data through the registry binding without counting it as assurance records', () => {

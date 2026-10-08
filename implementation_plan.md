@@ -15,31 +15,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 
 ## Open tasks
 
-### DEMO-498 — [BUILD] Give generation and builds one execution owner
-
-- Dependency: DEMO-497
-- Why: Remove repeated Vite builds and test-runner startup while preserving generated drift and determinism checks.
-- Scope: Asset/route/OpenAPI/runtime-binding generation, build orchestration and current generated-artifact tests.
-- Non-goals: Do not drop the two determinism passes, weaken Worker bundle validation, patch platform/, or introduce a competing build command.
-- Acceptance: A full check uses two client-generation passes instead of three builds; direct route generation replaces Vitest write mode; freshness comparisons each have one owner; distributable Worker validation remains.
-- Validation: Focused generated-artifact, route serializer, schema/binding and build ownership tests; deliberately stale/unstable output fails; final exact-head canonical CI.
-- Authorities: scripts/validate-generated-artifacts.ts; scripts/generate-route-manifest.ts; scripts/generate-assurance-runtime-binding.ts; scripts/sync-openapi-schemas.ts; tests/route-artifacts.test.ts; package.json; docs/CI-DIAGNOSTICS.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Trace each generator output and build consumer; identify the second parity pass output that can satisfy the client-build input.
-- [ ] 02. Refactor client-build orchestration to consume that output during full acceptance; keep standalone npm run build producing its own fresh distributable output.
-- [ ] 03. Retain clean-output, drift, unexpected-path and second-pass idempotence assertions around the asset generator.
-- [ ] 04. Keep Worker compilation, Wrangler dry run and bundle validation after the accepted client output; remove the redundant third Vite invocation.
-- [ ] 05. Extract/use the existing route serializer in the actual route generator so generation does not start Vitest.
-- [ ] 06. Change generate:routes/parity wiring to invoke the generator directly; remove WRITE-mode test/generator wrapping.
-- [ ] 07. Retain route serializer and invalid-route fixtures in current domain tests; delete the redundant real-checkout generation assertion.
-- [ ] 08. Make generated parity the sole OpenAPI freshness owner; keep unique contract schema, operation and routing assertions in contract validation.
-- [ ] 09. Make generated parity the sole runtime-binding freshness owner; remove registry and extra binding output comparisons while retaining completeness/routing checks.
-- [ ] 10. Expose the accepted build output paths to the canonical execution plan for later browser-job transfer, without adding a cross-head cache.
-- [ ] 11. Delete obsolete generator/build-shape fixtures and update current generator/build ownership tests and command documentation.
-- [ ] 12. Verify stale output, unexpected files and non-idempotent generation fail; confirm the full successful path contains only the intended builds.
-
 ### DEMO-499 — [BUILD] Cut over to forward-only controlled history
 
 - Dependency: DEMO-497

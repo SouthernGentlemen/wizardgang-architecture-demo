@@ -9,15 +9,15 @@ import { boundedDiagnosticText } from './lib/ci-diagnostics.ts';
 const root = process.cwd();
 const diagnosticsDir = process.env.CI_DIAGNOSTICS_DIR || '.ci-diagnostics';
 
-function listFiles(relativeDirectory) {
-  const absolute = path.join(root, relativeDirectory);
+function listFiles(relativeDirectory, cwd = root) {
+  const absolute = path.join(cwd, relativeDirectory);
   if (!fs.existsSync(absolute)) return [];
   const files = [];
   const visit = (directory) => {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((left, right) => left.name.localeCompare(right.name))) {
       const absoluteEntry = path.join(directory, entry.name);
       if (entry.isDirectory()) visit(absoluteEntry);
-      else files.push(path.relative(root, absoluteEntry).split(path.sep).join('/'));
+      else files.push(path.relative(cwd, absoluteEntry).split(path.sep).join('/'));
     }
   };
   visit(absolute);
@@ -33,7 +33,7 @@ const definitions = [
   },
   {
     id: 'routes',
-    command: ['npm', ['run', 'generate:routes']],
+    command: ['node', ['scripts/generate-route-manifest.ts']],
     inputs: listFiles('src/routing'),
     outputs: ['docs/route-manifest.json'],
   },
@@ -50,6 +50,81 @@ const definitions = [
     outputs: ['src/assurance/generated/registry-bindings.ts', 'src/assurance/generated/lifecycle-baseline-membership.json'],
   },
 ];
+
+// The ignored client distribution is an acceptance input, not a tracked artifact.
+// Verify it was freshly emitted, is complete, and has no leftover files.
+export function inspectAcceptedClientOutput(cwd = root) {
+  const issues = [];
+  const expected = new Set(['.vite/manifest.json']);
+  const readJson = (file) => {
+    try { return JSON.parse(fs.readFileSync(path.join(cwd, file), 'utf8')); }
+    catch { issues.push(file + ': missing or invalid JSON'); return null; }
+  };
+  const includeFile = (file, owner) => {
+    if (
+      typeof file !== 'string'
+      || !file.startsWith('assets/')
+      || file.split('/').some((part) => !part || part === '.' || part === '..')
+    ) {
+      issues.push(owner + ': invalid emitted asset path ' + JSON.stringify(file));
+      return;
+    }
+    expected.add(file);
+  };
+
+  const assetManifest = readJson('docs/asset-manifest.json');
+  if (assetManifest?.version !== 1 || !assetManifest.assets || Array.isArray(assetManifest.assets)
+    || typeof assetManifest.assets !== 'object' || Object.keys(assetManifest.assets).length === 0) {
+    issues.push('docs/asset-manifest.json: missing version 1 asset mapping');
+  } else {
+    for (const [name, file] of Object.entries(assetManifest.assets)) {
+      if (typeof file !== 'string' || !file.startsWith('/assets/')) {
+        issues.push('docs/asset-manifest.json: invalid asset ' + name);
+      } else {
+        includeFile(file.slice(1), 'docs/asset-manifest.json ' + name);
+      }
+    }
+  }
+
+  const viteManifest = readJson('dist/client/.vite/manifest.json');
+  if (!viteManifest || typeof viteManifest !== 'object' || Array.isArray(viteManifest)
+    || Object.keys(viteManifest).length === 0) {
+    issues.push('dist/client/.vite/manifest.json: missing Vite asset inventory');
+  } else {
+    for (const [name, entry] of Object.entries(viteManifest)) {
+      if (!entry || typeof entry !== 'object' || typeof entry.file !== 'string') {
+        issues.push('dist/client/.vite/manifest.json: invalid entry ' + name);
+        continue;
+      }
+      includeFile(entry.file, 'Vite entry ' + name);
+      for (const field of ['css', 'assets']) {
+        if (entry[field] === undefined) continue;
+        if (!Array.isArray(entry[field])) {
+          issues.push('Vite entry ' + name + ': invalid ' + field + ' file list');
+          continue;
+        }
+        for (const file of entry[field]) includeFile(file, 'Vite entry ' + name + ' ' + field);
+      }
+    }
+  }
+
+  const built = listFiles('dist/client', cwd).map((file) => file.slice('dist/client/'.length));
+  const actual = new Set(built);
+  for (const file of expected) {
+    if (!actual.has(file)) issues.push('dist/client/' + file + ': missing generated file');
+  }
+  for (const file of built) {
+    if (!expected.has(file)) issues.push('dist/client/' + file + ': unexpected generated file');
+    const absolute = path.join(cwd, 'dist/client', file);
+    try {
+      if (!fs.lstatSync(absolute).isFile() || fs.statSync(absolute).size === 0) {
+        issues.push('dist/client/' + file + ': not a nonempty regular file');
+      }
+    } catch { issues.push('dist/client/' + file + ': unreadable generated file'); }
+  }
+  if (built.length === 0) issues.push('dist/client: empty client distribution');
+  return { issues, hashes: snapshot(built.map((file) => 'dist/client/' + file), cwd) };
+}
 
 function sha256(file, cwd = root) {
   const absolute = path.join(cwd, file);
@@ -96,14 +171,26 @@ export function runGeneratedArtifactParity({ definitions: selected = definitions
   for (const definition of selected) {
     const allFiles = [...definition.inputs, ...definition.outputs];
     const before = snapshot(allFiles, cwd);
+    if (definition.id === 'assets') fs.rmSync(path.join(cwd, 'dist/client'), { recursive: true, force: true });
     const first = runGenerator(definition, cwd);
     const afterFirst = snapshot(allFiles, cwd);
     const firstChanged = definition.outputs.filter((file) => before[file] !== afterFirst[file]);
     const firstStatus = statusPaths(cwd);
+    const firstClient = definition.id === 'assets' ? inspectAcceptedClientOutput(cwd) : null;
+    if (definition.id === 'assets') fs.rmSync(path.join(cwd, 'dist/client'), { recursive: true, force: true });
     const second = runGenerator(definition, cwd);
     const afterSecond = snapshot(allFiles, cwd);
     const secondChanged = definition.outputs.filter((file) => afterFirst[file] !== afterSecond[file]);
     const secondStatus = statusPaths(cwd);
+    const secondClient = definition.id === 'assets' ? inspectAcceptedClientOutput(cwd) : null;
+    const clientChangedFiles = firstClient && secondClient
+      ? [...new Set([...Object.keys(firstClient.hashes), ...Object.keys(secondClient.hashes)])]
+        .filter((file) => firstClient.hashes[file] !== secondClient.hashes[file]).sort()
+      : [];
+    const clientIssues = [
+      ...(firstClient?.issues ?? []).map((issue) => 'first pass: ' + issue),
+      ...(secondClient?.issues ?? []).map((issue) => 'second pass: ' + issue),
+    ];
     const introducedStatus = [...firstStatus, ...secondStatus].filter((file) => !baselineStatus.has(file) && !definition.outputs.includes(file));
     const record = {
       id: definition.id,
@@ -112,17 +199,25 @@ export function runGeneratedArtifactParity({ definitions: selected = definitions
       outputs: [...definition.outputs].sort(),
       firstPass: { ...first, changedOutputs: firstChanged },
       secondPass: { ...second, changedOutputs: secondChanged },
-      idempotent: secondChanged.length === 0,
+      idempotent: secondChanged.length === 0 && clientChangedFiles.length === 0,
+      ...(firstClient ? { clientOutput: {
+        firstPassIssues: firstClient.issues,
+        secondPassIssues: secondClient.issues,
+        secondPassChangedFiles: clientChangedFiles,
+        fileCount: Object.keys(secondClient.hashes).length,
+      } } : {}),
       unexpectedChangedFiles: [...new Set(introducedStatus)].sort(),
       outputHashes: Object.fromEntries(definition.outputs.map((file) => [file, afterSecond[file]])),
     };
     records.push(record);
-    if (firstChanged.length || secondChanged.length || first.exitCode !== 0 || second.exitCode !== 0 || record.unexpectedChangedFiles.length) {
+    if (firstChanged.length || secondChanged.length || first.exitCode !== 0 || second.exitCode !== 0 || record.unexpectedChangedFiles.length || clientIssues.length || clientChangedFiles.length) {
       failures.push({
         id: definition.id,
         firstChanged,
         secondChanged,
         unexpectedChangedFiles: record.unexpectedChangedFiles,
+        clientIssues,
+        clientChangedFiles,
         firstExitCode: first.exitCode,
         secondExitCode: second.exitCode,
       });
@@ -141,7 +236,7 @@ export function runGeneratedArtifactParity({ definitions: selected = definitions
   fs.writeFileSync(path.join(absoluteDiagnostics, 'generated-artifact.diff'), boundedDiagnosticText(aggregateDiff));
   if (failures.length) {
     console.error('Generated-artifact parity failed; inspect .ci-diagnostics/generated-artifacts.json and generated-artifact.diff.');
-    for (const failure of failures) console.error(`- ${failure.id}: first-pass drift=${failure.firstChanged.length}, second-pass drift=${failure.secondChanged.length}, exit=${failure.firstExitCode}/${failure.secondExitCode}`);
+    for (const failure of failures) console.error(`- ${failure.id}: first-pass drift=${failure.firstChanged.length}, second-pass drift=${failure.secondChanged.length}, client-issues=${failure.clientIssues.length}, client-drift=${failure.clientChangedFiles.length}, exit=${failure.firstExitCode}/${failure.secondExitCode}`);
     return report;
   }
   console.log(`Generated-artifact parity passed for ${records.length} generator definitions; all second passes were idempotent.`);

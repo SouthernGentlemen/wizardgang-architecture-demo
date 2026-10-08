@@ -61,7 +61,9 @@ describe('DEMO-497 immutable post-merge history recovery', () => {
   it('leaves DEMO-497 retired and all later IDs unchanged', () => {
     const queued = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((m) => Number(m[1].slice(5)));
     expect(plan).not.toMatch(/^### DEMO-497 —/m);
-    expect(queued[0]).toBe(498);
-    expect(queued.every((id) => id >= 498)).toBe(true);
+    expect(queued.length).toBeGreaterThan(0);
+    expect(queued[0]).toBeGreaterThan(497);
+    expect(queued.every((id) => id > 497)).toBe(true);
+    expect(queued.every((id, index) => index === 0 || id > queued[index - 1])).toBe(true);
   });
 });

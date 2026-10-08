@@ -1,35 +1,81 @@
-import fs from 'node:fs';
-import path from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { applicationRouteRegistry, type ApplicationRouteDeclaration } from '../src/routing/application-routes';
-import { serializeRouteManifest } from '../src/routing/artifacts';
+import type { ApplicationRouteDeclaration } from '../src/routing/application-routes';
+import { buildRouteManifest, serializeRouteManifest } from '../src/routing/artifacts';
 
-const root = process.cwd();
-const manifestPath = path.join(root, 'docs', 'route-manifest.json');
-const declarations = applicationRouteRegistry.declarations as readonly ApplicationRouteDeclaration[];
-const expectedManifest = serializeRouteManifest(declarations);
-const write = process.env.ROUTE_ARTIFACTS_WRITE === '1';
-
-function reconcile(filePath: string, expected: string, label: string): string {
-  if (write) fs.writeFileSync(filePath, expected);
-  const current = fs.readFileSync(filePath, 'utf8');
-  if (current !== expected) {
-    const relativePath = path.relative(root, filePath);
-    const currentLines = current.split('\n');
-    const expectedLines = expected.split('\n');
-    const firstDifferentIndex = currentLines.findIndex((line, index) => line !== expectedLines[index]);
-    const firstDifferentLine =
-      firstDifferentIndex === -1 ? Math.min(currentLines.length, expectedLines.length) + 1 : firstDifferentIndex + 1;
-    const message = `Generated ${label.toLowerCase()} artifact is stale at ${relativePath}:${firstDifferentLine}. Run npm run generate:routes and commit the result.`;
-
-    console.error(`::error file=${relativePath},line=${firstDifferentLine}::${message}`);
-    throw new Error(message);
-  }
-  return current;
+function pageRoute(
+  id: string,
+  pattern: string,
+  navigation: 'primary' | 'none' = 'primary',
+): ApplicationRouteDeclaration {
+  return {
+    id,
+    pattern,
+    methods: ['GET'],
+    kind: 'page',
+    handler: () => new Response('ok'),
+    browserHtml: 'page',
+    authentication: { mode: 'anonymous' },
+    authorization: { mode: 'none' },
+    visibility: 'public',
+    sameOrigin: { mode: 'not-required' },
+    offline: { mode: 'gated' },
+    cache: { mode: 'no-store' },
+    crawler: { crawling: 'controlled', indexing: 'allow' },
+    documentation: {
+      title: id,
+      description: 'Synthetic route manifest projection for ' + id,
+      docs: ['docs/ROUTE-REGISTRY.md'],
+    },
+    source: { module: 'tests/route-artifacts.test.ts' },
+    page: {
+      parent: 'interfaces.frontend.index',
+      label: id,
+      summary: 'Synthetic page for the route serializer',
+      order: 1,
+      navigation,
+      architectureMap: true,
+    },
+  };
 }
 
-describe('registry-generated route artifacts', () => {
-  it('keeps the route manifest identical to active declarations', () => {
-    expect(reconcile(manifestPath, expectedManifest, 'MANIFEST')).toBe(expectedManifest);
+describe('route manifest serializer', () => {
+  it('serializes in stable route-ID order with the same formatted bytes regardless of input order', () => {
+    const declarations = [
+      pageRoute('z.detail', '/items/:itemId'),
+      pageRoute('a.index', '/about'),
+    ];
+    const expected = buildRouteManifest(declarations);
+    const serialized = serializeRouteManifest(declarations);
+
+    expect(serialized).toBe(JSON.stringify(expected, null, 2) + '\n');
+    expect(serialized).toBe(serializeRouteManifest([...declarations].reverse()));
+    expect(expected.map((entry) => entry.id)).toEqual(['a.index', 'z.detail']);
+    expect(expected[0]).toMatchObject({
+      route: '/about',
+      kind: 'page',
+      browser_html: 'page',
+      navigation: { parent: 'interfaces.frontend.index', sitemap: true },
+      status: 'working',
+    });
+    expect(expected[1]).toMatchObject({
+      route: '/items/{itemId}',
+      navigation: { sitemap: false },
+    });
+  });
+
+  it('omits non-navigation page metadata without changing declared route policies', () => {
+    const declarations = [pageRoute('z.hidden', '/hidden', 'none')];
+    const projected = buildRouteManifest(declarations)[0];
+
+    expect(projected).not.toHaveProperty('navigation');
+    expect(projected).toMatchObject({
+      id: 'z.hidden',
+      methods: ['GET'],
+      authentication: { mode: 'anonymous' },
+      authorization: { mode: 'none' },
+      crawler: { crawling: 'controlled', indexing: 'allow' },
+      source: { module: 'tests/route-artifacts.test.ts' },
+    });
+    expect(serializeRouteManifest(declarations)).toContain('"status": "working"');
   });
 });

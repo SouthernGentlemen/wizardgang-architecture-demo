@@ -35,18 +35,28 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
     expect(commands.filter((command) => command === canonicalAdvisory)).toHaveLength(1);
     expect(commands).not.toContain('validate:migrations');
     const expanded = expandedNpmRunSequence(pkg.scripts, 'check');
-    for (const run of ['validate:migrations', 'build', 'validate:worker-bundle', 'test:site-accessibility']) {
+    for (const run of ['validate:generated-artifacts', 'validate:migrations', 'build:worker', 'validate:worker-bundle', 'test:site-accessibility']) {
       expect(expanded.filter((candidate) => candidate === run), run).toHaveLength(1);
     }
+    expect(expanded).not.toContain('build');
+    expect(expanded).not.toContain('build:client');
+    expect(pkg.scripts.check.indexOf('npm run validate:generated-artifacts')).toBeLessThan(
+      pkg.scripts.check.indexOf('npm run build:worker'),
+    );
     expect(pkg.scripts.check.indexOf('npm run validate:migrations')).toBeLessThan(
       pkg.scripts.check.indexOf('npm run test:site-accessibility'),
     );
   });
 
-  it('keeps unbound build and bundle acceptance check-owned, leaving production build to the pinned deploy workflow', () => {
+  it('keeps accepted client parity and Worker bundle check-owned, leaving production build to the pinned deploy workflow', () => {
     const reproduce = namedStep(releaseWorkflow, 'Reproduce the tagged state');
     expect(reproduce.split('\n').map((line) => line.trim())).not.toContain('npm run build');
-    expect(expandedNpmRunSequence(pkg.scripts, 'check').filter((run) => run === 'build')).toHaveLength(1);
+    const accepted = expandedNpmRunSequence(pkg.scripts, 'check');
+    expect(accepted.filter((run) => run === 'validate:generated-artifacts')).toHaveLength(1);
+    expect(accepted.filter((run) => run === 'build:worker')).toHaveLength(1);
+    expect(accepted.filter((run) => run === 'validate:worker-bundle')).toHaveLength(1);
+    expect(accepted).not.toContain('build');
+    expect(accepted).not.toContain('build:client');
     expect(pkg.scripts.build).toBe('npm run build:client && npm run build:worker');
     expect(pkg.scripts['build:client']).toBe('npm run generate:assets');
     expect(pkg.scripts['build:worker']).toContain('wrangler deploy --dry-run --outdir dist/worker');
