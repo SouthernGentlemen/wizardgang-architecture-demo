@@ -23,11 +23,12 @@ describe('DEMO-422 post-merge history recovery', () => {
     expect(history).toContain('does not consume DEMO-423');
   });
 
-  it('keeps DEMO-422 retired as later implementation work advances the queue', () => {
+  it('keeps DEMO-422 retired as later implementation work advances or empties the queue', () => {
     const plan = read('implementation_plan.md');
     const headings = [...plan.matchAll(/^### (DEMO-\d{3,}) —/gm)].map((match) => match[1]);
-    expect(headings.length).toBeGreaterThan(0);
-    expect(Number(headings[0].slice('DEMO-'.length))).toBeGreaterThan(422);
+    if (headings.length > 0) {
+      expect(Number(headings[0].slice('DEMO-'.length))).toBeGreaterThan(422);
+    }
     expect(headings).not.toContain('DEMO-422');
   });
 
