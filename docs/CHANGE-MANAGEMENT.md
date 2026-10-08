@@ -7,7 +7,7 @@ Every controlled change to WizardGang Architecture Demo receives exactly one per
 - One change, one ID. IDs are sequential, permanent, and never reused after publication.
 - A commit title is `[DEMO-###] [TYPE] <imperative summary>` with one primary type.
 - A revert keeps the original change intact and receives a new ID with type `REVERT`.
-- A correction receives a new ID and names the corrected change in its body.
+- A correction receives a new ID and names the corrected change in its body; `Post-Merge-Recovery` and same-ID correction paths are retired.
 - Controlled pull requests land as one squash commit with the permanent DEMO ID on `main`.
 - Troubleshooting may use temporary branch commits, but a change that requires one controlled commit must be squashed or rebuilt before merge. Diagnose CI from the exact-head failing job's complete log or its retained diagnostics artifact before changing code; then revalidate the new exact head without weakening these identity rules.
 - Use an isolated `demo-###-imperative-summary` branch and a PR title matching the controlled commit. The provider requires strict/current-with-main `validate`, `change-id`, `security`, and `secrets` and permits only squash merge. Verify the exact PR head and current `main` before squashing that head. Inspect live settings when changing them or investigating drift.
@@ -15,11 +15,13 @@ Every controlled change to WizardGang Architecture Demo receives exactly one per
 
 Allowed primary types are `INIT`, `FEAT`, `FIX`, `SEC`, `API`, `A11Y`, `I18N`, `AI`, `DB`, `OPS`, `TEST`, `DOCS`, `REFACTOR`, `PERF`, `BUILD`, `REVERT`, and `CHORE`.
 
-### Published-history exceptions
+### Fixed forward-history boundary
 
-Published history is not rewritten to repair an already shared change identity. A correction moves forward under a new controlled ID.
+The fixed accepted checkpoint is pinned solely in `scripts/lib/forward-history.ts`, with sequential numeric floor 498 and no additional IDs consumed above the floor. Its identity is pinned in `scripts/lib/forward-history.ts`; it does not advance automatically with `main`. The validator requires that exact checkpoint to exist and be an ancestor of HEAD. Only commits after it undergo controlled title/body and ordered queue-transition validation. The pre-checkpoint history is read solely for raw accepted IDs, not metadata replay. Above-floor maintenance/live-release identities are tracked by current forward records without an old exception registry.
 
-Any exact immutable-history exception needed by sequential validation is encoded with the validator, test, or exception data that enforces it, including the exact immutable identity and reason. Permanent current-state policy does not enumerate old pull requests, merge SHAs, collisions, or prior numbering; Git and GitHub remain the authority for those historical facts.
+New history must use fresh IDs and valid structured bodies, even for corrections of published changes. Same-ID post-merge recovery, historical renumbering, suffix normalization and missing-body exceptions are no longer authored or accepted. Published commits/tags remain intact. The separate security gate still scans all reachable history, including commits before the checkpoint.
+
+
 
 ## Controlled record
 
@@ -58,7 +60,7 @@ v0.x.x | Unreleased
 
 Low risk covers documentation and non-authoritative presentation. Medium risk covers application behavior, routes, storage behavior, and new user workflows. High risk covers authentication, authorization, secrets, persistence schemas, deployment controls, privileged administration, and destructive data behavior. High-risk changes state explicit controls, validation, and a rollback target.
 
-The repository validates sequential IDs and controlled titles on every full check. Pull-request titles use the same syntax. Superseded or reconstructed repository states are recovered from Git/GitHub; current change-management policy does not duplicate their narrative.
+The repository validates forward-only sequential IDs, required controlled bodies and queue transitions from the fixed accepted checkpoint on every full check. Pull-request titles use the same syntax. Superseded or reconstructed repository states are recovered from Git/GitHub; current change-management policy does not duplicate their narrative.
 
 ## Active work and completion
 

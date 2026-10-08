@@ -15,31 +15,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 
 ## Open tasks
 
-### DEMO-499 — [BUILD] Cut over to forward-only controlled history
-
-- Dependency: DEMO-497
-- Why: Stop replaying old metadata failures and maintaining recovery exceptions for already-corrected repository states.
-- Scope: Fixed accepted-history checkpoint, current namespace/queue predicates, forward history validation and removal of historical recovery support.
-- Non-goals: Do not rewrite Git or tags, automatically advance the checkpoint, reuse identities, relax current queue discipline, or reduce reachable-history secret exposure scanning.
-- Acceptance: Only commits after the fixed accepted checkpoint undergo controlled-history validation; checkpoint ancestry and current namespace/reservations are verified; new malformed commits fail; legacy exception maps and recovery fixtures are deleted.
-- Validation: Current fixtures for missing/non-ancestor checkpoint, malformed new title/body, duplicate/reserved ID, queue order/dependency violations and valid forward correction; one real forward-history gate; exact-head CI.
-- Authorities: scripts/validate-history.ts; scripts/lib/controlled-pr-identity.ts; scripts/validate-pull-request-identity.ts; scripts/validate-implementation-plan.ts; scripts/check-portfolio-contract.ts; docs/CHANGE-MANAGEMENT.md; AGENTS.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Reconcile authoritative main, open work and the accepted namespace during implementation; identify a fixed accepted checkpoint and current ID floor without assigning another task ID manually.
-- [ ] 02. Represent the checkpoint and any consumed IDs above its sequential floor in one current boundary; preserve queued/open reservations and avoid a new historical narrative register.
-- [ ] 03. Implement a pure checkpoint ancestry/range predicate that rejects a missing or unrelated checkpoint and does not silently move it.
-- [ ] 04. Read controlled commit bodies only for the post-checkpoint range; keep raw accepted-ID lookup separate from replaying old body validation.
-- [ ] 05. Share current controlled-subject/type parsing between history and PR identity instead of carrying separate historical parsing exceptions.
-- [ ] 06. Share current queue parsing while retaining required task fields, first-task selection, dependency resolution and later-task preservation.
-- [ ] 07. Initialize forward sequencing from the accepted namespace boundary; retain current portfolio-maintenance/live supported identity rules only where current behavior requires them.
-- [ ] 08. Delete missing-body, suffix-normalization, published-continuation and historical renumbering exception maps and their special paths.
-- [ ] 09. Remove generic Post-Merge-Recovery authoring support; require a new controlled identity for a future correction.
-- [ ] 10. Delete legacy history/recovery fixtures, including museum cases for old malformed squashes; move any distinct current invariant into forward-only fixtures.
-- [ ] 11. Verify new suffix/body defects, ID collisions and checkpoint tampering fail; verify an ordinary forward correction and valid queue transition pass.
-- [ ] 12. Update change-management/current architecture authorities for the fixed forward boundary and removal of historical support; keep the secret exposure scan unchanged.
-
 ### DEMO-500 — [TEST] Consolidate assurance and repository validation
 
 - Dependency: DEMO-497, DEMO-498, DEMO-499

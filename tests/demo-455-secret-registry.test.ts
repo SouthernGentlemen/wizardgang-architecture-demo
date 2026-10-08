@@ -75,11 +75,6 @@ describe('DEMO-455 secret registry normalization', () => {
     expect(wrangler.r2_buckets.every((bucket) => !('preview_bucket_name' in bucket))).toBe(true);
   });
 
-  it('skips only the IDs DEMO-460 renumbered, anchored to its exact immutable commit', () => {
-    const history = fs.readFileSync('scripts/validate-history.ts', 'utf8');
-    expect(history).toContain("sha: 'ecc557aaa0a5e8c766c0020d5aa59357f27ef81e'");
-    expect(history).toMatch(/first: 435,\s+last: 452,/);
-  });
 
   it('vendors baseline platform/ from BASE-030 or later and checks the pin in npm run check', () => {
     const lock = JSON.parse(fs.readFileSync('platform/vendor.lock.json', 'utf8')) as { source: string; commit: string };
