@@ -4,11 +4,12 @@ import {
   validateJsonSchema,
 } from './json-schema.ts';
 import { readJsonFile } from './assurance-registry.ts';
+import { currentAssuranceValidationContext } from './assurance-validation-context.ts';
 
 export const ASSURANCE_JSON_SCHEMA_DRAFT = 'https://json-schema.org/draft/2020-12/schema';
 
 export function createAssuranceSchemaLoader(root) {
-  const loadSchemaFile = createFileSchemaLoader(root);
+  const loadSchemaFile = createFileSchemaLoader(root, currentAssuranceValidationContext(root)?.readJson);
   return (reference, fromSchemaPath) => {
     const loaded = loadSchemaFile(reference, fromSchemaPath);
     if (!loaded.schemaPath.startsWith('contracts/assurance/')) {

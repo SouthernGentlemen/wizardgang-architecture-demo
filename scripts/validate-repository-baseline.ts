@@ -6,6 +6,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateScaffold } from './validate-scaffold.ts';
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 type Reader = (name: string) => string;
@@ -125,7 +126,14 @@ export function validateRepositoryBaseline(root: string = DEFAULT_ROOT): string[
   const failures = validateUniversalRepositoryBaseline(root);
   const capabilityFailures: string[] = [];
   const declaration = loadCapabilityDeclaration(createReader(root, capabilityFailures), capabilityFailures);
-  if (declaration.profile === 'reference-stack') failures.push(...validateReferenceStackBaseline(root, declaration));
+  if (declaration.profile === 'reference-stack') {
+    failures.push(...validateReferenceStackBaseline(root, declaration));
+    // The product scaffold shares this owner on the canonical current checkout;
+    // minimal external profile fixtures still exercise just the universal contract.
+    if (existsSync(path.join(root, 'src/router.ts')) && existsSync(path.join(root, 'docs/route-manifest.json'))) {
+      failures.push(...validateScaffold(root).failures);
+    }
+  }
   return failures;
 }
 

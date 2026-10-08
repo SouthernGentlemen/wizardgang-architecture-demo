@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The twelve parent deliveries below are assigned **DEMO-497 through DEMO-508** in execution order.
+- The remaining parent deliveries are assigned **DEMO-501 through DEMO-508** in execution order.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,33 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-500 — [TEST] Consolidate assurance and repository validation
-
-- Dependency: DEMO-497, DEMO-498, DEMO-499
-- Why: Replace repeated process startup and data loading with one current assertion owner per domain.
-- Scope: Assurance context/predicates, repository/toolchain and documentation/reference validation, queue parsing consumers and current focused tests.
-- Non-goals: Do not discard unique schema/disclosure/framework/freshness assertions, alter public assurance data as cleanup, or loosen portfolio root-contract identity.
-- Acceptance: One assurance execution loads shared inputs once; overlapping predicates execute once; repository/documentation/current queue assertions are consolidated; obsolete prose/layout/retired-generator fixtures are deleted.
-- Validation: Focused current assurance, disclosure, relationship, publication, expiry, reference/link and queue rejection fixtures; expanded execution ownership; exact-head canonical CI.
-- Authorities: scripts/validate-assurance*.ts; scripts/lib/assurance-validation.ts; scripts/validate-scaffold.ts; scripts/validate-repository-baseline.ts; scripts/validate-governance-metadata.ts; scripts/validate-documentation-cleanup.ts; scripts/validate-toolchain.ts; docs/ASSURANCE.md; docs/governance/REFERENCE-REGISTRY.json; docs/ARCHITECTURE-STANDARD.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Enumerate the thirteen assurance commands and map their distinct current assertions into the execution plan; identify shared registry/schema/inventory reads.
-- [ ] 02. Create one assurance validation context with explicit readers and clock input so loaded data and time-sensitive checks can be reused safely.
-- [ ] 03. Convert registry, record/schema and advisory predicates to consume that context without spawning their old entrypoints.
-- [ ] 04. Merge projection/integrity overlap while retaining unique absolute-URL, derived-field, private-field and required-route constraints.
-- [ ] 05. Move publication and lifecycle predicates into the shared execution without preserving retired publication formats or old-run fixtures.
-- [ ] 06. Run ISO 27001, ISO 42001 and WCAG mapping assertions from the shared context; preserve unique current framework relationship checks.
-- [ ] 07. Share documentation/reference/heading resolution with assurance documentation validation; retain actual links and required control relationships.
-- [ ] 08. Integrate current observation/security-disclosure freshness and operations predicates with the same injected clock/context.
-- [ ] 09. Consolidate overlapping scaffold/repository-baseline file, toolchain and capability assertions under their current owner.
-- [ ] 10. Consolidate overlapping governance/documentation retired-path and exact-prose checks; replace brittle shape assertions with current semantic contracts.
-- [ ] 11. Use the shared queue parser from forward history for portfolio/plan consumers while retaining byte-identical root authority and shared empty-template rules.
-- [ ] 12. Wire validate:assurance to one execution and preserve focused access through the same predicates; remove superseded CLI orchestration and duplicate positive tests.
-- [ ] 13. Delete fixtures whose only purpose is retired generators/documents or old command text; exercise unique current bad-input cases directly.
-- [ ] 14. Update command/diagnostic authorities and confirm one assurance context and no duplicate current predicates in the expanded full check.
 
 ### DEMO-501 — [TEST] Stabilize browser acceptance and retire old harness paths
 

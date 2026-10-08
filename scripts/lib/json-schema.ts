@@ -294,7 +294,7 @@ function assertSupportedNode(schema, schemaPath, pointer = '#') {
   }
 }
 
-export function createFileSchemaLoader(root = process.cwd()) {
+export function createFileSchemaLoader(root = process.cwd(), readJson = null) {
   const absoluteRoot = path.resolve(root);
   const cache = new Map();
   return (reference, fromSchemaPath) => {
@@ -309,7 +309,7 @@ export function createFileSchemaLoader(root = process.cwd()) {
     }
     const normalizedPath = relativePath.split(path.sep).join('/');
     if (!cache.has(normalizedPath)) {
-      cache.set(normalizedPath, JSON.parse(fs.readFileSync(absolutePath, 'utf8')));
+      cache.set(normalizedPath, readJson ? readJson(normalizedPath) : JSON.parse(fs.readFileSync(absolutePath, 'utf8')));
     }
     return { schema: cache.get(normalizedPath), schemaPath: normalizedPath };
   };
