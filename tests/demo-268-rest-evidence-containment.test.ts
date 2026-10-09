@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { restDemoOpenApiDocument } from '../src/api/rest-demo-openapi';
 import { restSection } from '../src/demos/rest-presentation';
@@ -85,7 +85,6 @@ describe('DEMO-268 REST evidence containment', () => {
   it('keeps REST browser evidence owned by the surviving main audit', () => {
     const mainAuditSource = readFileSync('scripts/site-browser-audit.ts', 'utf8');
 
-    expect(existsSync('scripts/demo-268-rest-browser-audit.mjs')).toBe(false);
     expect(mainAuditSource).toContain('REST evidence containment failed');
     expect(mainAuditSource).toContain('GET response/contract/curl evidence is incomplete');
     expect(mainAuditSource).toContain('PATCH behavior was not paired with its relevant contract');

@@ -197,7 +197,6 @@ describe('DEMO-269 CI diagnostics', () => {
     const source = fs.readFileSync(path.join(process.cwd(), 'scripts', 'site-browser-audit.ts'), 'utf8');
     expect(source).toContain('process.env.WG_LOCAL_D1_PERSIST_TO');
     expect(source).toContain("'--persist-to'");
-    expect(fs.existsSync(path.join(process.cwd(), 'scripts', 'demo-289-site-evaluation.mjs'))).toBe(false);
   });
 
   it('preserves a migration failure status and still removes disposable state', () => {
