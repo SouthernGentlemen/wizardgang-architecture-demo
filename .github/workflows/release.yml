@@ -192,9 +192,94 @@ jobs:
 
   deploy:
     needs: reproduce
-    uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@5e3847c8cf0072fa9698aa8e5e141f96e00d73bb
+    permissions:
+      actions: read
+      contents: read
+    uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@1493de4ae8b1f43f23559b210d047a288b00fcf1
     with:
       worker: demo
       tag: ${{ github.ref_name }}
       expected_sha: ${{ github.sha }}
     secrets: inherit
+
+  # Record-only: re-running failed jobs re-runs just this job against the retained deploy result, never a redeploy.
+  record:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Record the verified deployment result on the Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DEPLOY_RESULT: ${{ needs.deploy.outputs.result }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$DEPLOY_RESULT" || "$DEPLOY_RESULT" == *$'\n'* || ${#DEPLOY_RESULT} -gt 1024 ]]; then
+            echo "::error::Deploy result is missing or not one bounded line; the deployment is not recorded as verified"
+            exit 1
+          fi
+          # Exactly the baseline result fields, bound to this run, tag and commit; anything else is refused.
+          if ! jq -e --arg repository "$GITHUB_REPOSITORY" --arg tag "$GITHUB_REF_NAME" --arg commit "$GITHUB_SHA" \
+            --argjson run_id "$GITHUB_RUN_ID" --argjson run_attempt "$GITHUB_RUN_ATTEMPT" '
+              type == "object"
+              and (keys == (["schema", "worker", "host", "repository", "run_id", "run_attempt", "tag", "commit", "observed_at",
+                "worker_version_id", "traffic_percentage", "assets_checked", "checks"] | sort))
+              and .schema == 1 and .worker == "demo" and .host == "demo.wizardgang.ai"
+              and .repository == $repository and .run_id == $run_id and .tag == $tag and .commit == $commit
+              and (.run_attempt | type == "number" and . == floor and . >= 1 and . <= $run_attempt)
+              and (.observed_at | type == "string" and test("^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}[.][0-9]{3}Z$"))
+              and (.worker_version_id | type == "string" and test("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"))
+              and .traffic_percentage == 100
+              and (.assets_checked | type == "number" and . == floor and . >= 0 and . <= 20)
+              and (.checks | type == "object" and keys == (["reproduction", "traffic", "version", "health", "assets"] | sort)
+                and all(.[]; . == "passed"))
+            ' <<< "$DEPLOY_RESULT" > /dev/null || [[ "$(jq -c . <<< "$DEPLOY_RESULT")" != "$DEPLOY_RESULT" ]]; then
+            echo "::error::Deploy result is malformed, unperformed or not bound to this run, tag and commit"
+            exit 1
+          fi
+
+          run_attempt="$(jq -r .run_attempt <<< "$DEPLOY_RESULT")"
+          asset="deployment-$GITHUB_RUN_ID-$run_attempt.json"
+          record_dir="$(mktemp -d)"
+          printf '%s\n' "$DEPLOY_RESULT" > "$record_dir/$asset"
+          {
+            echo "## Verified deployment"
+            echo
+            jq -r '"- Tag: `\(.tag)`", "- Commit: `\(.commit)`", "- Host: `\(.host)`", "- Observed at (UTC): `\(.observed_at)`",
+              "- Worker version: `\(.worker_version_id)` at \(.traffic_percentage)% of traffic", "- Assets checked: \(.assets_checked)",
+              "- Checks: \(.checks | to_entries | map("\(.key) \(.value)") | join(", "))"' <<< "$DEPLOY_RESULT"
+            echo "- Producing run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$run_attempt"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # Matches the attached asset byte for byte, or reports why not.
+          recorded() {
+            local existing
+            existing="$(gh release view "$GITHUB_REF_NAME" --json isDraft,assets)" || return 2
+            [[ "$(jq -r .isDraft <<< "$existing")" == false ]] || return 2
+            jq -e --arg asset "$asset" 'any(.assets[]; .name == $asset)' <<< "$existing" > /dev/null || return 1
+            rm -f "$record_dir/attached.json"
+            gh release download "$GITHUB_REF_NAME" --pattern "$asset" --output "$record_dir/attached.json" || return 2
+            cmp -s "$record_dir/attached.json" "$record_dir/$asset" || return 3
+          }
+          incomplete() {
+            echo "- Record: incomplete — $1" >> "$GITHUB_STEP_SUMMARY"
+            echo "::error::Deployment verified, record incomplete: $1"
+            exit 1
+          }
+
+          status=0
+          recorded || status=$?
+          if (( status == 1 )); then
+            gh release upload "$GITHUB_REF_NAME" "$record_dir/$asset" || true
+            status=0
+            recorded || status=$?
+          fi
+          case "$status" in
+            0) echo "- Record: \`$asset\` on the $GITHUB_REF_NAME Release" >> "$GITHUB_STEP_SUMMARY" ;;
+            3) incomplete "the $GITHUB_REF_NAME Release already holds a different $asset; it is never replaced" ;;
+            *) incomplete "$asset could not be attached to the published $GITHUB_REF_NAME Release; re-run failed jobs to retry recording only" ;;
+          esac

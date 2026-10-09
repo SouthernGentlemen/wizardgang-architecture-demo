@@ -15,7 +15,6 @@ function fixture(markdown: Record<string, string>): string {
     'package.json': JSON.stringify({ scripts: { check: 'npm run validate:governance' } }),
     [['docs', 'governance', 'REFERENCE-REGISTRY.json'].join('/')]: JSON.stringify({ records: [] }),
     [['docs', 'route-manifest.json'].join('/')]: '[]\n',
-    [['docs', 'history', 'DEPLOYMENTS.md'].join('/')]: `# Deployments\n\nRecorded by ${plannedChange}.\n`,
     'README.md': '# Fixture\n',
     ...markdown,
   };

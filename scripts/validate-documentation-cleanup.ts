@@ -265,9 +265,7 @@ export function runDocumentationValidation(root = process.cwd()) {
   }
 
   const routeManifest = [docsRoot, 'route-manifest.json'].join('/');
-  const deploymentRecord = [docsRoot, 'history', 'DEPLOYMENTS.md'].join('/');
   if (!fileSet.has(routeManifest)) errors.push(`${routeManifest}: generated route projection is missing`);
-  if (!fileSet.has(deploymentRecord)) errors.push(`${deploymentRecord}: intentional deployment operating record is missing`);
 
   if (errors.length) {
     console.error('Documentation cleanup validation failed:');

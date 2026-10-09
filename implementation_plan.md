@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The remaining parent deliveries are assigned **DEMO-506 through DEMO-508** in execution order.
+- The remaining parent deliveries are assigned **DEMO-507 through DEMO-508** in execution order.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,33 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-506 — [OPS] Record verified deployment success automatically
-
-- Dependency: DEMO-505
-- Why: Remove the follow-up OPS PR, its full CI cycle and the manually maintained deployment ledger.
-- Scope: Re-vendor the merged baseline contract, consume its result in the existing Release publisher, durable current success schema, retry semantics and retirement of legacy deployment records/tests.
-- Non-goals: Do not touch another session's DEMO-495 delivery, backfill old records, create an archive/database/service, repeat smoke/build/tests, add production credentials/approval, or record unperformed checks.
-- Acceptance: A verified successful deploy writes a durable producing-run/attempt-bound Release result before pipeline success; persistence retry preserves deployment identity without redeploy/approval; legacy record PR/Markdown/schema support is deleted.
-- Validation: Current pin/conformance, result schema, success/failed-verification/missing-output/write-failure/idempotent-retry cases; Release workflow contract and exact-head CI; actual production proof only in the later authorized final batch.
-- Authorities: platform/vendor.lock.json; platform/deploy/README.md; .github/workflows/release.yml; scripts/release-workflow.ts; docs/RELEASE-MANAGEMENT.md; docs/OPERATIONS.md; scripts/validate-documentation-cleanup.ts; tests/demo-305-release-operations-acceptance.test.ts; SECURITY.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Resolve the exact upstream merged pin from the prior controlled delivery and re-vendor platform/ through its supported vendor mechanism.
-- [ ] 02. Update the reusable workflow call pin/required inputs and verify vendor integrity, conformance and caller proof binding against that same commit.
-- [ ] 03. Define a strict compact current success schema: immutable tag/full commit, target/time, producer run/attempt/approval link, Worker version/traffic and observed verification outcomes.
-- [ ] 04. Consume only the successful trusted baseline output; reject absent, mismatched, malformed, private or unperformed result fields.
-- [ ] 05. Choose an append-only asset identity from the producing deploy run/attempt; publication retries keep that producer identity.
-- [ ] 06. Implement one lightweight result-publication job in the existing Release workflow using bounded Release permissions and no checkout/install/build/test/environment approval.
-- [ ] 07. Attach the structured result durably to the existing GitHub Release and render the same safe result in the existing summary.
-- [ ] 08. Treat verification success plus publication failure as deployment verified/record incomplete; keep overall pipeline completion red until persistence succeeds.
-- [ ] 09. Implement idempotent record-only retry: match an existing asset or publish the retained result, refuse conflicting content and never redeploy solely for paperwork.
-- [ ] 10. Retire docs/history/DEPLOYMENTS.md when automatic deployment results become authoritative; remove its presence/format requirements and legacy record/backfill fixtures.
-- [ ] 11. Remove routine post-deploy OPS branches/PR instructions and previous-release archaeology/rollback-ledger fields from the current authority.
-- [ ] 12. Point current release/operations/governance links at automatic results and reconcile documented health/assets guarantees with actual verifier behavior.
-- [ ] 13. Exercise failed verification, forged/stale output, upload failure, matching retry and conflict cases with current safe fixtures.
-- [ ] 14. Verify publication has no full acceptance, rebuild, production credential, second approval or separate smoke execution; require actual durable success rather than an expiring log.
 
 ### DEMO-507 — [OPS] Consolidate current assurance monitoring
 
