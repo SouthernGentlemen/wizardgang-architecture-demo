@@ -1,3 +1,4 @@
+import { acceptanceStages } from '../scripts/lib/acceptance-plan.ts';
 import { hkdfSync } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -82,7 +83,7 @@ describe('DEMO-455 secret registry normalization', () => {
     expect(lock.commit).toMatch(/^[0-9a-f]{40}$/);
     const scripts = (JSON.parse(fs.readFileSync('package.json', 'utf8')) as { scripts: Record<string, string> }).scripts;
     expect(scripts['check:platform']).toBe('node platform/conformance/cli.mjs pin && node platform/conformance/cli.mjs wrangler --worker demo');
-    expect(scripts.check).toContain('npm run check:platform');
+    expect(acceptanceStages.map(({ script }) => script)).toContain('check:platform');
     // Its own documentation links into baseline, so the local documentation check leaves the pinned copy alone.
     expect(fs.readFileSync('scripts/validate-documentation-cleanup.ts', 'utf8')).toContain("!file.startsWith('platform/')");
   });

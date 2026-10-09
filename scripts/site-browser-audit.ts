@@ -1403,13 +1403,15 @@ async function keyboardSmoke(cdp: CdpClient, pathname: string) {
       label: `${pathname} language-selector load`,
       timeoutMs: 30_000,
     });
-    await dispatchKey(cdp, 'ArrowDown', 'ArrowDown');
+    // Native select typeahead exercises a real keyboard selection without relying
+    // on an OS popup, which headless macOS Chromium does not operate with ArrowDown.
+    await cdp.call('Input.dispatchKeyEvent', { type: 'char', key: 'f', text: 'f', unmodifiedText: 'f' });
     try { await loaded; } catch (error) {
       const state = await evaluate(cdp, `({lang:document.documentElement.lang,selected:document.querySelector('#global-language')?.selectedIndex,focused:document.activeElement?.id,pathname:location.pathname})`);
       throw new Error(`${pathname}: language selector navigation failed; state=${JSON.stringify(state)}; ${error instanceof Error ? error.message : String(error)}`);
     }
-    const languageAfter = await evaluate(cdp, `document.querySelector('#global-language')?.selectedIndex ?? null`);
-    if (languageAfter === languageBefore) throw new Error(`${pathname}: language selector did not respond to keyboard navigation`);
+    const languageAfter = await evaluate(cdp, `({selected:document.querySelector('#global-language')?.selectedIndex,lang:document.documentElement.lang})`);
+    if (languageAfter.selected === languageBefore || languageAfter.lang !== 'fr') throw new Error(`${pathname}: language selector did not respond to keyboard navigation`);
   }
 }
 

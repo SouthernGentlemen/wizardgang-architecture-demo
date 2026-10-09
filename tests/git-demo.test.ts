@@ -48,7 +48,7 @@ function openPullRequest() {
 function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; compareTotal?: number; missingCheck?: string; checksUnavailable?: boolean; failedLatestCheck?: string } = {}) {
   const pulls = options.pulls ?? [openPullRequest()];
   const ciConclusion = options.ciConclusion === undefined ? 'success' : options.ciConclusion;
-  const checkRuns = ['validate', 'change-id', 'security', 'secrets'].filter((name) => name !== options.missingCheck).map((name, index) => ({
+  const checkRuns = ['validate', 'browser'].filter((name) => name !== options.missingCheck).map((name, index) => ({
     id: index + 1, name, status: ciConclusion === null ? 'in_progress' : 'completed', conclusion: ciConclusion,
     check_suite: { id: 501 }, html_url: `${repositoryUrl}/runs/${name}`,
     started_at: '2026-09-01T12:01:00Z', completed_at: ciConclusion === null ? null : '2026-09-01T12:02:00Z',
@@ -273,7 +273,7 @@ describe('live Git delivery lifecycle', () => {
   });
 
   it('refuses release when a required exact-head check is missing or unavailable', async () => {
-    const missing = fixtures({ missingCheck: 'secrets' });
+    const missing = fixtures({ missingCheck: 'browser' });
     const first = await gitDemoReleaseResponse(adminRequest('/admin/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(first.status).toBe(409);
     expect(missing.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
@@ -286,7 +286,7 @@ describe('live Git delivery lifecycle', () => {
   });
 
   it('does not reuse a stale successful check after its latest rerun fails', async () => {
-    const fetchMock = fixtures({ failedLatestCheck: 'security' });
+    const fetchMock = fixtures({ failedLatestCheck: 'browser' });
     const response = await gitDemoReleaseResponse(adminRequest('/admin/api/labs/git-release', { pullRequest: 54, requestId }), environment());
     expect(response.status).toBe(409);
     expect(fetchMock.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);

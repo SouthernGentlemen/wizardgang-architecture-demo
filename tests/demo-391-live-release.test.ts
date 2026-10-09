@@ -62,7 +62,7 @@ describe('DEMO-391 workflow protection', () => {
     expect(workflow).toContain('--match-head-commit "$SHA"');
     expect(workflow).toContain('--squash');
     expect(workflow).toContain('node scripts/git-demo-workflow.ts require-checks');
-    expect(lib).toContain("['validate', 'change-id', 'security', 'secrets']");
+    expect(lib).toContain("['validate', 'browser']");
     expect(workflow).toContain('node scripts/git-demo-workflow.ts recheck-base');
     expect(lib).toContain('pr.base.sha !== mainSha');
     expect(workflow).not.toMatch(/\s--merge\s*\\/);

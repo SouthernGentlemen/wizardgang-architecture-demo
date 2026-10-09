@@ -333,7 +333,7 @@ The compatible shared direct versions are Vite 8.3.1, Vitest 5.0.2, TypeScript 7
 | `npm run build` | Produce or validate the distributable artifact from declared inputs without publishing or deploying it. Generated outputs are reproducible projections, not a second source of truth. |
 | `npm run typecheck` | Check every applicable TypeScript program without emitting a distributable artifact; a non-TypeScript repository records N/A. |
 | `npm test` | Run the repository's deterministic automated tests. Name special suites (`test:browser`, `test:php`, visual evidence, and similar) explicitly; avoid an implicit second production build inside `test` when `check` already runs `build`, unless compiled tests genuinely require it and the reason is documented. |
-| `npm run check` | The canonical unattended, credential-free acceptance gate after locked dependency installation. Compose applicable type, test, build, generated-artifact parity, history/change, security, local acceptance, and patch-integrity checks once, with bounded diagnostics. CI runs the same command on PRs and `main`; any extra CI gate is named, justified, and locally reproducible. Do not require provider credentials, mutate live services, publish, or deploy. |
+| `npm run check` | The canonical unattended, credential-free acceptance gate after locked dependency installation. Compose applicable type, test, build, generated-artifact parity, history/change, security, local acceptance, and patch-integrity checks once, with bounded diagnostics. CI executes the same canonical plan on PRs and `main`, either whole or through exhaustive, disjoint required groups; any extra CI gate is named, justified, and locally reproducible. Do not require provider credentials, mutate live services, publish, or deploy. |
 | `npm run audit:dependencies` | Separate network advisory gate. A registry error is an unavailable result, never a clean pass. |
 | `npm run verify:github-settings` | Read live repository settings and rulesets using `GH_ADMIN_TOKEN`, or `GH_TOKEN` when it has read access. This command is read-only and stays outside `check`. |
 | `npm run apply:github-settings` | Apply only the settings and rulesets in committed authority using an administration-capable runtime token, then independently re-read and verify. No environment variable may redirect the committed repository identity. |
@@ -344,7 +344,7 @@ Local dependency-advisory queries may need registry network access even though t
 **Repository contents.**
 
 - The root holds `README.md`, `AGENTS.md`, `CONTRIBUTING.md`, `SECURITY.md`, an explicit source-license/attribution model, and applicable toolchain/lock/configuration files. A Workers project also has `wrangler.jsonc`; a non-Workers product does not add it merely for conformity.
-- `.github/workflows/ci.yml` runs `check`; a repository that publishes releases also has a tag-driven release workflow.
+- `.github/workflows/ci.yml` runs the canonical `check` plan (this demo requires real `validate` source and `browser` jobs); a repository that publishes releases also has a tag-driven release workflow.
 - There is no `CHANGELOG.md` or per-version Markdown archive; annotated tags and GitHub Releases are the release history.
 - The permanent lowercase root `implementation_plan.md` is a current/future queue. It has no completed tasks, merge SHAs, release notes, or retrospectives. A delivering PR removes its own task; the last task leaves the shared empty template tracked. Git/GitHub retain completed work.
 

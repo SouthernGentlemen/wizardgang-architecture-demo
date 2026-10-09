@@ -1,3 +1,4 @@
+import { acceptanceStages } from '../scripts/lib/acceptance-plan.ts';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -19,7 +20,7 @@ describe('DEMO-498 runtime binding execution ownership', () => {
     expect(scripts['generate:assurance-runtime-binding']).toBe('node scripts/generate-assurance-runtime-binding.ts');
     expect(scripts).not.toHaveProperty('validate:assurance-runtime-binding');
     expect(scripts['validate:assurance']).not.toContain('validate:assurance-runtime-binding');
-    expect(scripts.check.indexOf('validate:generated-artifacts')).toBeLessThan(scripts.check.indexOf('validate:assurance'));
+    expect(acceptanceStages.map(({ script }) => `npm run ${script}`).join(' && ').indexOf('validate:generated-artifacts')).toBeLessThan(acceptanceStages.map(({ script }) => `npm run ${script}`).join(' && ').indexOf('validate:assurance'));
     const runner = read('scripts/validate-generated-artifacts.ts');
     expect(runner).toContain('const first = runGenerator(definition, cwd)');
     expect(runner).toContain('const second = runGenerator(definition, cwd)');

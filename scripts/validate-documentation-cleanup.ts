@@ -1,3 +1,4 @@
+import { acceptanceStages, npmRunSequence } from './lib/acceptance-plan.ts';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -252,7 +253,7 @@ export function runDocumentationValidation(root = process.cwd()) {
   for (const retiredScript of ['generate:assurance-summaries', 'validate:assurance-summaries', 'generate:governance-registers']) {
     if (retiredScript in scripts) errors.push(`package.json: retired documentation generator remains registered as ${retiredScript}`);
   }
-  if (!String(scripts.check ?? '').includes('npm run validate:governance')) {
+  if (!(scripts.check === 'node scripts/check.ts' ? acceptanceStages.map(({ script }) => script) : npmRunSequence(scripts.check || '')).includes('validate:governance')) {
     errors.push('package.json: npm run check must execute validate:governance, the documentation owner');
   }
 

@@ -191,6 +191,7 @@ export async function runDiagnosticCommands({ commands, cwd = process.cwd(), dia
     postCheck,
     commands: commandResults,
     failure,
+    stages: (commands ?? []).map((command, index) => ({ id: command.id, label: command.label, status: index < commandResults.length ? (commandResults[index].exitCode === 0 ? 'passed' : 'failed') : 'not-run', exitCode: commandResults[index]?.exitCode ?? null })),
     fullLog: path.join(diagnosticsDir, 'validation.log'),
     reportFile,
   };

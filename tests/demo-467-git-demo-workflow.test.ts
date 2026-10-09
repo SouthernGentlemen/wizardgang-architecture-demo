@@ -14,7 +14,7 @@ const pull = {
   headRefName: 'demo-469-live-v0-32-0-123e4567',
   headRefOid: 'a'.repeat(40),
 };
-const passing = ['validate', 'change-id', 'security', 'secrets'].map((name) => ({ bucket: 'pass', name, workflow: 'CI' }));
+const passing = ['validate', 'browser'].map((name) => ({ bucket: 'pass', name, workflow: 'CI' }));
 
 describe('DEMO-467 live Git workflow logic', () => {
   it('computes the semantic version, change ID, and controlled branch for start', () => {
@@ -49,7 +49,7 @@ describe('DEMO-467 live Git workflow logic', () => {
   it('requires every passing CI check, the unchanged head, and mergeability against current main', () => {
     expect(() => requireSuccessfulChecks(passing)).not.toThrow();
     expect(() => requireSuccessfulChecks(passing.slice(1))).toThrow('Required CI validate');
-    expect(() => requireSuccessfulChecks([...passing.slice(0, 3), { bucket: 'pass', name: 'secrets', workflow: 'Other' }])).toThrow('Required CI secrets');
+    expect(() => requireSuccessfulChecks([...passing.slice(0, 1), { bucket: 'pass', name: 'browser', workflow: 'Other' }])).toThrow('Required CI browser');
     const api = { state: 'open', mergeable: true, head: { sha: 'h' }, base: { sha: 'm' } };
     expect(() => requireExactBase(api, 'h', 'm')).not.toThrow();
     for (const changed of [{ ...api, mergeable: null }, { ...api, base: { sha: 'old' } }, { ...api, head: { sha: 'new' } }, { ...api, state: 'closed' }]) {

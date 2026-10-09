@@ -1,3 +1,4 @@
+import { expandedNpmRunSequence } from './lib/acceptance-plan.ts';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -83,7 +84,7 @@ export function validateToolchainContract({
   if (manifest.scripts?.['validate:typescript-execution'] !== TYPESCRIPT_EXECUTION_SCRIPT) {
     failures.push(`validate:typescript-execution must be exactly "${TYPESCRIPT_EXECUTION_SCRIPT}"`);
   }
-  const checkCommands = (manifest.scripts?.check || '').split('&&').map((command) => command.trim());
+  const checkCommands = expandedNpmRunSequence(manifest.scripts, 'check').map((name) => `npm run ${name}`);
   if (!checkCommands.includes('npm run validate:typescript-execution')) {
     failures.push('check must include npm run validate:typescript-execution');
   }

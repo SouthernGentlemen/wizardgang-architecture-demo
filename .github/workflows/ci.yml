@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -23,71 +27,64 @@ jobs:
           cache: npm
       - name: Use committed npm version
         run: npm install --global npm@12.1.0
-      - name: Run strict CI validation with diagnostics
+      - name: Run source acceptance with diagnostics
         env:
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           CI_DIAGNOSTICS_DIR: .ci-diagnostics
-        run: npm run validate:ci
+        run: npm run validate:ci -- source
       - name: Upload failure diagnostics
         if: failure()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: ci-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          name: ci-diagnostics-source-${{ github.run_id }}-${{ github.run_attempt }}
           path: .ci-diagnostics
           if-no-files-found: error
           retention-days: 14
           include-hidden-files: true
-  change-id:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Upload prepared browser inputs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version-file: .node-version
-      - name: Use committed npm version
-        run: npm install --global npm@12.1.0
-      - name: Validate controlled PR identity and queue sequence
-        env:
-          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: npm run validate:pull-request-identity
-  security:
+          name: browser-inputs-${{ github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            dist/client
+            dist/browser-inputs.json
+            src/worker-entry.mjs
+          if-no-files-found: error
+          retention-days: 1
+          include-hidden-files: true
+          overwrite: true
+  browser:
+    needs: validate
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .node-version
           cache: npm
       - name: Use committed npm version
         run: npm install --global npm@12.1.0
-      - name: Install locked dependencies
-        run: npm ci
-      - name: Check dependency advisories
-        run: npm run audit:dependencies
-  secrets:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Download matching prepared browser inputs
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+          name: browser-inputs-${{ github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Run browser acceptance with diagnostics
+        env:
+          CI_DIAGNOSTICS_DIR: .ci-diagnostics
+        run: npm run validate:ci -- browser
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          node-version-file: .node-version
-      - name: Use committed npm version
-        run: npm install --global npm@12.1.0
-      - name: Scan tracked files and public history
-        run: npm run validate:security
-      - name: Validate Worker secret inventory
-        run: npm run validate:worker-secrets
+          name: ci-diagnostics-browser-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .ci-diagnostics
+          if-no-files-found: warn
+          retention-days: 14
+          include-hidden-files: true

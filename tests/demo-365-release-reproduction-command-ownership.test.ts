@@ -1,3 +1,4 @@
+import { acceptanceStages } from '../scripts/lib/acceptance-plan.ts';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import { describe, expect, it } from 'vitest';
@@ -40,11 +41,11 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
     }
     expect(expanded).not.toContain('build');
     expect(expanded).not.toContain('build:client');
-    expect(pkg.scripts.check.indexOf('npm run validate:generated-artifacts')).toBeLessThan(
-      pkg.scripts.check.indexOf('npm run build:worker'),
+    expect(acceptanceStages.map(({ script }) => `npm run ${script}`).join(' && ').indexOf('npm run validate:generated-artifacts')).toBeLessThan(
+      acceptanceStages.map(({ script }) => `npm run ${script}`).join(' && ').indexOf('npm run build:worker'),
     );
-    expect(pkg.scripts.check.indexOf('npm run validate:migrations')).toBeLessThan(
-      pkg.scripts.check.indexOf('npm run test:site-accessibility'),
+    expect(acceptanceStages.map(({ script }) => `npm run ${script}`).join(' && ').indexOf('npm run validate:migrations')).toBeLessThan(
+      acceptanceStages.map(({ script }) => `npm run ${script}`).join(' && ').indexOf('npm run test:site-accessibility'),
     );
   });
 

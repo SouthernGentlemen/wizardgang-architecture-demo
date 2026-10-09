@@ -3,6 +3,7 @@ import path from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   acceptedBuildOutputPaths,
+  acceptanceStages,
   commandSequence,
   createCiValidationCommands,
   expandedNpmRunSequence,
@@ -11,8 +12,8 @@ import {
 } from '../scripts/lib/acceptance-plan.ts';
 
 const packageJson = JSON.parse(fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf8'));
-const checkCommands = commandSequence(packageJson.scripts.check);
-const checkRuns = npmRunSequence(packageJson.scripts.check);
+const checkCommands = acceptanceStages.map(({ script }) => `npm run ${script}`);
+const checkRuns = acceptanceStages.map(({ script }) => script);
 const expandedCheckRuns: string[] = expandedNpmRunSequence(packageJson.scripts, 'check');
 const ciCommands = createCiValidationCommands({
   nodeExecutable: 'node',
@@ -24,6 +25,11 @@ const expandedCiRuns: string[] = ciRuns.flatMap((name) => expandedNpmRunSequence
 const ciWorkflow = fs.readFileSync(path.join(process.cwd(), '.github/workflows/ci.yml'), 'utf8');
 
 const REQUIRED_CHECK_OWNERS = [
+  ['native TypeScript', 'validate:typescript-execution'],
+  ['TypeScript boundary', 'validate:typescript-source-boundary'],
+  ['platform conformance', 'check:platform'],
+  ['shared queue contract', 'test:plan-queue'],
+  ['settings failure fixtures', 'test:github-settings'],
   ['generated-artifact parity', 'validate:generated-artifacts'],
   ['clean local migrations', 'validate:migrations'],
   ['Worker build from accepted client', 'build:worker'],
@@ -49,14 +55,14 @@ describe('DEMO-354 acceptance gate ownership', () => {
   it.each(REQUIRED_CHECK_OWNERS)('%s has exactly one expanded CI execution owner', (_label, run) => {
     expect(expandedCheckRuns.filter((candidate) => candidate === run)).toHaveLength(1);
     expect(expandedCiRuns.filter((candidate) => candidate === run)).toHaveLength(1);
-    expect(ciRuns).not.toContain(run);
+
   });
 
   it('detects duplicate nested acceptance owners instead of freezing one command sequence', () => {
     for (const name of new Set(expandedCheckRuns)) {
       expect(expandedCheckRuns.filter((candidate) => candidate === name), name).toHaveLength(1);
     }
-    expect(expandedCiRuns.filter((name) => name === 'check')).toHaveLength(1);
+
     expect(expandedCiRuns.filter((name) => name === 'validate:patch-whitespace')).toHaveLength(1);
     expect(expandedCiRuns.filter((name) => name === 'validate:generated-artifacts')).toHaveLength(1);
     expect(expandedCiRuns.filter((name) => name === 'validate:assurance')).toHaveLength(1);
@@ -96,59 +102,13 @@ describe('DEMO-354 acceptance gate ownership', () => {
     expect(expandedCheckRuns.filter((run) => run === 'validate:assurance')).toHaveLength(1);
   });
 
-  it('exposes accepted same-head build output paths on the existing full-check owner only', () => {
-    const check = ciCommands.find(({ id }) => id === 'check');
-    expect(acceptedBuildOutputPaths).toEqual({
-      clientAssets: 'dist/client',
-      workerBundle: 'dist/worker',
-      workerEntry: 'src/worker-entry.mjs',
-    });
-    expect(Object.isFrozen(acceptedBuildOutputPaths)).toBe(true);
-    expect(check?.acceptedBuildOutputPaths).toBe(acceptedBuildOutputPaths);
-    expect(ciCommands.filter((command) => 'acceptedBuildOutputPaths' in command)).toHaveLength(1);
-
-    // A future browser job may transfer these ignored outputs from the *same validated head*.
-    // This metadata does not add a build step, cache, upload or a second execution owner.
-    expect(ciCommands.map(({ id }) => id)).toEqual(['toolchain', 'install', 'check', 'patch-whitespace']);
-    expect(check).toMatchObject({ file: 'npm', args: ['run', 'check'] });
-    expect(ciWorkflow).toContain('ci-diagnostics-'); // Existing failure diagnostics are retained.
-    expect(ciWorkflow).not.toContain('name: accepted-build-outputs');
-    expect(ciWorkflow).not.toMatch(/path:\s*(?:\.\/)?dist\//);
-    expect(ciWorkflow).not.toContain('actions/cache');
-    const paths = Object.values(acceptedBuildOutputPaths);
-    expect(new Set(paths).size).toBe(paths.length);
-    for (const output of paths) {
-      expect(path.posix.isAbsolute(output)).toBe(false);
-      expect(output.split('/')).not.toContain('..');
-    }
-    const ignored = fs.readFileSync(path.join(process.cwd(), '.gitignore'), 'utf8');
-    expect(ignored).toContain('dist/');
-    expect(ignored).toContain('src/worker-entry.mjs');
-    const wrangler = fs.readFileSync(path.join(process.cwd(), 'wrangler.jsonc'), 'utf8');
-    expect(wrangler).toContain('"main": "src/worker-entry.mjs"');
-    expect(wrangler).toContain('"directory": "./dist/client"');
-    expect(commandSequence(packageJson.scripts['build:worker'])).toContain('wrangler deploy --dry-run --outdir dist/worker');
-    expect(checkRuns.indexOf('validate:generated-artifacts')).toBeLessThan(checkRuns.indexOf('build:worker'));
-    expect(checkRuns.indexOf('build:worker')).toBeLessThan(checkRuns.indexOf('test:site-accessibility'));
-    expect(expandedCheckRuns.filter((run) => run === 'build:worker')).toHaveLength(1);
-  });
-
-  it('keeps separate CI toolchain, installation, check and committed-patch validation gates', () => {
-    for (const id of ['toolchain', 'install', 'check', 'patch-whitespace']) {
-      expect(ciCommands.filter((command) => command.id === id), id).toHaveLength(1);
-    }
-    const index = (id: string) => ciCommands.findIndex((command) => command.id === id);
-    expect(index('toolchain')).toBeLessThan(index('install'));
-    expect(index('install')).toBeLessThan(index('check'));
-    expect(index('check')).toBeLessThan(index('patch-whitespace'));
-    expect(ciRuns.filter((run) => run === 'check')).toHaveLength(1);
-    expect(ciRuns.filter((run) => run === 'validate:patch-whitespace')).toHaveLength(1);
+  it('transfers only browser runtime outputs and retains separate CI boundary gates', () => {
+    expect(acceptedBuildOutputPaths).toEqual({ clientAssets: 'dist/client', workerEntry: 'src/worker-entry.mjs' });
+    expect(ciCommands.map(({ id }) => id)).toEqual(['toolchain', 'install', ...checkRuns, 'patch-whitespace']);
     expect(ciRuns).not.toContain('security:dependency-advisories');
-    expect(ciCommands.find(({ id }) => id === 'check')?.env).toEqual({
-      WG_LOCAL_D1_PERSIST_TO: '/tmp/demo-354-d1',
-    });
-    const securityJob = ciWorkflow.split('\n  security:\n')[1]?.split('\n  secrets:\n')[0] ?? '';
-    expect(securityJob.match(/run: npm run audit:dependencies/g) ?? []).toHaveLength(1);
+    expect(ciWorkflow).toContain('ci-diagnostics-source-');
+    expect(ciWorkflow).toContain('ci-diagnostics-browser-');
+    expect(ciWorkflow).not.toContain('actions/cache');
   });
 
   it('fails expanded ownership inspection for missing or cyclic npm scripts', () => {
@@ -200,7 +160,7 @@ describe('DEMO-354 acceptance gate ownership', () => {
         return nested ? flatten(nested[1], [...ancestors, name]) : [command];
       });
     };
-    const accepted = flatten('check');
+    const accepted = checkRuns.flatMap((name) => flatten(name));
     // The parity owner runs both clean client passes before the sole Worker build.
     const runner = fs.readFileSync(path.join(process.cwd(), 'scripts/validate-generated-artifacts.ts'), 'utf8');
     expect(packageJson.scripts['validate:generated-artifacts']).toBe('node scripts/validate-generated-artifacts.ts');

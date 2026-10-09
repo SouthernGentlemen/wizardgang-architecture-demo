@@ -1,3 +1,4 @@
+import { acceptanceStages } from '../scripts/lib/acceptance-plan.ts';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -57,6 +58,6 @@ describe('DEMO-492 TypeScript-only authored-source boundary', () => {
     const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
     expect(packageJson.scripts['validate:typescript-source-boundary'])
       .toBe('node scripts/validate-typescript-source-boundary.ts');
-    expect(packageJson.scripts.check).toContain('npm run validate:typescript-source-boundary');
+    expect(acceptanceStages.map(({ script }) => script)).toContain('validate:typescript-source-boundary');
   });
 });

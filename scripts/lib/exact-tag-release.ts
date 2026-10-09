@@ -56,7 +56,7 @@ export function planExactTagRelease({ run, mainSha, version, tag, release, jobs,
 }): ExactTagReleasePlan {
   if (run?.name !== 'CI' || run.event !== 'push' || run.head_branch !== 'main' || run.status !== 'completed' || run.conclusion !== 'success') return { action: 'skip', reason: 'CI is not a successful main push' };
   if (!sha.test(run.head_sha ?? '') || run.head_sha !== mainSha) return { action: 'skip', reason: 'CI is stale against current main' };
-  if (!['validate', 'security', 'secrets'].every((name) => jobs?.some((job) => job.name === name && job.status === 'completed' && job.conclusion === 'success' && job.head_sha === mainSha))) {
+  if (!['validate', 'browser'].every((name) => jobs?.some((job) => job.name === name && job.status === 'completed' && job.conclusion === 'success' && job.head_sha === mainSha))) {
     return { action: 'skip', reason: 'required main CI jobs are incomplete' };
   }
   if (!versionPattern.test(version ?? '')) throw new Error('Current package version is not semantic.');

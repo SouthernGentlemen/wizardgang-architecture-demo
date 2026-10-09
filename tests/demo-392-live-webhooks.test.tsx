@@ -15,7 +15,7 @@ function status(checkConclusion: string | null, available = true) {
     active: true, requestId, targetVersion: '0.28.1', pullRequest: { number: 54, state: 'open', url: `${repository}/pull/54` },
     releaseReady: checkConclusion === 'success' && available, failures: available ? [] : ['ciChecks'],
     stages: ['branch', 'pr', 'ci', 'merge', 'tag', 'release', 'deploy', 'health'].map((key) => ({ key, label: key, state: key === 'ci' ? checkConclusion ? 'complete' : 'current' : 'queued' })),
-    ci: { run, available, checks: available ? ['validate', 'change-id', 'security', 'secrets'].map((name) => ({ name, status: checkConclusion ? 'completed' : 'in_progress', conclusion: checkConclusion, url: `${repository}/runs/${name}`, startedAt: '2026-09-30T12:00:00Z', completedAt: checkConclusion ? '2026-09-30T12:02:00Z' : null })) : [], jobs: [{ name: 'validate', status: checkConclusion ? 'completed' : 'in_progress', conclusion: checkConclusion, url: `${repository}/actions/runs/101/job/1`, steps: [{ number: 1, name: 'Install locked dependencies', status: 'completed', conclusion: 'success' }, { number: 2, name: 'Run acceptance', status: checkConclusion ? 'completed' : 'in_progress', conclusion: checkConclusion }] }] },
+    ci: { run, available, checks: available ? ['validate', 'browser'].map((name) => ({ name, status: checkConclusion ? 'completed' : 'in_progress', conclusion: checkConclusion, url: `${repository}/runs/${name}`, startedAt: '2026-09-30T12:00:00Z', completedAt: checkConclusion ? '2026-09-30T12:02:00Z' : null })) : [], jobs: [{ name: 'validate', status: checkConclusion ? 'completed' : 'in_progress', conclusion: checkConclusion, url: `${repository}/actions/runs/101/job/1`, steps: [{ number: 1, name: 'Install locked dependencies', status: 'completed', conclusion: 'success' }, { number: 2, name: 'Run acceptance', status: checkConclusion ? 'completed' : 'in_progress', conclusion: checkConclusion }] }] },
     controller: { start: null, release: null, startJobs: [], releaseJobs: [] },
     delivery: { releaseRun: null, deployRun: null, releaseJobs: [], deployJobs: [], releaseUrl: null },
   };
@@ -46,7 +46,7 @@ describe('DEMO-392 live Webhooks presentation', () => {
     vi.stubGlobal('fetch', fetchMock);
     try {
       await mountWebhooks(root);
-      await vi.waitFor(() => expect(root.querySelectorAll('[data-live-checks] li')).toHaveLength(4));
+      await vi.waitFor(() => expect(root.querySelectorAll('[data-live-checks] li')).toHaveLength(2));
       expect(root.querySelector<HTMLButtonElement>('[data-live-release]')?.disabled).toBe(true);
       expect(root.querySelector<HTMLElement>('[data-live-controls]')?.hidden).toBe(true);
       const check = root.querySelector<HTMLElement>('[data-key="check-0-validate"]');

@@ -5,7 +5,7 @@ import { planExactTagRelease, validateExactTagDispatch } from '../scripts/lib/ex
 const commit = 'a'.repeat(40);
 const previous = 'b'.repeat(40);
 const run = { name: 'CI', event: 'push', head_branch: 'main', head_sha: commit, status: 'completed', conclusion: 'success' };
-const jobs = ['validate', 'security', 'secrets'].map((name) => ({ name, head_sha: commit, status: 'completed', conclusion: 'success' }));
+const jobs = ['validate', 'browser'].map((name) => ({ name, head_sha: commit, status: 'completed', conclusion: 'success' }));
 const facts = { run, jobs, mainSha: commit, version: '0.28.1', tag: null, release: null, releaseRuns: [] };
 
 describe('DEMO-395 exact main release cutter', () => {

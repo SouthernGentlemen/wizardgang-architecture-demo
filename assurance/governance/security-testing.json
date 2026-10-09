@@ -241,7 +241,7 @@
       "fields": {
         "category": "PR governance",
         "testControl": "Pull-request title/change-ID format check",
-        "currentEvidence": "CI `change-id` job",
+        "currentEvidence": "CI `validate` identity stage",
         "status": "Active",
         "triggerCadence": "PR",
         "currentLimitationNextAction": "Does not independently verify required reviewer/branch rules"
