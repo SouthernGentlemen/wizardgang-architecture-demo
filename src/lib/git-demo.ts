@@ -367,7 +367,7 @@ async function jobsForRun(identity: RepositoryIdentity, env: Env, run: WorkflowR
   return { jobs, available: Boolean(result.ok && typeof value.total_count === 'number' && value.total_count === jobs.length) };
 }
 
-const REQUIRED_CHECKS = ['validate', 'change-id', 'security', 'secrets'] as const;
+const REQUIRED_CHECKS = ['validate', 'browser'] as const;
 
 async function checksForSha(identity: RepositoryIdentity, env: Env, sha: string | null): Promise<{ checks: CheckRun[]; available: boolean }> {
   if (!sha) return { checks: [], available: true };

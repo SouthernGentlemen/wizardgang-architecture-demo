@@ -64,7 +64,7 @@
     "validate:patch-whitespace": "node scripts/validate-patch-whitespace.ts",
     "security:dependency-advisories": "npm audit --audit-level=high",
     "audit:dependencies": "npm run security:dependency-advisories",
-    "check": "npm run validate:typescript-execution && npm run validate:typescript-source-boundary && npm run check:platform && npm run test:plan-queue && npm run validate:generated-artifacts && npm run validate:migrations && npm run build:worker && npm run validate:history && npm run validate:implementation-plan && npm run validate:worker-secrets && npm run validate:repository-settings && npm run test:github-settings && npm run validate:repository-baseline && npm run validate:react-presentation && npm run validate:stylesheet-classes && npm run lint && npm run typecheck && npm run test:site-accessibility && npm run test && npm run validate:contracts && npm run validate:locales && npm run validate:security && npm run validate:governance && npm run validate:assurance",
+    "check": "node scripts/check.ts",
     "validate:scaffold": "node scripts/validate-scaffold.ts",
     "validate:assurance-documentation": "node scripts/validate-assurance-documentation.ts",
     "validate:worker-secrets": "node scripts/validate-worker-secrets.ts",

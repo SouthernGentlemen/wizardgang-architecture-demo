@@ -71,8 +71,8 @@ test("main ruleset protects exact main and controlled PR merge policy", () => {
   assert.match(failuresFor((actual) => { rule(main(actual), "pull_request").parameters.allowed_merge_methods = ["merge"]; }), /main merge methods/);
 });
 
-test("all four exact-head status checks are required", () => {
-  const checks = ["validate", "change-id", "security", "secrets"];
+test("both exact-head status checks are required", () => {
+  const checks = ["validate", "browser"];
   assert.deepEqual(expected.rulesets.main.requiredStatusChecks, checks);
   for (const missing of checks) {
     assert.match(failuresFor((actual) => {

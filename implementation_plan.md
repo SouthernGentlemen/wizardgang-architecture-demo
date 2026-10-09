@@ -15,34 +15,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 
 ## Open tasks
 
-### DEMO-502 — [BUILD] Replace redundant CI jobs with two real acceptance jobs
-
-- Dependency: DEMO-497, DEMO-498, DEMO-499, DEMO-500, DEMO-501
-- Why: Reduce runner setup and stale-head work and allow browser failures to rerun without repeating source acceptance.
-- Scope: Canonical grouped acceptance runner, source/browser CI jobs, prepared browser inputs, diagnostics and the matching bounded required-check migration.
-- Non-goals: Do not add aggregate/green-relay jobs, a second hand-maintained core suite, path-based skipped-suite passes, cross-head reuse, bypass actors, or cancellation of main/release/deploy jobs.
-- Acceptance: Source validate and browser both execute the canonical required groups on the final head; identity/secrets/advisory/patch gates retain blocking behavior; old job/status surfaces are retired; protections and consumers match.
-- Validation: Pure group-coverage and failure-propagation tests; fresh D1/build-input failure cases; exact-head executable CI; read-only live settings before and independently after the authorized bounded apply.
-- Authorities: package.json; scripts/lib/acceptance-plan.ts; scripts/ci-validation.ts; scripts/lib/ci-diagnostics.ts; .github/workflows/ci.yml; config/github-repository-settings.json; scripts/validate-github-repository-settings.ts; scripts/lib/exact-tag-release.ts; scripts/lib/git-demo-workflow.ts; docs/CI-DIAGNOSTICS.md; docs/ARCHITECTURE-STANDARD.md section 27.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Define source/browser groups in the single canonical execution plan; show their union covers all current credential-free check stages exactly once.
-- [ ] 02. Wire npm run check to run all groups by default and allow focused selection through the same runner; keep advisory and committed-range patch checks separate from credential-free check.
-- [ ] 03. Make source validate run pinned setup/install, early PR identity, current source/unit/contract/governance/secret stages and committed-range validation.
-- [ ] 04. Move the sole CI network advisory query from the old security job into its own labelled source diagnostic stage using the same locked install.
-- [ ] 05. Declare the minimal prepared build outputs required by browser acceptance; create a bounded artifact from the producing run/head with no database, installed tree or credentials.
-- [ ] 06. Make browser consume only the matching producing-run/head outputs; reject missing/stale inputs instead of borrowing another head or rebuilding a hidden acceptance suite.
-- [ ] 07. Give browser its own fresh migration/D1 context, bounded audit and guaranteed cleanup; keep default local/tagged acceptance using the same logical plan.
-- [ ] 08. Retain failed/not-run/exit-code diagnostics per actual stage and upload failure evidence through existing machinery in each executable job.
-- [ ] 09. Set explicit source/browser time bounds and PR-number concurrency that cancels only superseded PR-head runs.
-- [ ] 10. Update committed required checks to validate/browser and update settings-policy assertions without changing current-base strictness, squash-only, no-bypass or immutable-tag rules.
-- [ ] 11. Update cutter and live-controller check consumers to require both real jobs and the exact head; delete hardcoded four-job fixtures and obsolete status consumers.
-- [ ] 12. Exercise current identity, secret, inventory, advisory, patch and browser failures to prove merge blocking and no skipped/cancelled-child success.
-- [ ] 13. Read live open PRs/rulesets before the bounded migration, stage exact-head coverage safely, apply only the reviewed check-list change and independently reread protection; maintain protection throughout.
-- [ ] 14. Remove old change-id/security/secrets job surfaces without permanent compatibility wrappers; verify a failed-browser-only rerun preserves completed source evidence on the same head.
-- [ ] 15. Update README, change-management, diagnostics and architecture command contracts together and compare existing PR/main runner and stage timings.
-
 ### DEMO-503 — [BUILD] Use one automatic identity and protected merge path
 
 - Dependency: DEMO-499, DEMO-502

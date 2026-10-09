@@ -1,7 +1,7 @@
 import { nextLiveReleaseId } from './live-release-identity.ts';
 
 export type ReleaseBump = 'patch' | 'minor' | 'major';
-export const REQUIRED_LIVE_RELEASE_CHECKS = ['validate', 'change-id', 'security', 'secrets'];
+export const REQUIRED_LIVE_RELEASE_CHECKS = ['validate', 'browser'];
 const liveBranchPattern = /^demo-(\d{3,})-live-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/;
 
 export interface OpenPullRequest {

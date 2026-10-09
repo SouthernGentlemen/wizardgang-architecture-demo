@@ -1,3 +1,4 @@
+import { acceptanceStages } from '../scripts/lib/acceptance-plan.ts';
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -21,7 +22,7 @@ describe('DEMO-426 native TypeScript execution path', () => {
 
     expect(packageJson.scripts['validate:typescript-execution'])
       .toBe('node scripts/validate-typescript-execution.ts --self-check');
-    expect(packageJson.scripts.check.split('&&').map((command: string) => command.trim())[0])
+    expect(`npm run ${acceptanceStages[0].script}`)
       .toBe('npm run validate:typescript-execution');
     expect(dependencies).not.toHaveProperty('tsx');
     expect(dependencies).not.toHaveProperty('ts-node');

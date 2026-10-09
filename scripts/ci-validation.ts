@@ -14,6 +14,8 @@ const commands = createCiValidationCommands({
   nodeExecutable: process.execPath,
   npmExecutable: npm,
   checkEnvironment: localD1Environment,
+  group: process.argv[2] || 'all',
+  pullRequest: process.env.GITHUB_EVENT_NAME === 'pull_request',
 });
 
 let report;

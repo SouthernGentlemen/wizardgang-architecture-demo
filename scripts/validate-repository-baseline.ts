@@ -70,8 +70,9 @@ export function validateUniversalRepositoryBaseline(root: string = DEFAULT_ROOT)
 
   const scripts = pkg.scripts ?? {};
   if (!scripts.check) failures.push('missing npm run check');
-  if (!/\bvalidate:repository-baseline\b/.test(scripts.check ?? '')) failures.push('check must invoke validate:repository-baseline');
-  if (!/\bvalidate:history\b/.test(scripts.check ?? '')) failures.push('check must validate sequential controlled history');
+  const checkPlan = scripts.check === 'node scripts/check.ts' ? read('scripts/lib/acceptance-plan.ts') : scripts.check ?? '';
+  if (!/\bvalidate:repository-baseline\b/.test(checkPlan)) failures.push('check must invoke validate:repository-baseline');
+  if (!/\bvalidate:history\b/.test(checkPlan)) failures.push('check must validate sequential controlled history');
 
   const ci = read('.github/workflows/ci.yml');
   if (!/pull_request:/.test(ci) || !/branches:\s*\[main\]/.test(ci)) failures.push('CI must run on pull requests and main');
@@ -86,7 +87,7 @@ export function validateUniversalRepositoryBaseline(root: string = DEFAULT_ROOT)
     return [source, ...imports.map((specifier) => readLocalModuleGraph(specifier, seen))].join('\n');
   };
   const ciCommand = /npm run validate:ci/.test(ci) ? readLocalModuleGraph('scripts/ci-validation.ts') : ci;
-  if (!/npm\s+ci|args:\s*\['ci'\]/.test(ciCommand) || !/npm run check|\['run', 'check'\]/.test(ciCommand)) failures.push('CI must install with npm ci and run check');
+  if (!/npm\s+ci|args:\s*\['ci'\]/.test(ciCommand) || !/npm run check|\['run', 'check'\]|acceptanceCommands/.test(ciCommand)) failures.push('CI must install with npm ci and run check');
   return failures;
 }
 

@@ -11,28 +11,21 @@ function job(name: string): string {
   return lines.slice(start, end < 0 ? undefined : end).join('\n');
 }
 
-describe('DEMO-379 distinct required security and secrets statuses', () => {
-  it('runs all four named jobs on pull requests and main', () => {
-    expect(workflow).toContain('pull_request:');
-    expect(workflow).toContain('branches: [main]');
-    for (const name of ['validate', 'change-id', 'security', 'secrets']) {
-      expect(job(name), `${name} job`).not.toBe('');
+describe('two executable required acceptance jobs', () => {
+  it('runs exactly source validate and browser on PRs and main', () => {
+    expect(workflow.split('jobs:\n')[1].split('\n').filter((line) => /^  [a-z0-9-]+:$/.test(line))).toEqual(['  validate:', '  browser:']);
+    for (const name of ['validate', 'browser']) {
+      expect(job(name)).toContain('ref: ${{ github.event.pull_request.head.sha || github.sha }}');
+      expect(job(name)).toContain('timeout-minutes: 15');
+      expect(job(name)).toContain(`npm run validate:ci -- ${name === 'validate' ? 'source' : 'browser'}`);
+      expect(job(name)).toContain('if: failure()');
     }
-    expect(workflow).toMatch(/permissions:\n  contents: read/);
-  });
-
-  it('pins both new jobs to the exact head and their existing security commands', () => {
-    const security = job('security');
-    const secrets = job('secrets');
-    for (const source of [security, secrets]) {
-      expect(source).toContain('ref: ${{ github.event.pull_request.head.sha || github.sha }}');
-      expect(source).toContain('node-version-file: .node-version');
-      expect(source).toContain('npm install --global npm@12.1.0');
-    }
-    expect(security).toContain('run: npm ci');
-    expect(security).toContain('run: npm run audit:dependencies');
-    expect(secrets).toContain('fetch-depth: 0');
-    expect(secrets).toContain('run: npm run validate:security');
-    expect(secrets).toContain('run: npm run validate:worker-secrets');
+    expect(job('browser')).toContain('needs: validate');
+    const upload = job('validate').split('- name: Upload prepared browser inputs')[1];
+    expect(upload).toContain('include-hidden-files: true');
+    expect(workflow).toContain("cancel-in-progress: ${{ github.event_name == 'pull_request' }}");
+    expect(workflow).toContain('github.event.pull_request.number || github.sha');
+    expect(workflow).toContain('browser-inputs-${{ github.run_id }}-${{ github.event.pull_request.head.sha || github.sha }}');
+    expect(workflow).not.toContain('run-id:'); // Download stays within this producing run.
   });
 });
