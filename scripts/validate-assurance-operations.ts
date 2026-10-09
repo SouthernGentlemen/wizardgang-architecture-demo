@@ -12,6 +12,7 @@ import { createAssuranceValidationContext } from './lib/assurance-validation-con
 export async function runAssuranceOperationsValidation(context = createAssuranceValidationContext(), options = {}) {
   const root = context.root;
   const live = options.live === true;
+  const fetchLive = options.fetch ?? globalThis.fetch;
   const nowValue = context.now;
   const validationNow = Date.parse(nowValue);
   const errors = [];
@@ -85,7 +86,7 @@ export async function runAssuranceOperationsValidation(context = createAssurance
   async function fetchChecked(url, init = {}) {
     const headers = new Headers(init.headers);
     if (!headers.has('user-agent')) headers.set('user-agent', liveUserAgent);
-    const request = () => fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(15000), ...init, headers });
+    const request = () => fetchLive(url, { redirect: 'follow', signal: AbortSignal.timeout(15000), ...init, headers });
     try {
       let response = await request();
       if (response.status === 403 && response.headers.get('cf-mitigated') === 'challenge') {
@@ -93,12 +94,13 @@ export async function runAssuranceOperationsValidation(context = createAssurance
         response = await request();
       }
       if (!response.ok) {
-        errors.push(`reporting link unavailable: ${url} returned ${response.status}`);
+        errors.push(`reporting link failed: ${url} returned ${response.status}`);
         return null;
       }
       return response;
     } catch (error) {
-      errors.push(`reporting link unavailable: ${url}: ${error instanceof Error ? error.message : String(error)}`);
+      // No response is an unknown outcome, not a tested failure; it still fails the run.
+      errors.push(`reporting link unknown: ${url} could not be reached: ${error instanceof Error ? error.message : String(error)}`);
       return null;
     }
   }
@@ -156,5 +158,5 @@ export async function runAssuranceOperationsValidation(context = createAssurance
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
-  if (!(await runAssuranceOperationsValidation(createAssuranceValidationContext(), { live: process.argv.includes('--live') }))) process.exitCode = 1;
+  if (!(await runAssuranceOperationsValidation(createAssuranceValidationContext()))) process.exitCode = 1;
 }

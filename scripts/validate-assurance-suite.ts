@@ -14,6 +14,8 @@ import { runAssuranceOperationsValidation } from './validate-assurance-operation
 
 // Each owner is invoked exactly once in a single Node process. Standalone CLI
 // entrypoints use the same predicates for negative-case fixture coverage.
+// --live (monitor:assurance) adds the live reporting checks to that same single operations run.
+const live = process.argv.includes('--live');
 const context = createAssuranceValidationContext();
 const validators = [
   ['registry/schema', runAssuranceRegistryValidation],
@@ -27,7 +29,7 @@ const validators = [
   ['publication', runAssurancePublicationValidation],
   ['lifecycle/history', runAssuranceLifecycleValidation],
   ['integrity/relationships/freshness', runAssuranceIntegrityValidation],
-  ['security disclosure/operations', runAssuranceOperationsValidation],
+  ['security disclosure/operations', (ctx) => runAssuranceOperationsValidation(ctx, { live })],
 ];
 
 await withAssuranceValidationContext(context, async () => {
@@ -40,6 +42,6 @@ await withAssuranceValidationContext(context, async () => {
       console.error(`Assurance ${label} validation could not complete: ${error instanceof Error ? error.message : String(error)}`);
     }
   }
-  console.log(`Assurance execution: one shared context, ${validators.length} domain owners, ${failures} failures.`);
+  console.log(`Assurance execution${live ? ' with live reporting checks' : ''}: one shared context, ${validators.length} domain owners, ${failures} failures.`);
   if (failures) process.exitCode = 1;
 });

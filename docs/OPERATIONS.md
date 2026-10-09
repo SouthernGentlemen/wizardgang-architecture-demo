@@ -34,6 +34,16 @@ The public log API returns only the identity log envelope needed for bounded dia
 
 Cloudflare usage collection pins the demo Worker's surviving DemoCoordinator namespace in Wrangler alongside its resource selectors. The account's billable usage endpoint is Alpha, Restricted and is not offered despite Billing Read permission. `CLOUDFLARE_BILLABLE_USAGE=not-offered` records that verified capability: collection skips the restricted endpoint and exposes `billing-not-offered-by-cloudflare` as a separate qualification, with no invented cost or billing failure. Resource analytics still determine report availability and pagination completeness. Without that explicit capability setting, authorization, rate-limit, malformed-response, and network errors retain their existing failure handling.
 
+## Assurance monitor
+
+The daily `Assurance Monitor` workflow runs `npm run monitor:assurance` once. That is the same single-process suite as `npm run validate:assurance`, with live reporting checks added to its operations owner, so each static, freshness and live assertion executes once per run. Observation expiry and `security.txt` expiry are evaluated against the run's own clock (`ASSURANCE_VALIDATION_NOW`, defaulting to the current time), never against a source or commit time. The live checks fetch the security policy page, `security.txt` and every URL it names, and the GitHub private vulnerability reporting setting. An HTTP failure is reported as failed; a request with no response is reported as unknown. Both fail the run.
+
+The monitor complements, and does not replace, the Worker's five-minute scheduled availability collection and its 365-day retention.
+
+The monitor keeps one `Assurance Monitor failure` issue. A failed run opens, reopens or comments on it with links to the run and the head commit, and says whether an assurance assertion failed or the run failed before any assertion was tested. The next successful run comments on and closes it. A cancelled run changes nothing.
+
+The Operations Owner, currently the repository owner, is responsible for an open monitor issue. They repair it, or authorize a session to, through the ordinary controlled delivery path; there is no separate approval, notification service or failure log. Old runs remain in GitHub Actions and need no reconstruction.
+
 ## Route and source ownership
 
 Operational route declarations remain in `src/routing/operational-routes.ts`; machine collection remains in `src/api/operations.ts`; usage/provider observation remains in `src/lib/cloudflare-usage.ts`; logs remain in `src/lib/logs.ts`; reporting APIs remain under the reporting route/API modules.

@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The remaining parent deliveries are assigned **DEMO-507 through DEMO-508** in execution order.
+- The remaining parent delivery is assigned **DEMO-508**.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,29 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-507 — [OPS] Consolidate current assurance monitoring
-
-- Dependency: DEMO-500, DEMO-506
-- Why: Remove repeated scheduled validation and make present failures actionable without maintaining retrospective run evidence.
-- Scope: One scheduled static/clock/live operations context, existing monitor diagnostics/tracking issue and current response ownership.
-- Non-goals: Do not add a flake ledger, backfill history, duplicate deployment acceptance, change five-minute collection/365-day retention, invent login/cost proof, or create a new notification/automation service.
-- Acceptance: Each current static/freshness/live assertion executes once per monitor run; failure/recovery is actionable under an explicit owner; native old runs need no curated reconstruction.
-- Validation: Current expired-observation/security-disclosure, live-path/network failure, current recovery/issue transition and cancelled-run cases; focused monitor/availability contracts and exact-head CI.
-- Authorities: .github/workflows/assurance-monitor.yml; scripts/validate-assurance-operations.ts; scripts/lib/assurance-validation.ts; docs/OPERATIONS.md; docs/ASSURANCE.md; SECURITY.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Trace the full assurance validation plus monitor:assurance path and identify the operations predicates currently executed twice.
-- [ ] 02. Select one current monitor entrypoint/context that composes static, clock-sensitive and live checks without a second acceptance definition.
-- [ ] 03. Reuse shared assurance inputs/predicates from the consolidation task and remove the second static operations invocation.
-- [ ] 04. Keep observation freshness and security-disclosure expiry evaluated against the current run clock, not inherited source-time evidence.
-- [ ] 05. Keep live disclosure/private-reporting requests and bounded network-error handling; preserve meaningful failed versus unknown outcomes.
-- [ ] 06. Reuse the existing issue for failure/recovery with safe run/head links; make zero-step cancellation distinguishable from a tested assertion failure.
-- [ ] 07. Name the responsible current operator/authorized repair session in the runbook and existing issue guidance without adding another approval or notification system.
-- [ ] 08. Delete retired monitor fixtures, manual flake registers and retrospective failure-reconstruction requirements.
-- [ ] 09. Verify five-minute Worker collection and 365-day retention contracts remain intact and are not replaced by the daily monitor.
-- [ ] 10. Exercise current freshness/live/failure/recovery cases, update scheduled command guidance and compare existing run timings.
 
 ### DEMO-508 — [CHORE] Remove obsolete operational interfaces and complete current-only integration
 
