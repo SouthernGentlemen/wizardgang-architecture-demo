@@ -25,15 +25,17 @@ jobs:
         run: npm install --global npm@12.1.0
       - name: Install locked dependencies
         run: npm ci
-      - name: Validate assurance data and freshness
-        run: npm run validate:assurance
-      - name: Verify live disclosure and private reporting paths
+      # One suite run against this run's clock: static, freshness and live reporting checks each execute once.
+      - name: Validate assurance data, freshness and live reporting paths
+        id: assurance
         run: npm run monitor:assurance
+      # A cancelled run reaches no tracking-issue transition.
       - name: Maintain assurance monitor tracking issue
         if: ${{ always() && !cancelled() }}
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           MONITOR_STATUS: ${{ job.status }}
+          MONITOR_ASSERTIONS: ${{ steps.assurance.outcome }}
           MONITOR_ISSUE_TITLE: Assurance Monitor failure
         with:
           script: |
@@ -41,7 +43,9 @@ jobs:
             const repo = context.repo.repo;
             const title = process.env.MONITOR_ISSUE_TITLE;
             const status = process.env.MONITOR_STATUS;
+            const assertions = process.env.MONITOR_ASSERTIONS;
             const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+            const headUrl = `${context.serverUrl}/${owner}/${repo}/commit/${context.sha}`;
             const issues = await github.paginate(github.rest.issues.listForRepo, {
               owner,
               repo,
@@ -56,7 +60,7 @@ jobs:
                   owner,
                   repo,
                   issue_number: issue.number,
-                  body: `Recovered in ${runUrl} at commit \`${context.sha}\`.`,
+                  body: `Recovered in ${runUrl} at ${headUrl}.`,
                 });
                 await github.rest.issues.update({
                   owner,
@@ -68,13 +72,17 @@ jobs:
               return;
             }
 
+            const outcome = assertions === 'failure'
+              ? 'An assurance assertion failed.'
+              : 'The monitor failed before any assurance assertion ran; no assertion was tested.';
             const body = [
-              'The Assurance Monitor failed.',
+              `The Assurance Monitor failed. ${outcome}`,
               '',
               `- Run: ${runUrl}`,
-              `- Commit: \`${context.sha}\``,
+              `- Head: ${headUrl}`,
               `- Event: \`${context.eventName}\``,
               '',
+              'Responsible: the Operations Owner, currently the repository owner, or a repair session they authorize; see docs/OPERATIONS.md#assurance-monitor.',
               'Use the Actions run for bounded diagnostic output. Do not copy credentials or secret values into this issue.',
             ].join('\n');
 

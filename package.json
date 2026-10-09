@@ -47,7 +47,7 @@
     "generate:assurance-runtime-binding": "node scripts/generate-assurance-runtime-binding.ts",
     "validate:generated-artifacts": "node scripts/validate-generated-artifacts.ts",
     "validate:assurance-operations": "node scripts/validate-assurance-operations.ts",
-    "monitor:assurance": "node scripts/validate-assurance-operations.ts --live",
+    "monitor:assurance": "node scripts/validate-assurance-suite.ts --live",
     "snapshot:assurance": "node scripts/generate-assurance-snapshot.ts",
     "validate:assurance": "node scripts/validate-assurance-suite.ts",
     "validate:assurance-publication": "node scripts/validate-assurance-publication.ts",
