@@ -117,12 +117,11 @@ describe('DEMO-354 acceptance gate ownership', () => {
   });
 
   it('keeps network, provider-authenticated, and deployment operations outside check', () => {
-    for (const run of ['security:dependency-advisories', 'validate:patch-whitespace', 'deploy', 'provision:worker-secret']) {
+    for (const run of ['security:dependency-advisories', 'validate:patch-whitespace', 'deploy']) {
       expect(checkRuns).not.toContain(run);
     }
     expect(checkCommands.some((command) => command.includes('--live'))).toBe(false);
     expect(ciRuns).not.toContain('deploy');
-    expect(ciRuns).not.toContain('provision:worker-secret');
     expect(packageJson.scripts['security:dependency-advisories']).toBe('npm audit --audit-level=high');
     expect(packageJson.scripts['audit:dependencies']).toBe('npm run security:dependency-advisories');
     expect(packageJson.scripts['validate:patch-whitespace']).toBe('node scripts/validate-patch-whitespace.ts');

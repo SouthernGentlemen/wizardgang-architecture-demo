@@ -31,8 +31,6 @@ function env(): Env {
     ASSETS: staticAssets,
     GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
     GITHUB_BRANCH: 'main',
-    DEMO_ADMIN_USER: 'operator',
-    DEMO_ADMIN_PASSWORD: 'test-admin-password',
     BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
   };
 }

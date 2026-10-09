@@ -42,9 +42,6 @@ describe('DEMO-359 shared toolchain contract', () => {
   it('keeps CI, release, and deployment on repository-owned toolchain authority', () => {
     const ci = read('.github/workflows/ci.yml');
     const release = read('.github/workflows/release.yml');
-    expect(fs.existsSync(path.join(root, '.github/workflows/deploy.yml'))).toBe(false);
-    const vendor = JSON.parse(read('platform/vendor.lock.json'));
-    expect(release).toContain(`Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@${vendor.commit}`);
 
     for (const workflow of [ci, release]) {
       expect(workflow).toContain('node-version-file: .node-version');

@@ -9,8 +9,6 @@ import { createDemoWorker } from '../src/index';
 const baseEnv = {
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
-  DEMO_ADMIN_USER: 'operator',
-  DEMO_ADMIN_PASSWORD: 'correct horse battery staple',
 } as Env;
 
 describe('admin boundary', () => {
