@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { allocateControlledIdentity, allocatePlanIdentities, reconcileUnpublishedIdentity, selectQueuedIdentity } from '../scripts/lib/controlled-identity-allocation.ts';
 import { normalizeControlledBody, renderControlledRecord, requireMatchingRecord, validateControlledRecord } from '../scripts/lib/controlled-record.ts';
 import { planProtectedSquash, protectedSquash, verifyMergedIdentity, type DeliverySnapshot } from '../scripts/lib/controlled-delivery.ts';
-import { liveControlledRecord } from '../scripts/lib/live-controlled-record.ts';
 import { validateControlledPullRequestIdentity } from '../scripts/lib/controlled-pr-identity.ts';
 
 const base = 'a'.repeat(40), head = 'b'.repeat(40);
@@ -16,7 +15,7 @@ const record = renderControlledRecord(recordInput);
 const snapshot = (): DeliverySnapshot => ({
   mainSha: base,
   pr: { number: 448, state: 'open', title: record.subject, body: record.body, head: { sha: head, ref: 'demo-503-controlled-delivery' }, base: { sha: base, ref: 'main' }, mergeable: true },
-  identity: { branchName: 'demo-503-controlled-delivery', title: record.subject, headSubject: record.subject, headBody: record.body, rangeSubjects: [record.subject], basePlanMarkdown: before, headPlanMarkdown: after, baseAcceptedIds: new Set(['DEMO-502']), baseSha: base, liveReleaseErrors: null },
+  identity: { branchName: 'demo-503-controlled-delivery', title: record.subject, headSubject: record.subject, headBody: record.body, rangeSubjects: [record.subject], basePlanMarkdown: before, headPlanMarkdown: after, baseAcceptedIds: new Set(['DEMO-502']), baseSha: base },
   checks: ['validate', 'browser'].map((name) => ({ name, sha: head, conclusion: 'success' })), requiredChecks: ['validate', 'browser'], canonicalCi: { sha: head, conclusion: 'success' },
 });
 
@@ -57,12 +56,11 @@ describe('one controlled metadata record', () => {
     expect(validateControlledRecord(record.subject, record.body + '\nChange:\nDuplicate')).toContain('Controlled record requires one nonempty Change: section.');
     expect(() => renderControlledRecord({ ...recordInput, summary: 'Changed (#448)' })).toThrow('suffix');
   });
-  it('puts live request correlation and range evidence in the same record', () => {
-    const live = liveControlledRecord({ id: 'DEMO-510', version: '0.32.1', requestId: '123e4567-e89b-12d3-a456-426614174000', previousTag: 'v0.32.0', commits: '- 123abc Controlled change' });
-    expect(validateControlledRecord(live.subject, live.body)).toEqual([]);
-    expect(live.commit).toContain('<!-- git-demo-request:123e4567-e89b-12d3-a456-426614174000 -->');
-    expect(live.body).toContain('- 123abc Controlled change');
-    expect(live.body).toContain('Live-Release: true');
+  it('carries an authorized release intent only in a plan-maintenance record', () => {
+    const intent = renderControlledRecord({ ...recordInput, id: 'DEMO-510', maintenance: true, releaseIntent: '0.33.0', release: 'v0.33.0 — authorized batch release', requestId: '123e4567-e89b-12d3-a456-426614174000' });
+    expect(validateControlledRecord(intent.subject, intent.body)).toEqual([]);
+    expect(intent.body).toMatch(/Portfolio-Plan-Maintenance: true\n\nRelease-Intent: v0\.33\.0\n\n<!-- git-demo-request:/);
+    expect(() => renderControlledRecord({ ...recordInput, releaseIntent: '0.33.0' })).toThrow('plan-maintenance record');
   });
 });
 

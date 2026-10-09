@@ -6,7 +6,7 @@ const commit = 'a'.repeat(40);
 const previous = 'b'.repeat(40);
 const run = { name: 'CI', event: 'push', head_branch: 'main', head_sha: commit, status: 'completed', conclusion: 'success' };
 const jobs = ['validate', 'browser'].map((name) => ({ name, head_sha: commit, status: 'completed', conclusion: 'success' }));
-const facts = { run, jobs, mainSha: commit, version: '0.28.1', tag: null, release: null, releaseRuns: [] };
+const facts = { run, jobs, mainSha: commit, version: '0.28.1', planMarkdown: '# Implementation plan\n', intent: '0.28.1', tag: null, release: null, releaseRuns: [] };
 
 describe('DEMO-395 exact main release cutter', () => {
   it('cannot cut a tag from failed, stale, or incomplete CI', () => {
@@ -21,7 +21,7 @@ describe('DEMO-395 exact main release cutter', () => {
   });
 
   it('creates a new annotated tag only for the accepted current main commit', () => {
-    expect(planExactTagRelease(facts)).toEqual({ action: 'create-and-dispatch', tag: 'v0.28.1', commit });
+    expect(planExactTagRelease(facts)).toMatchObject({ action: 'create-and-dispatch', tag: 'v0.28.1', commit });
     expect(() => planExactTagRelease({ ...facts, tag: { ref: 'refs/tags/v0.28.1', object: { type: 'tag', sha: previous }, tagName: 'v0.28.1', commitSha: previous } })).toThrow(/never be moved/);
     expect(() => planExactTagRelease({ ...facts, tag: { ref: 'refs/tags/v0.28.1', object: { type: 'commit', sha: commit }, commitSha: commit } })).toThrow(/never be moved/);
   });
@@ -35,7 +35,7 @@ describe('DEMO-395 exact main release cutter', () => {
 
 describe('DEMO-395 release and deployment identities', () => {
   it('accepts only an exact-tag dispatch bound to successful current-main CI', () => {
-    const valid = { eventName: 'workflow_dispatch', ref: 'refs/tags/v0.28.1', refName: 'v0.28.1', tag: 'v0.28.1', commit, checkoutCommit: commit, mainSha: commit, ciRun: run };
+    const valid = { eventName: 'workflow_dispatch', ref: 'refs/tags/v0.28.1', refName: 'v0.28.1', tag: 'v0.28.1', commit, checkoutCommit: commit, mainSha: commit, ciRun: run, version: '0.28.1', planMarkdown: '', intent: '0.28.1' };
     expect(() => validateExactTagDispatch(valid)).not.toThrow();
     expect(() => validateExactTagDispatch({ ...valid, ref: 'refs/heads/main' })).toThrow();
     expect(() => validateExactTagDispatch({ ...valid, commit: previous })).toThrow();

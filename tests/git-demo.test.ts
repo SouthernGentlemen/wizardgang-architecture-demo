@@ -14,7 +14,7 @@ const headSha = 'a'.repeat(40);
 const mainSha = 'b'.repeat(40);
 function fingerprint(bump: 'patch' | 'minor' | 'major'): string {
   const target = bump === 'patch' ? '0.7.1' : bump === 'minor' ? '0.8.0' : '1.0.0';
-  return createHash('sha256').update(JSON.stringify([mainSha, '0.7.0', target, 'v0.7.0', ['c'.repeat(40)]])).digest('hex');
+  return createHash('sha256').update(JSON.stringify([mainSha, '0.7.0', target, 'v0.7.0', [], ['c'.repeat(40)]])).digest('hex');
 }
 
 function environment(): Env & { WG_DB: SqliteD1 } {
@@ -34,18 +34,18 @@ function json(value: unknown, status = 200): Response {
 function openPullRequest() {
   return {
     number: 54,
-    title: '[DEMO-055] [BUILD] Demonstrate v0.7.1 release lifecycle',
+    title: '[DEMO-055] [BUILD] Authorize v0.7.1 batch release',
     state: 'open',
     body: `Controlled demo\n- Previous version: \`0.7.0\`\n<!-- git-demo-request:${requestId} -->`,
     html_url: `${repositoryUrl}/pull/54`,
-    head: { ref: 'demo-055-live-v0-7-1-123e4567', sha: headSha },
+    head: { ref: 'demo-055-release-v0-7-1-123e4567', sha: headSha },
     base: { ref: 'main' },
     merge_commit_sha: null,
     merged_at: null,
   };
 }
 
-function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; compareTotal?: number; missingCheck?: string; checksUnavailable?: boolean; failedLatestCheck?: string } = {}) {
+function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; compareTotal?: number; missingCheck?: string; checksUnavailable?: boolean; failedLatestCheck?: string; plan?: string; latestRelease?: string } = {}) {
   const pulls = options.pulls ?? [openPullRequest()];
   const ciConclusion = options.ciConclusion === undefined ? 'success' : options.ciConclusion;
   const checkRuns = ['validate', 'browser'].filter((name) => name !== options.missingCheck).map((name, index) => ({
@@ -61,6 +61,7 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; co
   const values = new Map<string, Response>([
     [`${apiPrefix}/contents/package.json?ref=main`, json({ content: btoa(JSON.stringify({ version: '0.7.0' })) })],
     [`${apiPrefix}/contents/package.json?ref=${mainSha}`, json({ content: btoa(JSON.stringify({ version: '0.7.0' })) })],
+    [`${apiPrefix}/contents/implementation_plan.md?ref=${mainSha}`, json({ content: Buffer.from(options.plan ?? '# Implementation plan\n').toString('base64') })],
     [`${apiPrefix}/git/ref/heads/main`, json({ object: { sha: mainSha } })],
     [`${apiPrefix}/pulls?state=all&sort=updated&direction=desc&per_page=100`, json(pulls)],
     [`${apiPrefix}/actions/workflows/git-demo.yml/runs?event=workflow_dispatch&per_page=30`, json({ workflow_runs: [{
@@ -81,11 +82,11 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; co
       id: 101,
       check_suite_id: 501,
       name: 'CI',
-      display_title: '[DEMO-055] [BUILD] Demonstrate v0.7.1 release lifecycle',
+      display_title: '[DEMO-055] [BUILD] Authorize v0.7.1 batch release',
       status: ciConclusion === null ? 'in_progress' : 'completed',
       conclusion: ciConclusion,
       event: 'pull_request',
-      head_branch: 'demo-055-live-v0-7-1-123e4567',
+      head_branch: 'demo-055-release-v0-7-1-123e4567',
       head_sha: headSha,
       created_at: '2026-09-01T12:01:00Z',
       updated_at: '2026-09-01T12:02:00Z',
@@ -106,8 +107,8 @@ function fixtures(options: { pulls?: unknown[]; ciConclusion?: string | null; co
       check_runs: checkRuns,
     })],
     [`${apiPrefix}/releases/tags/v0.7.1`, json({ message: 'Not Found' }, 404)],
-    [`${apiPrefix}/releases/latest`, json({ tag_name: 'v0.7.0' })],
-    [`${apiPrefix}/compare/v0.7.0...${mainSha}`, json({ status: 'ahead', total_commits: options.compareTotal ?? 1, commits: [{
+    [`${apiPrefix}/releases/latest`, json({ tag_name: options.latestRelease ?? 'v0.7.0' })],
+    [`${apiPrefix}/compare/${options.latestRelease ?? 'v0.7.0'}...${mainSha}`, json({ status: 'ahead', total_commits: options.compareTotal ?? 1, commits: [{
       sha: 'c'.repeat(40),
       commit: { message: '[DEMO-054] [FIX] Previous accepted change\n\nBody' },
       html_url: `${repositoryUrl}/commit/${'c'.repeat(40)}`,
@@ -156,7 +157,7 @@ describe('live Git delivery lifecycle', () => {
       targetVersion: '0.7.1',
       pollAfterMs: 500,
       releaseReady: true,
-      pullRequest: { number: 54, branch: 'demo-055-live-v0-7-1-123e4567', ciReady: true },
+      pullRequest: { number: 54, branch: 'demo-055-release-v0-7-1-123e4567', ciReady: true },
       ci: { run: { name: 'CI', conclusion: 'success' } },
     });
     expect(status.ci.jobs[0].steps.map((step) => step.name)).toEqual(['Install locked dependencies', 'Typecheck']);
@@ -230,6 +231,21 @@ describe('live Git delivery lifecycle', () => {
     const response = await gitDemoPreflightResponse(request, environment());
     expect(response.status).toBe(200);
     expect(await response.json()).toMatchObject({ mainSha, targetVersion: '0.7.1', lastRelease: 'v0.7.0', commitsSinceRelease: [{ sha: 'c'.repeat(40) }] });
+  });
+
+  it('authorizes a live release only for a completed batch without unreleased intent', async () => {
+    const queued = fixtures({ pulls: [], plan: '# Implementation plan\n\n## Open tasks\n\n### DEMO-056 — [BUILD] Queued — work\n' });
+    const preflight = await gitDemoPreflightResponse(new Request('https://demo.wizardgang.ai/admin/api/labs/git-delivery?preflight=patch'), environment());
+    expect(await preflight.json()).toMatchObject({ openTasks: ['DEMO-056'], blocked: expect.stringContaining('open tasks: DEMO-056') });
+    const start = await gitDemoStartResponse(adminRequest('/admin/api/labs/git-delivery', { bump: 'patch', preflightFingerprint: '0'.repeat(64) }), environment());
+    expect(start.status).toBe(409);
+    expect(await start.json()).toMatchObject({ error: 'release_batch_not_ready' });
+    expect(queued.mock.calls.some(([input]) => String(input).endsWith('/dispatches'))).toBe(false);
+    queued.mockRestore();
+    clearGitDemoCacheForTest();
+    fixtures({ pulls: [], latestRelease: 'v0.6.0' });
+    const pending = await gitDemoPreflightResponse(new Request('https://demo.wizardgang.ai/admin/api/labs/git-delivery?preflight=patch'), environment());
+    expect(await pending.json()).toMatchObject({ blocked: expect.stringContaining('unreleased authorized intent') });
   });
 
   it('fails closed when the commits-since-release comparison is incomplete', async () => {

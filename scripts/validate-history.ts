@@ -36,7 +36,6 @@ if (errors.length) {
     records: enriched,
     acceptedBefore,
     commitInputs: (record) => ({
-      changedFiles: git(['diff', '--name-only', record.parents[0], record.sha]).split('\n').filter(Boolean),
       beforePackage: gitFile(record.parents[0], 'package.json'),
       afterPackage: gitFile(record.sha, 'package.json'),
       beforeLock: gitFile(record.parents[0], 'package-lock.json'),

@@ -207,6 +207,8 @@ Production milestones are represented by annotated Git tags and GitHub Releases 
 
 A deployed production version must be traceable to a specific annotated Git tag and commit. GitHub Releases publish release identity and generated change notes from Git/GitHub state, with the release-bound assurance snapshot attached. Annotated tags and GitHub Releases are the historical release authority; the repository does not maintain a parallel per-version Markdown archive or changelog.
 
+A release closes one owner-authorized batch. The target version is chosen explicitly during batch planning and tagged only after that batch's queue is empty and exact-current-main CI succeeds; individual fixes are not tagged, and corrections move forward under a new controlled change rather than a separate version-bump route.
+
 ## 19 — GitHub Actions
 
 GitHub Actions automates validation, testing, release management, and deployment. Repeatable controls should be automated rather than remembered.

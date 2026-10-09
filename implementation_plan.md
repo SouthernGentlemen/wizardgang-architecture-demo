@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The remaining parent deliveries are assigned **DEMO-504 through DEMO-508** in execution order.
+- The remaining parent deliveries are assigned **DEMO-505 through DEMO-508** in execution order.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,31 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-504 — [BUILD] Release each authorized batch without a routine version PR
-
-- Dependency: DEMO-502, DEMO-503
-- Why: Remove an entire routine PR/main CI cycle and make the existing cutter own the batch handoff.
-- Scope: Batch version intent, queue retirement handoff, cutter/current deploy readiness and shared current live-release primitives.
-- Non-goals: Do not tag each fix, add a readiness service/approval, block on old missing records, alter current versions as parity work, or publish an unapproved batch.
-- Acceptance: Authorized target version is selected during batch planning; cutter acts only for that batch with empty queue and successful exact-current-main acceptance; the routine version-only PR and its legacy-only tests are removed.
-- Validation: Current readiness fixtures for nonempty/moved queue, absent intent, wrong version, stale CI, conflicting immutable tag and already-published release; current live-demo integration; exact-head CI.
-- Authorities: scripts/cut-main-release.ts; scripts/lib/exact-tag-release.ts; scripts/lib/live-release-identity.ts; scripts/release-workflow.ts; .github/workflows/release-cutter.yml; .github/workflows/git-demo.yml; docs/RELEASE-MANAGEMENT.md; docs/CHANGE-MANAGEMENT.md; implementation_plan.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Define target-version and explicit release-intent input in the existing batch planning operation; avoid inferring operator approval from an empty queue alone.
-- [ ] 02. Have the automatic allocator reserve the planning identity and queued identities once; carry version intent through the existing controlled metadata.
-- [ ] 03. Choose how approved intent survives final task retirement while restoring the byte-identical shared empty queue; do not retain completed-task history in this file.
-- [ ] 04. Update current package/lock version metadata only at the designed owner-authorized batch point and preserve package/tag identity checks.
-- [ ] 05. Add the queue-empty and authorized-batch predicates to cutter planning alongside exact-current-main CI and both new required jobs.
-- [ ] 06. Re-read current main/queue/intent before tag mutation or dispatch and enforce the same current readiness at the existing deployment boundary.
-- [ ] 07. Keep immutable annotated-tag conflict detection and already-published-version handling; delete retrospective record/unpublished-old-version blockers.
-- [ ] 08. Remove the routine version-only PR route and fixtures requiring it; retain any current product demonstration through shared primitives rather than a legacy compatibility branch.
-- [ ] 09. Share current range/version readiness summaries with the live controller and existing Actions summary instead of adding a separate readiness command/report.
-- [ ] 10. Exercise absent intent, queue movement, stale CI, tag conflicts and duplicate dispatch against current pure fixtures without mutating production.
-- [ ] 11. Update release/change/architecture authorities for one end-of-batch release and forward correction, deleting obsolete recovery/version-only prose.
-- [ ] 12. Verify the configured cutter remains a separate serialized post-completed-CI workflow and that normal unpublished intent cannot release early.
 
 ### DEMO-505 — [BUILD] Deliver the current shared baseline deployment contract
 

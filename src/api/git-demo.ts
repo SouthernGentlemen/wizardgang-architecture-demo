@@ -113,6 +113,9 @@ export async function gitDemoStartResponse(request: Request, env: Env): Promise<
       pullRequest: { number: preflight.active.number, title: preflight.active.title, url: preflight.active.url },
     }, { status: 409, headers: { 'cache-control': 'no-store' } });
   }
+  if (preflight.blocked) {
+    return json({ error: 'release_batch_not_ready', detail: preflight.blocked }, { status: 409, headers: { 'cache-control': 'no-store' } });
+  }
   if (body.preflightFingerprint !== preflight.fingerprint) {
     return json({ error: 'release_preflight_changed', detail: 'The target version or commit range changed. Review a fresh preflight.' }, { status: 409, headers: { 'cache-control': 'no-store' } });
   }

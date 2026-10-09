@@ -1,11 +1,9 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import process from 'node:process';
-import {
-  packageVersion, planLiveReleaseStart,
-} from './lib/git-demo-workflow.ts';
+import { liveIntentRecord, packageVersion, planLiveReleaseStart } from './lib/git-demo-workflow.ts';
+import { batchReleaseReadiness, renderReadinessSummary } from './lib/release-intent.ts';
 import { deliverProtectedPull, openControlledPull, readReservations, git } from './lib/controlled-delivery-provider.ts';
-import { liveControlledRecord } from './lib/live-controlled-record.ts';
 
 function env(name: string): string {
   const value = process.env[name];
@@ -47,7 +45,11 @@ switch (operation) {
       existingTag: (tag) => git(['tag', '--list', tag]) !== '',
     });
     if (start.version !== env('VERSION')) throw new Error('Version intent changed before publication.');
-    const record = liveControlledRecord({ id: start.change_id, version: start.version, requestId: env('REQUEST_ID'), previousTag: env('LAST_TAG'), commits: fs.readFileSync(env('COMMITS_FILE'), 'utf8').trim() });
+    const commits = fs.readFileSync(env('COMMITS_FILE'), 'utf8').trim();
+    const record = liveIntentRecord({ id: start.change_id, version: start.version, requestId: env('REQUEST_ID'), previousTag: env('LAST_TAG'), commits });
+    // After merge the cutter applies this same readiness to the accepted main commit.
+    const readiness = batchReleaseReadiness({ version: start.version, planMarkdown: reservations.planMarkdown, intent: start.version });
+    fs.appendFileSync(env('GITHUB_STEP_SUMMARY'), renderReadinessSummary(readiness, [`Previous release: ${env('LAST_TAG')}`, `Commits since ${env('LAST_TAG')}:\n${commits}`]));
     git(['switch', '-c', start.branch]);
     git(['add', 'package.json', 'package-lock.json']);
     execFileSync('git', ['commit', '-F', '-'], { input: record.commit, stdio: ['pipe', 'inherit', 'inherit'] });
