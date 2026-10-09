@@ -2,13 +2,19 @@
 
 WizardGang Architecture Demo uses semantic versioning. Controlled change IDs identify accepted changes; annotated semantic-version tags identify immutable product states. Not every change is tagged.
 
-## Authenticated live release
+## One release per authorized batch
 
-The live Git delivery controller is an explicit release operation in `/demos#webhooks`. Visitors can inspect the public read-only Actions feed at `/api/labs/git-delivery`; every release control is under `/admin/*` and therefore crosses the shared `WG_OPS_TOKEN` shell gate. Before an operator confirms a start, `GET /admin/api/labs/git-delivery?preflight=patch` (or `minor`/`major`) returns the target version, latest published release, every commit since that release, and a fingerprint of that evidence; incomplete GitHub comparison data fails closed. Start requires the matching fingerprint so a changed target or commit range must be reviewed again. The start response and workflow/PR summaries repeat that range so the operator can see all accumulated changes that the new tag would ship.
+A release is the end of one owner-authorized batch, not a per-fix event or a follow-up version PR. During batch planning the owner names the target version: the plan-only change is planned with `npm run delivery -- plan <input.json>`, where the input's optional `release` object carries `version` and `authorizedBy` beside the ordered `tasks`. The shared allocator reserves the planning identity and queued identities once and validates that the version advances the current package version. That same controlled `Portfolio-Plan-Maintenance: true` record carries `Release-Intent: vX.Y.Z`, a `Release:` section naming the version, and the only `package.json`/`package-lock.json` version change. A batch planned without that object releases nothing. PR and forward-history validation reject any other package version change, a mismatched or duplicate intent, and an intent outside plan maintenance.
 
-Start re-reads the shared accepted/queued/open reservations before branching and publication, recomputing only unpublished collisions. One controlled record carries the request correlation and release range through commit, PR and explicit squash. The live controller uses the ordinary protected delivery adapter, including mutable title/body, current-base/head, canonical CI, every active required check and mergeability re-reads; merged identity and queue preservation are verified against the validated head.
+The intent survives the batch in accepted Git history and in the package version; each delivery still retires only its own task, and the final delivery restores the byte-identical shared empty queue without recording completed work. An empty queue alone never authorizes a release, and an authorized but unpublished version cannot release while any task remains.
 
-Start opens one version-metadata-only controlled `[BUILD] Demonstrate vX.Y.Z release lifecycle` PR under an unused DEMO ID. Its marker, full structured body, hyphen-only branch, unchanged queue, and package/lockfile versions are checked by PR and history validation. Merge & Release requires both exact-head CI jobs, current `main`, and ordinary squash-only protection. After the squash commit, successful CI on exact current `main` creates or verifies the annotated version tag and explicitly dispatches Release at that tag and accepted commit. The same cutter serves controlled version-only PRs delivered through GitHub without the live controller. A completed production deployment requires a separate controlled `OPS` record in `docs/history/DEPLOYMENTS.md` with the actual post-deployment evidence. Starting or merging an ordinary implementation PR at an already-published version does not trigger a new release.
+The exact-tag cutter is a separate, serialized `workflow_run` after completed CI on `main`. For each successful run it reads current `main`, its package version, `implementation_plan.md`, the newest intent among `package.json`-changing records, both required CI jobs, the version tag and Release. It leaves an already-published version alone and otherwise acts only when the run is for exact current `main`, both `validate` and `browser` succeeded, the intent matches the package version and the queue is empty. It re-reads all of those inputs and requires the same decision before creating the annotated tag or dispatching Release; an existing tag at another commit fails closed and is never moved, and an active dispatch for the exact tag is not duplicated. The cutter writes the shared readiness summary (version, intent, open queue, decision) to its Actions summary. Release dispatch validation applies the same readiness to the checked-out tagged commit before publication or deployment.
+
+### Authenticated live release
+
+The live Git delivery controller in `/demos#webhooks` demonstrates the same path for a completed batch. Visitors can inspect the public read-only Actions feed at `/api/labs/git-delivery`; every release control is under `/admin/*` and therefore crosses the shared `WG_OPS_TOKEN` shell gate. `GET /admin/api/labs/git-delivery?preflight=patch` (or `minor`/`major`) returns the target version, latest published release, every commit since that release, open queue tasks, any blocking reason and a fingerprint of that evidence; incomplete GitHub data fails closed. Start is refused while the queue has tasks or the current package version is still unreleased, and it requires the matching fingerprint.
+
+Start re-reads the shared reservations, allocates through the same planning primitive and opens one `[BUILD] Authorize vX.Y.Z batch release` plan-maintenance PR on `demo-###-release-vX-Y-Z-<request>` carrying the intent, request correlation and release range. Merge & Release uses the ordinary protected delivery adapter: mutable title/body, current-base/head, canonical CI, every active required check and mergeability are re-read before the explicit squash. Successful CI on the accepted commit then lets the cutter tag and dispatch Release.
 
 ## Release rule
 
@@ -47,7 +53,8 @@ Historical release notes are read from GitHub Releases. Superseded repository st
 ## Flow
 
 ```text
-isolated branch -> controlled commit -> pull request -> CI -> review -> merge to main
+batch plan + Release-Intent -> queued deliveries -> last task retired (empty queue)
+                -> successful exact-current-main CI -> cutter readiness
                 -> annotated semantic tag -> reproduce exact tag
                 -> GitHub Release + assurance snapshot
                 -> deploy exact tag -> verify Cloudflare Worker version / 100% traffic
@@ -55,7 +62,7 @@ isolated branch -> controlled commit -> pull request -> CI -> review -> merge to
                 -> deployment record
 ```
 
-Production identity comes from the immutable release tag and commit, not from an arbitrary `main` commit. A security or release defect is corrected forward with a new controlled change and patch version.
+Production identity comes from the immutable release tag and commit, not from an arbitrary `main` commit. A security or release defect is corrected forward with a new controlled change, planned under a fresh authorized patch intent.
 
 ## Tag-triggered deployment
 

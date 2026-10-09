@@ -6,7 +6,7 @@ import {
   acceptedControlledIds,
   validateControlledPullRequestIdentity,
 } from './lib/controlled-pr-identity.ts';
-import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.ts';
+import { validateReleaseIntentChange } from './lib/release-intent.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const requiredEnvironment = ['PR_BRANCH', 'PR_TITLE', 'PR_BODY', 'BASE_SHA', 'HEAD_SHA'];
@@ -43,22 +43,14 @@ const rangeOutput = runGit(['log', '--reverse', '--format=%s', `${baseSha}..${he
 const rangeSubjects = rangeOutput ? rangeOutput.split('\n').filter(Boolean) : [];
 const baseHistoryOutput = runGit(['log', '--format=%s', baseSha]);
 const baseAcceptedIds = acceptedControlledIds(baseHistoryOutput ? baseHistoryOutput.split('\n').filter(Boolean) : []);
-const liveRelease = headBody.split('\n').some((line) => line.trim() === LIVE_RELEASE_MARKER)
-  || /^\[DEMO-\d+\] \[BUILD\] Demonstrate v\d+\.\d+\.\d+ release lifecycle$/.test(headSubject);
 const gitFile = (revision, file) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: root, encoding: 'utf8' });
-const liveReleaseErrors = liveRelease ? validateLiveReleaseIdentity({
-  title: headSubject,
+const releaseIntentErrors = validateReleaseIntentChange({
   body: headBody,
-  branchName: process.env.PR_BRANCH,
-  changedFiles: runGit(['diff', '--name-only', `${baseSha}..${headSha}`]).split('\n').filter(Boolean),
   beforePackage: gitFile(baseSha, 'package.json'),
   afterPackage: gitFile(headSha, 'package.json'),
   beforeLock: gitFile(baseSha, 'package-lock.json'),
   afterLock: gitFile(headSha, 'package-lock.json'),
-  basePlanMarkdown,
-  headPlanMarkdown,
-  baseAcceptedIds,
-}) : null;
+});
 
 errors.push(...validateControlledPullRequestIdentity({
   branchName: process.env.PR_BRANCH,
@@ -71,7 +63,7 @@ errors.push(...validateControlledPullRequestIdentity({
   headPlanMarkdown,
   baseAcceptedIds,
   baseSha,
-  liveReleaseErrors,
+  releaseIntentErrors,
 }));
 
 if (errors.length) {

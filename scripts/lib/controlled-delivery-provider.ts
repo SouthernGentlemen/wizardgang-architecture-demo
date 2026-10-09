@@ -2,9 +2,9 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import { requireMatchingRecord } from './controlled-record.ts';
 import { acceptedControlledIds, validateControlledPullRequestIdentity } from './controlled-pr-identity.ts';
-import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './live-release-identity.ts';
+import { validateReleaseIntentChange } from './release-intent.ts';
 import { protectedSquash, verifyMergedIdentity, type DeliverySnapshot } from './controlled-delivery.ts';
-import { verifyLivePullRequest } from './git-demo-workflow.ts';
+import { verifyLiveIntentPull } from './git-demo-workflow.ts';
 
 // Repository identity is committed authority, never an operator-controlled override.
 export const repository = JSON.parse(fs.readFileSync(new URL('../../config/github-repository-settings.json', import.meta.url), 'utf8')).repository;
@@ -38,7 +38,7 @@ export function readReservations() {
 export function readDeliverySnapshot(number: number, requestId?: string): DeliverySnapshot {
   const mainSha = api('git/ref/heads/main').object.sha;
   const pr = api(`pulls/${number}`);
-  if (requestId) verifyLivePullRequest({ state: pr.state.toUpperCase(), title: pr.title, body: pr.body, baseRefName: pr.base.ref, headRefName: pr.head.ref, headRefOid: pr.head.sha }, requestId);
+  if (requestId) verifyLiveIntentPull({ state: pr.state.toUpperCase(), title: pr.title, body: pr.body, baseRefName: pr.base.ref, headRefName: pr.head.ref, headRefOid: pr.head.sha }, requestId);
   git(['fetch', 'origin', mainSha, pr.head.sha]);
   const identity = publicationIdentity(pr.head.sha, mainSha, pr.head.ref, pr.title, pr.body);
   if (git(['rev-parse', `${pr.head.sha}^`]) !== mainSha) throw new Error('Head parent is not exact current main; revalidate the rebased head.');
@@ -114,12 +114,10 @@ function publicationIdentity(head: string, base: string, branch: string, title: 
     branchName: branch, title, prBody, headSubject, headBody,
     rangeSubjects: git(['log', '--format=%s', `${base}..${head}`]).split('\n').filter(Boolean),
     basePlanMarkdown, headPlanMarkdown, baseAcceptedIds, baseSha: base,
-    liveReleaseErrors: headBody.includes(LIVE_RELEASE_MARKER) ? validateLiveReleaseIdentity({
-      title: headSubject, body: headBody, branchName: branch,
-      changedFiles: git(['diff', '--name-only', base, head]).split('\n').filter(Boolean),
+    releaseIntentErrors: validateReleaseIntentChange({
+      body: headBody,
       beforePackage: file(base, 'package.json'), afterPackage: file(head, 'package.json'),
       beforeLock: file(base, 'package-lock.json'), afterLock: file(head, 'package-lock.json'),
-      basePlanMarkdown, headPlanMarkdown, baseAcceptedIds,
-    }) : null,
+    }),
   };
 }

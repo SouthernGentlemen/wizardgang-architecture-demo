@@ -1,4 +1,5 @@
 import { parsePlanTasks, validateQueueDelivery } from './controlled-pr-identity.ts';
+import { validateBatchReleaseRequest, type BatchReleaseRequest } from './release-intent.ts';
 
 export interface Reservations {
   subjects: string[];
@@ -27,17 +28,27 @@ export function allocateControlledIdentity(input: Reservations): string {
   return idFor(candidate);
 }
 
-// Pure planning only: the reservation is published by an ordinary protected plan-only PR.
-export function allocatePlanIdentities(input: Reservations, tasks: Array<{ type: string; title: string }>) {
+// Pure planning only: the reservation is published by an ordinary protected plan-only PR. An optional
+// owner-authorized release intent rides in that same record and sets the package version once.
+export function allocatePlanIdentities(input: Reservations, tasks: Array<{ type: string; title: string }>, release?: BatchReleaseRequest & { currentVersion: string }) {
+  if (!tasks.length && !release) throw new Error('Plan input requires ordered tasks or an authorized release intent.');
+  if (release) {
+    const errors = validateBatchReleaseRequest(release, release.currentVersion);
+    if (errors.length) throw new Error(errors.join('\n'));
+  }
   const maintenanceId = allocateControlledIdentity(input);
   const reserved = reservedControlledNumbers(input);
   reserved.add(Number(maintenanceId.slice(5)));
   let candidate = Math.max(Number(maintenanceId.slice(5)), ...parsePlanTasks(input.planMarkdown).map((task) => task.number));
-  return { maintenanceId, tasks: tasks.map((task) => {
-    do { candidate++; } while (reserved.has(candidate));
-    reserved.add(candidate);
-    return { ...task, id: idFor(candidate) };
-  }) };
+  return {
+    maintenanceId,
+    ...(release ? { releaseIntent: release.version, authorizedBy: release.authorizedBy.trim() } : {}),
+    tasks: tasks.map((task) => {
+      do { candidate++; } while (reserved.has(candidate));
+      reserved.add(candidate);
+      return { ...task, id: idFor(candidate) };
+    }),
+  };
 }
 
 export function selectQueuedIdentity(input: Reservations): string {

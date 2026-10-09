@@ -15,7 +15,7 @@ type GitStatus = {
   controller: { start: Run | null; release: Run | null; startJobs: Job[]; releaseJobs: Job[] };
   delivery: { releaseRun: Run | null; deployRun: Run | null; releaseJobs: Job[]; deployJobs: Job[]; releaseUrl: string | null };
 };
-type Preflight = { mainSha: string; currentVersion: string; targetVersion: string; lastRelease: string; fingerprint: string; commitsSinceRelease: Array<{ sha: string; subject: string; url: string }>; active: unknown };
+type Preflight = { mainSha: string; currentVersion: string; targetVersion: string; lastRelease: string; fingerprint: string; commitsSinceRelease: Array<{ sha: string; subject: string; url: string }>; active: unknown; blocked: string | null };
 
 function required<T extends Element>(root: ParentNode, selector: string): T {
   const node = root.querySelector<T>(selector);
@@ -127,7 +127,7 @@ export function mountLiveGit(root: HTMLElement, signal: AbortSignal, messages: R
   let busy = false;
 
   const updateControls = () => {
-    startButton.disabled = busy || !authorization || !preflight || !confirmation.checked || Boolean(preflight.active) || Boolean(status?.active);
+    startButton.disabled = busy || !authorization || !preflight || !confirmation.checked || Boolean(preflight.active) || Boolean(preflight.blocked) || Boolean(status?.active);
     releaseButton.disabled = busy || !authorization || !status?.releaseReady || !status.pullRequest || !status.requestId || status.pullRequest.state !== 'open';
   };
   const request = async (path: string, init: RequestInit = {}): Promise<Record<string, unknown>> => {
@@ -210,7 +210,7 @@ export function mountLiveGit(root: HTMLElement, signal: AbortSignal, messages: R
       commits.append(empty);
     }
     preflightPanel.hidden = false;
-    notice.textContent = preflight.active ? 'A live release is already active.' : 'Review the release preflight before starting.';
+    notice.textContent = preflight.active ? 'A live release is already active.' : preflight.blocked ?? 'Review the release preflight before starting.';
     updateControls();
   };
   form.addEventListener('submit', (event) => {

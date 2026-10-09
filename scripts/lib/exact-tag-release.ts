@@ -1,3 +1,5 @@
+import { batchReleaseReadiness, type ReleaseReadiness } from './release-intent.ts';
+
 const sha = /^[0-9a-f]{40}$/;
 const versionPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/;
 
@@ -31,8 +33,8 @@ export interface ExistingTag {
 }
 
 export type ExactTagReleasePlan =
-  | { action: 'skip'; reason: string }
-  | { action: 'dispatch' | 'create-and-dispatch'; tag: string; commit: string };
+  | { action: 'skip'; reason: string; readiness?: ReleaseReadiness }
+  | { action: 'dispatch' | 'create-and-dispatch'; tag: string; commit: string; readiness: ReleaseReadiness };
 
 export interface ExactTagDispatch {
   eventName?: string;
@@ -43,12 +45,19 @@ export interface ExactTagDispatch {
   checkoutCommit?: string;
   ciRun: WorkflowRun | null;
   mainSha?: string;
+  version?: string;
+  planMarkdown?: string | null;
+  intent?: string | null;
 }
 
-export function planExactTagRelease({ run, mainSha, version, tag, release, jobs, releaseRuns }: {
+// Cuts only the owner-authorized batch: published versions are left alone; an unpublished version needs
+// its matching Release-Intent and an empty queue on the exact accepted main commit.
+export function planExactTagRelease({ run, mainSha, version, planMarkdown, intent, tag, release, jobs, releaseRuns }: {
   run: WorkflowRun | null;
   mainSha: string;
   version: string;
+  planMarkdown: string | null;
+  intent: string | null;
   tag: ExistingTag | null;
   release: ExistingRelease | null;
   jobs: WorkflowJob[];
@@ -66,19 +75,21 @@ export function planExactTagRelease({ run, mainSha, version, tag, release, jobs,
     if (!tag || tag.ref !== `refs/tags/${name}` || tag.object?.type !== 'tag' || tag.tagName !== name || !sha.test(tag.commitSha ?? '')) throw new Error('Published release has no matching annotated semantic tag.');
     return { action: 'skip', reason: `${name} is already published` };
   }
+  const readiness = batchReleaseReadiness({ version, planMarkdown, intent });
+  if (!readiness.ready) return { action: 'skip', reason: readiness.reason, readiness };
   if (tag) {
     if (tag.ref !== `refs/tags/${name}` || tag.object?.type !== 'tag' || tag.tagName !== name || !sha.test(tag.object.sha ?? '') || tag.commitSha !== mainSha) {
       throw new Error(`Existing ${name} tag does not identify the validated current main commit; it must never be moved.`);
     }
     if (releaseRuns?.some((item) => item.event === 'workflow_dispatch' && item.head_sha === mainSha && item.head_branch === name && ['queued', 'in_progress', 'completed', 'waiting', 'pending'].includes(item.status ?? '') && item.conclusion !== 'failure')) {
-      return { action: 'skip', reason: `${name} release is already dispatched` };
+      return { action: 'skip', reason: `${name} release is already dispatched`, readiness };
     }
-    return { action: 'dispatch', tag: name, commit: mainSha };
+    return { action: 'dispatch', tag: name, commit: mainSha, readiness };
   }
-  return { action: 'create-and-dispatch', tag: name, commit: mainSha };
+  return { action: 'create-and-dispatch', tag: name, commit: mainSha, readiness };
 }
 
-export function validateExactTagDispatch({ eventName, ref, refName, tag, commit, checkoutCommit, ciRun, mainSha }: ExactTagDispatch): void {
+export function validateExactTagDispatch({ eventName, ref, refName, tag, commit, checkoutCommit, ciRun, mainSha, version, planMarkdown = null, intent = null }: ExactTagDispatch): void {
   if (eventName === 'push') {
     if (ref !== `refs/tags/${tag}` || refName !== tag) throw new Error('Tag push does not retain the exact release ref.');
   } else if (eventName === 'workflow_dispatch') {
@@ -87,6 +98,9 @@ export function validateExactTagDispatch({ eventName, ref, refName, tag, commit,
     if (mainSha !== commit) throw new Error('Release dispatch commit is no longer current main.');
   } else throw new Error('Unsupported release event.');
   if (checkoutCommit !== commit && eventName === 'workflow_dispatch') throw new Error('Checked-out commit differs from dispatch.');
+  if (tag !== `v${version}`) throw new Error('Release tag differs from the checked-out package version.');
+  const readiness = batchReleaseReadiness({ version: version ?? '', planMarkdown, intent });
+  if (!readiness.ready) throw new Error(`Release is not an authorized completed batch: ${readiness.reason}.`);
 }
 
 export function validateDeployTrigger({ eventName, ref, tag, releaseOrigin, expectedCommit, checkoutCommit }: {

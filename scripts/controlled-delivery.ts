@@ -22,13 +22,16 @@ switch (operation) {
   case 'allocate':
     console.log(allocateControlledIdentity(readReservations()));
     break;
-  case 'plan':
-    {
-      const tasks = JSON.parse(fs.readFileSync(args[0], 'utf8'));
-      if (!Array.isArray(tasks) || !tasks.length || tasks.some((task) => !parseControlledSubject(`[DEMO-001] [${task.type}] ${task.title}`))) throw new Error('Plan input requires ordered typed task titles.');
-      console.log(JSON.stringify(allocatePlanIdentities(readReservations(), tasks), null, 2));
-    }
+  case 'plan': {
+    // Input: { "tasks": [{ "type", "title" }], "release"?: { "version", "authorizedBy" } }.
+    const input = JSON.parse(fs.readFileSync(args[0], 'utf8'));
+    const tasks = input?.tasks;
+    if (!Array.isArray(tasks) || tasks.some((task) => !parseControlledSubject(`[DEMO-001] [${task.type}] ${task.title}`))) throw new Error('Plan input requires ordered typed task titles.');
+    const reservations = readReservations();
+    const release = input.release ? { ...input.release, currentVersion: JSON.parse(git(['show', `${reservations.mainSha}:package.json`])).version } : undefined;
+    console.log(JSON.stringify(allocatePlanIdentities(reservations, tasks, release), null, 2));
     break;
+  }
   case 'record': {
     const record = renderControlledRecord(JSON.parse(fs.readFileSync(args[0], 'utf8')));
     fs.writeFileSync(args[1], record.commit);

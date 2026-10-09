@@ -229,7 +229,7 @@ function pullRequest(entry: Record<string, unknown>, identity: RepositoryIdentit
   const head = object(entry.head);
   const base = object(entry.base);
   const branch = bounded(head.ref, 180);
-  const versionParts = branch?.match(/^demo-\d{3,}-live-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/);
+  const versionParts = branch?.match(/^demo-\d{3,}-release-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/);
   const targetVersion = versionParts ? `${versionParts[1]}.${versionParts[2]}.${versionParts[3]}` : null;
   const url = safeRepoUrl(entry.html_url, identity);
   if (!number || !title || !state || !branch || !url || !targetVersion) return null;
@@ -335,6 +335,19 @@ async function packageVersion(identity: RepositoryIdentity, env: Env, ref: strin
     return version ? { ok: true, value: version, status: result.status } : { ok: false, error: 'Repository package version is invalid' };
   } catch {
     return { ok: false, error: 'Repository package version is unavailable' };
+  }
+}
+
+// The live controller authorizes only a completed batch: no queued task and no unreleased intent.
+async function openQueueTasks(identity: RepositoryIdentity, env: Env, ref: string): Promise<GitHubResult<string[]>> {
+  const result = await githubRequest<Record<string, unknown>>(`${identity.apiPath}/contents/implementation_plan.md?ref=${encodeURIComponent(ref)}`, env, CONTENTS_READ);
+  if (!result.ok) return { ok: false, status: result.status, error: result.error };
+  try {
+    const bytes = Uint8Array.from(atob(bounded(object(result.value).content, 400_000)?.replace(/\s/g, '') ?? ''), (character) => character.charCodeAt(0));
+    const markdown = new TextDecoder().decode(bytes);
+    return { ok: true, value: [...markdown.matchAll(/^### (DEMO-\d{3,}) — \[[A-Z0-9]+\] /gm)].map((match) => match[1]), status: result.status };
+  } catch {
+    return { ok: false, error: 'Implementation queue is unavailable' };
   }
 }
 
@@ -542,6 +555,8 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
   targetVersion: string;
   fingerprint: string;
   active: DemoPullRequest | null;
+  blocked: string | null;
+  openTasks: string[];
   lastRelease: string;
   commitsSinceRelease: Array<{ sha: string; subject: string; url: string }>;
 }> {
@@ -554,13 +569,14 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
   );
   const mainSha = bounded(object(object(mainRef.value).object).sha, 40);
   if (!mainRef.ok || !mainSha || !/^[0-9a-f]{40}$/.test(mainSha)) throw new Error('Current main identity is unavailable.');
-  const [version, pulls, latest] = await Promise.all([
+  const [version, queue, pulls, latest] = await Promise.all([
     packageVersion(identity, env, mainSha),
+    openQueueTasks(identity, env, mainSha),
     listDemoPullRequests(identity, env),
     githubRequest<Record<string, unknown>>(`${identity.apiPath}/releases/latest`, env, CONTENTS_READ),
   ]);
   const lastRelease = bounded(object(latest.value).tag_name, 60);
-  if (!version.ok || !version.value || !pulls.ok || !latest.ok || !lastRelease || !/^v\d+\.\d+\.\d+$/.test(lastRelease)) {
+  if (!version.ok || !version.value || !queue.ok || !queue.value || !pulls.ok || !latest.ok || !lastRelease || !/^v\d+\.\d+\.\d+$/.test(lastRelease)) {
     throw new Error('GitHub preflight evidence is unavailable.');
   }
   const comparison = await githubRequest<Record<string, unknown>>(
@@ -575,7 +591,11 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
     throw new Error('Complete commits-since-release evidence is unavailable.');
   }
   const targetVersion = nextVersion(version.value, bump);
-  const preflightBytes = new TextEncoder().encode(JSON.stringify([mainSha, version.value, targetVersion, lastRelease, commits.map((entry) => entry.sha)]));
+  const openTasks = queue.value;
+  const blocked = `v${version.value}` !== lastRelease
+    ? `v${version.value} already has an unreleased authorized intent; complete that batch first.`
+    : openTasks.length ? `The live controller releases only a completed batch; open tasks: ${openTasks.join(', ')}.` : null;
+  const preflightBytes = new TextEncoder().encode(JSON.stringify([mainSha, version.value, targetVersion, lastRelease, openTasks, commits.map((entry) => entry.sha)]));
   const fingerprint = [...new Uint8Array(await crypto.subtle.digest('SHA-256', preflightBytes))].map((byte) => byte.toString(16).padStart(2, '0')).join('');
   return {
     mainSha,
@@ -583,6 +603,8 @@ export async function gitDemoPreflight(env: Env, bump: VersionBump): Promise<{
     targetVersion,
     fingerprint,
     active: pulls.value?.find((entry) => entry.state === 'open') ?? null,
+    blocked,
+    openTasks,
     lastRelease,
     commitsSinceRelease: commits.map((entry) => ({
       sha: bounded(entry.sha, 40) ?? '',

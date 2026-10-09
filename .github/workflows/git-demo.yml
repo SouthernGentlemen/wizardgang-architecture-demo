@@ -91,7 +91,7 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
-          active="$(gh pr list --state open --limit 1000 --json number,headRefName --jq '[.[] | select(.headRefName | test("^demo-[0-9]+-live-v[0-9]+-[0-9]+-[0-9]+-"))][0].number // empty')"
+          active="$(gh pr list --state open --limit 1000 --json number,headRefName --jq '[.[] | select(.headRefName | test("^demo-[0-9]+-release-v[0-9]+-[0-9]+-[0-9]+-"))][0].number // empty')"
           if [ -n "$active" ]; then
             echo "::error::Live release demonstration already active: PR #$active"
             exit 1
@@ -104,10 +104,9 @@ jobs:
           REQUEST_ID: ${{ inputs.request_id }}
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: node scripts/git-demo-workflow.ts start
-      - name: Show release preflight before merge confirmation
+      - name: Read the release range since the previous published release
         id: preflight
         env:
-          VERSION: ${{ steps.release.outputs.version }}
           GH_TOKEN: ${{ steps.app.outputs.token }}
         run: |
           last_tag="$(gh release view --json tagName --jq .tagName)"
@@ -116,20 +115,12 @@ jobs:
             exit 1
           fi
           echo "last_tag=$last_tag" >> "$GITHUB_OUTPUT"
-          git log --format='- %h %s' "$last_tag..HEAD" > "$RUNNER_TEMP/live-release-commits.md"
-          {
-            echo "### Proposed live release"
-            echo "- Target version: v$VERSION"
-            echo "- Previous release: $last_tag"
-            echo "- Commits since $last_tag:"
-            cat "$RUNNER_TEMP/live-release-commits.md"
-            echo "- Review the pull request and required CI before Merge & Release confirmation."
-          } >> "$GITHUB_STEP_SUMMARY"
+          git log --format='- %h %s' "$last_tag..HEAD" > "$RUNNER_TEMP/release-range-commits.md"
       - name: Create semantic version change
         env:
           VERSION: ${{ steps.release.outputs.version }}
         run: npm version "$VERSION" --no-git-tag-version
-      - name: Publish one controlled record
+      - name: Publish one release-intent record and readiness summary
         id: published
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
@@ -137,7 +128,7 @@ jobs:
           BUMP: ${{ inputs.bump }}
           REQUEST_ID: ${{ inputs.request_id }}
           LAST_TAG: ${{ steps.preflight.outputs.last_tag }}
-          COMMITS_FILE: ${{ runner.temp }}/live-release-commits.md
+          COMMITS_FILE: ${{ runner.temp }}/release-range-commits.md
         run: |
           git config user.name "WizardGang Live Demo"
           git config user.email "live-demo@users.noreply.github.com"
@@ -153,7 +144,7 @@ jobs:
             echo "- Change: $CHANGE_ID"
             echo "- Version: v$VERSION"
             echo "- Branch: $BRANCH"
-            echo "- Pull request remains open for CI and review."
+            echo "- The release-intent pull request remains open for CI and review."
           } >> "$GITHUB_STEP_SUMMARY"
 
   release:
@@ -220,5 +211,5 @@ jobs:
             echo "### Live Git demo released"
             echo "- Pull request: #$PULL_REQUEST"
             echo "- Merge commit: $MERGE_SHA"
-            echo "- Successful CI on exact current main cuts or verifies the tag and dispatches Release."
+            echo "- Successful CI on exact current main with this intent and an empty queue cuts or verifies the tag and dispatches Release."
           } >> "$GITHUB_STEP_SUMMARY"

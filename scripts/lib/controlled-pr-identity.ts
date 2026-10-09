@@ -134,7 +134,7 @@ export function validateControlledPullRequestIdentity({
   headPlanMarkdown = null,
   baseAcceptedIds = new Set(),
   baseSha = '',
-  liveReleaseErrors = null,
+  releaseIntentErrors = [],
 }) {
   const errors = [];
   if (prBody !== undefined) {
@@ -171,11 +171,7 @@ export function validateControlledPullRequestIdentity({
     errors.push(`PR range controlled commit ${controlledRange[0].id} does not match exact head ${headIdentity.id}.`);
   }
 
-  if (liveReleaseErrors !== null) {
-    errors.push(...liveReleaseErrors);
-    return errors;
-  }
-
+  errors.push(...releaseIntentErrors);
   if (recovery) errors.push('Post-merge recovery is retired; use a new controlled identity.');
   if (titleIdentity && baseAcceptedIds.has(titleIdentity.id)) {
     errors.push('Controlled identity ' + titleIdentity.id + ' is already accepted on the PR base.');

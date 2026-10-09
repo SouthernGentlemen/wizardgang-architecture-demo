@@ -106,20 +106,18 @@ describe('DEMO-499 fixed forward-only controlled history', () => {
     expect(check([reserved]).errors.join(' ')).toContain('already accepted or reserved');
   });
 
-  it('keeps supported live-release version-only identity, with no old suffix fallback', () => {
+  it('accepts a version change only as an authorized plan-maintenance release intent', () => {
     const pkg = (version) => JSON.stringify({ name: 'demo', version });
     const lock = (version) => JSON.stringify({ name: 'demo', version, packages: { '': { name: 'demo', version } } });
     const release = record({
-      subject: '[DEMO-510] [BUILD] Demonstrate v0.33.0 release lifecycle',
-      body: body('Live-Release: true').replace('Release:\nUnreleased', 'Release:\nv0.33.0'),
+      subject: '[DEMO-510] [BUILD] Authorize v0.33.0 batch release',
+      body: body('Portfolio-Plan-Maintenance: true\n\nRelease-Intent: v0.33.0').replace('Release:\nUnreleased', 'Release:\nv0.33.0 — authorized batch release'),
       headPlanMarkdown: initial,
     });
-    const opts = { commitInputs: () => ({
-      changedFiles: ['package-lock.json', 'package.json'], beforePackage: pkg('0.32.0'),
-      afterPackage: pkg('0.33.0'), beforeLock: lock('0.32.0'), afterLock: lock('0.33.0'),
-    }) };
+    const opts = { commitInputs: () => ({ beforePackage: pkg('0.32.0'), afterPackage: pkg('0.33.0'), beforeLock: lock('0.32.0'), afterLock: lock('0.33.0') }) };
     expect(check([release], opts).errors).toEqual([]);
     expect(check([record({ ...release, subject: release.subject + ' (#99)' })], opts).errors.join(' ')).toContain('invalid forward controlled title');
-    expect(check([record({ ...release, body: release.body.replace('Live-Release: true', '') })], opts).errors.length).toBeGreaterThan(0);
+    expect(check([record({ ...release, body: release.body.replace('Release-Intent: v0.33.0', '') })], opts).errors.join(' ')).toContain('only through an authorized batch Release-Intent');
+    expect(check([record()], opts).errors.join(' ')).toContain('only through an authorized batch Release-Intent');
   });
 });

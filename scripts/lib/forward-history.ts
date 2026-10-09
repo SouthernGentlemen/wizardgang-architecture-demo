@@ -1,5 +1,5 @@
 import { parseControlledSubject, parsePlanTasks, validateQueueDelivery, validateMaintenanceQueue } from './controlled-pr-identity.ts';
-import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './live-release-identity.ts';
+import { validateReleaseIntentChange } from './release-intent.ts';
 
 export const ACCEPTED_HISTORY_BOUNDARY = Object.freeze({
   checkpoint: '9223eb09974d44a526171a6fe1a7389dc6f9173e',
@@ -64,18 +64,9 @@ export function validateForwardRecords({
     }
 
     const maintenance = /^Portfolio-Plan-Maintenance:\s*true$/m.test(body);
-    const live = body.split('\n').some((line) => line.trim() === LIVE_RELEASE_MARKER);
-    if (maintenance && live) errors.push(id + ' cannot be both maintenance and live release.');
-    if (live) {
-      const inputs = commitInputs(record);
-      if (!inputs) errors.push(id + ' is missing live release diff and package evidence.');
-      else errors.push(...validateLiveReleaseIdentity({
-        ...inputs, title: record.subject, body,
-        basePlanMarkdown: record.basePlanMarkdown,
-        headPlanMarkdown: record.headPlanMarkdown,
-        baseAcceptedIds: accepted,
-      }).map((error) => id + ': ' + error));
-    } else if (maintenance) {
+    const inputs = commitInputs(record);
+    if (inputs) errors.push(...validateReleaseIntentChange({ ...inputs, body }).map((error) => id + ': ' + error));
+    if (maintenance) {
       errors.push(...validateMaintenanceQueue({
         id, basePlanMarkdown: record.basePlanMarkdown,
         headPlanMarkdown: record.headPlanMarkdown, baseAcceptedIds: accepted,
@@ -87,7 +78,7 @@ export function validateForwardRecords({
         headPlanMarkdown: record.headPlanMarkdown, baseAcceptedIds: accepted,
       }));
     }
-    if (number !== next && !(maintenance || live)) {
+    if (number !== next && !maintenance) {
       errors.push(label + ' uses ' + id + '; expected DEMO-' + String(next).padStart(3, '0') + '.');
     }
     if (number === next) {
