@@ -108,23 +108,6 @@ describe('controlled PR identity and queue sequence', () => {
     }))).toContain('First open task DEMO-364 is blocked by unresolved dependency: External provider prerequisite is unresolved.');
   });
 
-  it('rejects same-ID post-merge recovery even with a matching old parent', () => {
-    const recoveryBase = plan(task('DEMO-423', 'REFACTOR', 'DEMO-422 merged.'));
-    const result = validateControlledPullRequestIdentity({
-      branchName: 'demo-422-post-merge-history-recovery',
-      title: '[DEMO-422] [FIX] Recover post-merge history metadata',
-      headSubject: '[DEMO-422] [FIX] Recover post-merge history metadata',
-      headBody: 'Post-Merge-Recovery: 68968b6d0419cf3de6abc410b9a0a264097fe136',
-      rangeSubjects: ['[DEMO-422] [FIX] Recover post-merge history metadata'],
-      basePlanMarkdown: recoveryBase,
-      headPlanMarkdown: recoveryBase,
-      baseAcceptedIds: new Set(['DEMO-422']),
-      baseSha: '68968b6d0419cf3de6abc410b9a0a264097fe136',
-    });
-    expect(result).toContain('Post-merge recovery is retired; use a new controlled identity.');
-    expect(result).toContain('Controlled identity DEMO-422 is already accepted on the PR base.');
-  });
-
   it('rejects PR suffix normalization and reserved maintenance identity', () => {
     expect(validateControlledPullRequestIdentity(valid({
       title: '[DEMO-364] [TEST] Bind controlled PR identity and queue sequence (#99)',

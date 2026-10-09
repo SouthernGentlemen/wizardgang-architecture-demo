@@ -9,7 +9,7 @@ import {
 import { LIVE_RELEASE_MARKER, validateLiveReleaseIdentity } from './lib/live-release-identity.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const requiredEnvironment = ['PR_BRANCH', 'PR_TITLE', 'BASE_SHA', 'HEAD_SHA'];
+const requiredEnvironment = ['PR_BRANCH', 'PR_TITLE', 'PR_BODY', 'BASE_SHA', 'HEAD_SHA'];
 const missingEnvironment = requiredEnvironment.filter((name) => !process.env[name]);
 if (missingEnvironment.length) {
   console.error(`Missing pull-request identity environment: ${missingEnvironment.join(', ')}`);
@@ -32,10 +32,7 @@ try {
 let basePlanMarkdown = null;
 try {
   basePlanMarkdown = execFileSync('git', ['show', `${baseSha}:implementation_plan.md`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
-} catch {
-  try {
-    basePlanMarkdown = execFileSync('git', ['show', `${baseSha}:IMPLEMENTATION_PLAN.md`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
-  } catch { basePlanMarkdown = null; }
+} catch { basePlanMarkdown = null;
 }
 
 const headPlanPath = path.join(root, 'implementation_plan.md');
@@ -66,6 +63,7 @@ const liveReleaseErrors = liveRelease ? validateLiveReleaseIdentity({
 errors.push(...validateControlledPullRequestIdentity({
   branchName: process.env.PR_BRANCH,
   title: process.env.PR_TITLE,
+  prBody: process.env.PR_BODY,
   headSubject,
   headBody,
   rangeSubjects,

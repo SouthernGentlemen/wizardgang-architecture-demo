@@ -1,3 +1,4 @@
+import { requireMatchingRecord } from './controlled-record.ts';
 const TYPES = 'INIT|FEAT|FIX|SEC|API|A11Y|I18N|AI|DB|OPS|TEST|DOCS|REFACTOR|PERF|BUILD|REVERT|CHORE';
 const controlledSubjectPattern = new RegExp(`^\\[DEMO-(\\d{3,})\\] \\[(${TYPES})\\] (.+)$`);
 const branchPattern = /^demo-(\d{3,})-[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -127,6 +128,7 @@ export function validateControlledPullRequestIdentity({
   title,
   headSubject,
   headBody = '',
+  prBody = undefined,
   rangeSubjects = [],
   basePlanMarkdown = null,
   headPlanMarkdown = null,
@@ -135,6 +137,9 @@ export function validateControlledPullRequestIdentity({
   liveReleaseErrors = null,
 }) {
   const errors = [];
+  if (prBody !== undefined) {
+    try { requireMatchingRecord(headSubject, headBody, title, prBody); } catch (error) { errors.push(error.message); }
+  }
   const titleIdentity = parseControlledSubject(title);
   const headIdentity = parseControlledSubject(headSubject);
   const branchMatch = branchPattern.exec(branchName || '');

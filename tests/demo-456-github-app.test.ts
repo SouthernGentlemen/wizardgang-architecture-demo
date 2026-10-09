@@ -38,7 +38,7 @@ describe('DEMO-456 GitHub App adoption', () => {
     expect(workflow).toMatch(/\npermissions:\n {2}contents: read\n\n/);
     const expected: Record<string, string[]> = {
       start: ['contents: write', 'pull-requests: write'],
-      release: ['contents: write', 'pull-requests: write', 'checks: read', 'statuses: read'],
+      release: ['contents: write', 'pull-requests: write', 'actions: read', 'checks: read', 'statuses: read'],
     };
     for (const [job, permissions] of Object.entries(expected)) {
       const body = workflowJob(workflow, job);

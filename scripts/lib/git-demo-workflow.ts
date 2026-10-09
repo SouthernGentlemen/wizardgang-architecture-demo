@@ -1,8 +1,7 @@
-import { nextLiveReleaseId } from './live-release-identity.ts';
+import { allocateControlledIdentity } from './controlled-identity-allocation.ts';
 
 export type ReleaseBump = 'patch' | 'minor' | 'major';
-export const REQUIRED_LIVE_RELEASE_CHECKS = ['validate', 'browser'];
-const liveBranchPattern = /^demo-(\d{3,})-live-v(\d+)-(\d+)-(\d+)-[0-9a-f]{8}$/;
+import { liveReleaseCoordinates } from './live-release-identity.ts';
 
 export interface OpenPullRequest {
   title: string;
@@ -31,24 +30,6 @@ export interface LivePullRequest {
   version: string;
 }
 
-export interface PullRequestCheck {
-  bucket: string;
-  name: string;
-  workflow: string;
-}
-
-export interface PullRequestApiView {
-  state: string;
-  mergeable: boolean | null;
-  head: { sha: string };
-  base: { sha: string };
-}
-
-export interface PullRequestMergeView {
-  state: string;
-  mergeCommit?: { oid?: string } | null;
-}
-
 export function packageVersion(packageJson: string): string {
   const version: unknown = JSON.parse(packageJson).version;
   if (typeof version !== 'string') throw new Error('package.json has no version.');
@@ -62,7 +43,7 @@ export function nextSemanticVersion(current: string, bump: ReleaseBump): string 
 }
 
 export function planLiveReleaseStart({
-  packageJson, bump, requestId, subjects, planMarkdown, openPullRequests, existingTag,
+  packageJson, bump, requestId, subjects, planMarkdown, openPullRequests, branches = [], existingTag,
 }: {
   packageJson: string;
   bump: ReleaseBump;
@@ -70,12 +51,13 @@ export function planLiveReleaseStart({
   subjects: string[];
   planMarkdown: string;
   openPullRequests: OpenPullRequest[];
+  branches?: string[];
   existingTag: (tag: string) => boolean;
 }): LiveReleaseStart {
   const current = packageVersion(packageJson);
   const version = nextSemanticVersion(current, bump);
   if (existingTag(`v${version}`)) throw new Error(`Release tag v${version} already exists.`);
-  const changeId = nextLiveReleaseId(subjects, planMarkdown, openPullRequests);
+  const changeId = allocateControlledIdentity({ subjects, planMarkdown, openPullRequests, branches });
   const shortId = requestId.replace(/[^a-f0-9]/gi, '').slice(0, 8).toLowerCase();
   return {
     current,
@@ -87,28 +69,10 @@ export function planLiveReleaseStart({
 
 export function verifyLivePullRequest(pr: LivePullRequestView, requestId: string): LivePullRequest {
   if (pr.state !== 'OPEN' || pr.baseRefName !== 'main') throw new Error('Pull request is not an open live-demo change against main.');
-  const branch = liveBranchPattern.exec(pr.headRefName);
-  const version = branch ? `${branch[2]}.${branch[3]}.${branch[4]}` : null;
-  if (!branch || !version || pr.title !== `[DEMO-${branch[1]}] [BUILD] Demonstrate v${version} release lifecycle`) {
+  const coordinates = liveReleaseCoordinates(pr.title, pr.headRefName);
+  if (!coordinates) {
     throw new Error('Pull request does not match the controlled live-demo contract.');
   }
   if (!pr.body.includes(`<!-- git-demo-request:${requestId} -->`)) throw new Error('Pull request request ID does not match.');
-  return { branch: pr.headRefName, sha: pr.headRefOid, version };
-}
-
-export function requireSuccessfulChecks(checks: PullRequestCheck[]): void {
-  for (const name of REQUIRED_LIVE_RELEASE_CHECKS) {
-    const check = checks.find((entry) => entry.workflow === 'CI' && entry.name === name);
-    if (!check || check.bucket !== 'pass') throw new Error(`Required CI ${name} is not successful on the exact PR head.`);
-  }
-}
-
-export function requireExactBase(pr: PullRequestApiView, headSha: string, mainSha: string): void {
-  if (pr.state !== 'open' || pr.head.sha !== headSha || pr.base.sha !== mainSha || pr.mergeable !== true) {
-    throw new Error('Live release PR head, current main, or mergeability changed; revalidate CI on the new exact head.');
-  }
-}
-
-export function mergedCommit(pr: PullRequestMergeView): string {
-  return pr.state === 'MERGED' ? pr.mergeCommit?.oid || '' : '';
+  return { branch: pr.headRefName, sha: pr.headRefOid, version: coordinates.version };
 }
