@@ -84,10 +84,8 @@ describe('DEMO-268 REST evidence containment', () => {
 
   it('keeps REST browser evidence owned by the surviving main audit', () => {
     const mainAuditSource = readFileSync('scripts/site-browser-audit.ts', 'utf8');
-    const auditRunnerSource = readFileSync('scripts/run-site-accessibility-audits.ts', 'utf8');
 
     expect(existsSync('scripts/demo-268-rest-browser-audit.mjs')).toBe(false);
-    expect(auditRunnerSource).not.toContain('demo-268-rest-browser-audit');
     expect(mainAuditSource).toContain('REST evidence containment failed');
     expect(mainAuditSource).toContain('GET response/contract/curl evidence is incomplete');
     expect(mainAuditSource).toContain('PATCH behavior was not paired with its relevant contract');

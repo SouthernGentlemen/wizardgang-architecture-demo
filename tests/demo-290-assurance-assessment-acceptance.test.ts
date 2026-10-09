@@ -239,7 +239,6 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(assuranceStates.some((state) => state.path.includes('lang=ar'))).toBe(true);
 
     const mainAudit = readFileSync('scripts/site-browser-audit.ts', 'utf8');
-    const runner = readFileSync('scripts/run-site-accessibility-audits.ts', 'utf8');
 
     expect(mainAudit).toContain('axe-core');
     expect(mainAudit).toContain("violation.id==='color-contrast'");
@@ -272,11 +271,7 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(mainAudit).toContain('mergedDemo289Coverage');
     expect(mainAudit).toContain('mergedDemo289MediaCoverage');
 
-    expect(runner).toContain("['site-browser-audit', 'scripts/site-browser-audit.ts']");
-    expect(runner).not.toContain('demo-289-site-evaluation');
     expect(existsSync('scripts/demo-289-site-evaluation.mjs')).toBe(false);
-    expect(existsSync('scripts/lib/demo-289-content-review.ts')).toBe(true);
-    expect(mainAudit).toContain("from './lib/demo-289-content-review.ts'");
     expect(mainAudit).toContain('assuranceReviewState');
     expect(mainAudit).toContain('waitForAssuranceRecordPane');
   });

@@ -4,6 +4,10 @@ The [`validate` job](../.github/workflows/ci.yml) runs `npm run validate:ci`. [`
 
 The site-wide browser command reports the start, completion, and duration of the surviving main audit. Compare before/after CI cost from existing successful `validate` job logs and their stage timestamps: use the exact-head run, record the duration of `npm run check`, the browser audit, the Vitest suite, and other instrumented stages, and distinguish job scheduling/install variance from removed subprocess cost. Success diagnostics are in the live Actions log; `.ci-diagnostics/` artifacts are uploaded only on failure. Do not treat missing timing evidence as a speedup. Focus, content review, WCAG text spacing, 200%/400% reflow, reduced-motion, and forced-colors checks run inside that same Wrangler/Chromium process and reuse its canonical page/state visits; failures identify the affected path, locale, and audit phase.
 
+The browser command invokes the audit directly; the diagnostic runner owns command exit/signal and duration evidence. The audit owns its Chromium, Wrangler, profile and fresh local D1 cleanup, including bootstrap failures. To repeat the affected keyboard and assurance cases three times with the same pinned runtime and built inputs, use `node scripts/site-browser-audit.ts --focused`. This focused command is diagnostic evidence; the full browser command remains in canonical acceptance. Both paths exercise deliberate wrong-focus, broken-navigation, missing-mount and 375px out-of-viewport defects before positive cases.
+
+Readiness observes mounted/current panes and `aria-busy`; keyboard input requires the selected category to own focus after reset-dialog focus return. Geometry requires three consecutive samples within 0.25px under a five-second budget, then applies the unchanged first-viewport bounds. Timeout messages include the last safe selected/focused/mounted/busy state. Observations never refocus, scroll, reload or replay the failed action. Stable bad geometry fails. Identical localized route/state visits share coverage; locale, viewport, theme, no-JavaScript, reflow and keyboard states remain distinct. The workbench teardown observation and keyboard traversal timing retain their specific behavior checks.
+
 ## Committed patch-integrity gate
 
 `npm run validate:patch-whitespace` checks the committed change range; its exact command wiring lives in [`package.json`](../package.json). GitHub Actions supplies `BASE_SHA` from the pull-request base or the previous `main` push commit.
@@ -33,7 +37,7 @@ Every run writes `.ci-diagnostics/` (ignored by Git):
 
 ## Exact-head failure retrieval
 
-All interfaces below enforce the same sequence: bind the investigation to the current PR head SHA, select the workflow run and attempt for that SHA, enumerate its jobs, and retrieve complete evidence for every failing job. A status/check summary is navigation metadata, not failure diagnosis.
+All interfaces below enforce the same sequence: bind the investigation to the current PR head SHA, select the workflow run and attempt for that SHA, enumerate its jobs, and retrieve complete evidence for every failing job. A status/check summary is navigation metadata, not failure diagnosis. A cancelled job with zero executed steps provides no assertion evidence; distinguish runner cancellation from a command that actually failed.
 
 ### Connector actions
 

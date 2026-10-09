@@ -14,7 +14,7 @@ import {
   waitForUrl,
 } from './lib/browser-audit.ts';
 import { parseJsonc } from '../platform/conformance/jsonc.mjs';
-import { assuranceReviewState, waitForAssuranceRecordPane } from './lib/demo-289-content-review.ts';
+import { assuranceReviewState, waitForAssuranceRecordPane, waitForBrowserState, requireCategoryFocus, settledGeometry, requireFirstViewport } from './lib/browser-readiness.ts';
 import { runCleanLocalMigrations } from './validate-migrations.ts';
 
 type Route = { id: string; route: string; kind: string; visibility: string; methods: string[] };
@@ -237,7 +237,7 @@ async function runDemo289MediaChecks(cdp: CdpClient, pathname: string, findings:
 }
 
 async function runMergedDemo289Checks(cdp: CdpClient, pathname: string, locale: string, coverage: Set<string>, mediaCoverage: Set<string>, findings: Finding[]) {
-  const key = `${pathname}|${locale}`;
+  const key = localizedPath(pathname, locale);
   if (coverage.has(key)) return;
   coverage.add(key);
 
@@ -256,8 +256,9 @@ async function runMergedDemo289Checks(cdp: CdpClient, pathname: string, locale: 
   }
 
   await cdp.call('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
-  if (locale === 'en' && !mediaCoverage.has(pathname)) {
-    mediaCoverage.add(pathname);
+  const mediaKey = localizedPath(pathname, 'en');
+  if (locale === 'en' && !mediaCoverage.has(mediaKey)) {
+    mediaCoverage.add(mediaKey);
     try {
       await runDemo289MediaChecks(cdp, pathname, findings);
     } finally {
@@ -367,6 +368,12 @@ async function inspectCurrentPage(cdp: CdpClient, expectedLocale: string, label:
 
 async function inspectPath(cdp: CdpClient, pathname: string, locale: string, label: string, options?: { checkTargetSize?: boolean }) {
   await navigate(cdp, `${origin}${localizedPath(pathname, locale)}`);
+  const url = new URL(pathname, origin);
+  if (url.pathname === demosPath) {
+    const requestedId = decodeURIComponent(url.hash.slice(1));
+    await waitForWorkbenchReady(cdp, workbenchDemos[requestedId] ? requestedId : 'd1', label);
+  }
+  await waitForAssuranceRecordPane(cdp, pathname, locale, { origin, assurancePath, evaluatePage: evaluate, sleep });
   return inspectCurrentPage(cdp, locale, label, options);
 }
 
@@ -414,20 +421,22 @@ async function dispatchKey(cdp: CdpClient, key: string, code: string = key) {
 }
 
 async function waitForExpression(cdp: CdpClient, expression: string, label: string, attempts: number = 80) {
-  for (let attempt = 0; attempt < attempts; attempt += 1) {
-    if (await evaluate(cdp, expression)) return;
-    await sleep(50);
-  }
-  throw new Error(`Timed out waiting for ${label}`);
+  await waitForBrowserState(() => evaluate(cdp, expression, label), Boolean, label, { timeoutMs: attempts * 50 });
 }
 
-async function assertWorkbenchState(cdp: CdpClient, expectedId: string, label: string, expectedHash: string = `#${expectedId}`, expectedLocale: string = 'en') {
-  await waitForExpression(
-    cdp,
-    `document.querySelector('[data-demo-workbench]')?.dataset.demoId === ${JSON.stringify(expectedId)} && document.querySelector('[data-demo-workbench]')?.dataset.demoMounted === 'true'`,
-    `${label} to mount`,
-    200,
-  );
+async function waitForWorkbenchReady(cdp: CdpClient, expectedId: string, label: string, timeoutMs = 10_000) {
+  await waitForBrowserState(() => evaluate(cdp, `(()=>{
+    const root=document.querySelector('[data-demo-workbench]');
+    const selected=document.querySelector('[data-demo-category][aria-selected="true"]');
+    return {id:root?.dataset.demoId,mounted:root?.dataset.demoMounted,busy:document.querySelector('[data-demo-panel]')?.getAttribute('aria-busy'),
+      selected:selected?.getAttribute('data-demo-category'),focused:document.activeElement?.getAttribute('data-demo-category'),
+      panes:document.querySelectorAll('[data-demo-panel] [data-demo-section]').length};
+  })()`), (state) => state.id === expectedId && state.mounted === 'true' && state.busy === 'false'
+    && state.selected === workbenchDemos[expectedId]?.[0] && state.panes === 1, `${label} workbench mount`, { timeoutMs });
+}
+
+async function assertWorkbenchState(cdp: CdpClient, expectedId: string, label: string, expectedHash: string = `#${expectedId}`, expectedLocale: string = 'en', timeoutMs = 10_000) {
+  await waitForWorkbenchReady(cdp, expectedId, label, timeoutMs);
   const state = await evaluate(cdp, `(()=>{
     const selectedCategories=[...document.querySelectorAll('[data-demo-category][aria-selected="true"]')];
     const categoryTabStops=[...document.querySelectorAll('[data-demo-category]')].filter((node)=>node.tabIndex===0);
@@ -892,6 +901,7 @@ async function workbenchInteractionAudit(cdp: CdpClient) {
     throw new Error(`Workbench reset confirmation failed: ${JSON.stringify(resetState)}`);
   }
   await evaluate(cdp, `document.querySelector('[data-demo-reset-cancel]')?.click();true`);
+  await waitForExpression(cdp, `!document.querySelector('[data-demo-reset-dialog]')?.open && document.activeElement===document.querySelector('[data-demo-reset]')`, 'reset dialog close and focus return');
 
   for (const mode of ['Guide', 'Request', 'Evidence']) {
     const modeState = await evaluate(cdp, `(()=>{
@@ -906,6 +916,7 @@ async function workbenchInteractionAudit(cdp: CdpClient) {
   }
 
   await evaluate(cdp, `document.querySelector('[data-demo-category][aria-selected="true"]')?.focus()`);
+  requireCategoryFocus(await evaluate(cdp, `(()=>{const selected=document.querySelector('[data-demo-category][aria-selected="true"]');return {selected:selected?.getAttribute('data-demo-category'),focused:document.activeElement?.getAttribute('data-demo-category'),selectedFocused:!!selected&&document.activeElement===selected}})()`), 'category ArrowRight precondition');
   await dispatchKey(cdp, 'ArrowRight', 'ArrowRight');
   await assertWorkbenchState(cdp, 'rest', 'category ArrowRight');
   const categoryFocus = await evaluate(cdp, `document.activeElement?.getAttribute('data-demo-category')`);
@@ -1225,16 +1236,16 @@ async function retainedInspectorAudit(cdp: CdpClient) {
         const label = `${id} inspector ${width}px ${locale}`;
         await navigate(cdp, `${origin}/demos?lang=${locale}#${id}`);
         await assertWorkbenchState(cdp, id, label, `#${id}`, locale);
-        await sleep(300);
-        const geometry = await evaluate(cdp, `(()=>{
+
+        const geometry = await settledGeometry(() => evaluate(cdp, `(()=>{
           const stage=document.querySelector('.demo-stage').getBoundingClientRect();
           const inspector=document.querySelector('[data-demo-inspector]');
           const rect=inspector.getBoundingClientRect();
           const toggle=document.querySelector('[data-demo-inspector-toggle]');
-          return {position:getComputedStyle(inspector).position,stageEnd:stage.right,stageStart:stage.left,
+          return {position:getComputedStyle(inspector).position,stageEnd:stage.right,stageStart:stage.left,stageTop:stage.top,stageBottom:stage.bottom,scroll:scrollY,
             sideStart:rect.left,sideEnd:rect.right,toggleVisible:getComputedStyle(toggle).display!=='none',
             overflow:document.documentElement.scrollWidth>innerWidth+1};
-        })()`);
+        })()`), label);
         if (geometry.overflow) throw new Error(`${label} overflow: ${JSON.stringify(geometry)}`);
         if (width > 900) {
           const beside = locale === 'ar' ? geometry.sideEnd <= geometry.stageStart + 2 : geometry.sideStart >= geometry.stageEnd - 2;
@@ -1258,7 +1269,7 @@ async function retainedInspectorAudit(cdp: CdpClient) {
           toggle.scrollIntoView({ behavior: 'instant' });const before=scrollY;toggle.click();
           return {before,after:scrollY};
         })()`);
-        await sleep(250);
+        await waitForExpression(cdp, `document.querySelector('[data-demo-inspector]')?.dataset.open==='true' && document.activeElement===document.querySelector('[data-demo-inspector-close]') && !document.querySelector('[data-demo-inspector]').getAnimations({subtree:true}).some((animation)=>animation.playState==='running')`, `${label} inspector open and focus`);
         const opened = await evaluate(cdp, `(()=>{
           const toggle=document.querySelector('[data-demo-inspector-toggle]');
           const side=document.querySelector('[data-demo-inspector]').getBoundingClientRect();
@@ -1278,7 +1289,7 @@ async function retainedInspectorAudit(cdp: CdpClient) {
         if (closed.expanded !== 'false' || !closed.focused) throw new Error(`${label} close focus return failed: ${JSON.stringify(closed)}`);
         if (id === 'd1') {
           await evaluate(cdp, `document.querySelector('[data-demo-inspector-toggle]').click();true`);
-          await sleep(250);
+          await waitForExpression(cdp, `document.querySelector('[data-demo-inspector]')?.dataset.open==='true' && document.activeElement===document.querySelector('[data-demo-inspector-close]') && !document.querySelector('[data-demo-inspector]').getAnimations({subtree:true}).some((animation)=>animation.playState==='running')`, `${label} inspector open and focus`);
           const access = await evaluate(cdp, `(async()=>{
             ${axeSource}
             const side=document.querySelector('[data-demo-inspector]');
@@ -1297,18 +1308,18 @@ async function retainedInspectorAudit(cdp: CdpClient) {
 }
 
 async function assertAssurancePane(cdp: CdpClient, expectedId: string, label: string, focused: boolean) {
-  await waitForExpression(cdp, `document.querySelector('[data-assurance-detail] [data-assurance-record]')?.getAttribute('data-assurance-record') === ${JSON.stringify(expectedId)} && document.querySelector('[data-assurance-detail]')?.getAttribute('aria-busy') === 'false'`, `${label} focused pane`);
-  const state = await evaluate(cdp, `(()=>{
+  await waitForAssuranceRecordPane(cdp, `${assurancePath}#${encodeURIComponent(expectedId)}`, 'current document', { origin, assurancePath, evaluatePage: evaluate, sleep });
+  const state = await settledGeometry(() => evaluate(cdp, `(()=>{
     const detail=document.querySelector('[data-assurance-detail]');
     const heading=detail?.querySelector('[data-assurance-detail-heading]');
     const current=document.querySelector('[data-assurance-record-link][aria-current="true"]');
     const box=heading?.getBoundingClientRect();
     return {hash:location.hash,record:detail?.querySelector('[data-assurance-record]')?.getAttribute('data-assurance-record'),current:current?.getAttribute('data-assurance-record-link'),headingTop:box?.top,headingBottom:box?.bottom,height:innerHeight,focus:document.activeElement===heading,bodyFocus:document.activeElement===document.body,listMounted:Boolean(document.querySelector('[data-assurance-record-grid]')?.isConnected),overflow:document.documentElement.scrollWidth>innerWidth+1};
-  })()`);
+  })()`), label);
   const problems=[];
   if(state.hash!==`#${expectedId}`)problems.push(`fragment=${state.hash}`);
   if(state.record!==expectedId||state.current!==expectedId)problems.push(`record/list=${state.record}/${state.current}`);
-  if(!(state.headingTop>=-1&&state.headingBottom<=state.height+1))problems.push(`heading outside first viewport=${state.headingTop}..${state.headingBottom}/${state.height}`);
+  requireFirstViewport(state.headingTop, state.headingBottom, state.height, label);
   if(focused&&!state.focus)problems.push('heading did not receive focus');
   if(state.bodyFocus)problems.push('focus fell to body');
   if(!state.listMounted)problems.push('record index unmounted');
@@ -1323,8 +1334,9 @@ async function assuranceRecordFirstAudit(cdp: CdpClient) {
       const label=`assurance ${width}px ${locale}`;
       await navigate(cdp,`${origin}/assurance?lang=${locale}`);
       const defaultId=await evaluate(cdp,`document.querySelector('[data-assurance-detail] [data-assurance-record]')?.getAttribute('data-assurance-record')`);
-      const first=await evaluate(cdp,`(()=>{const r=document.querySelector('[data-assurance-detail-heading]')?.getBoundingClientRect();return {top:r?.top,bottom:r?.bottom,height:innerHeight}})()`);
-      if(!(first.top>=-1&&first.bottom<=first.height+1))throw new Error(`${label}: default heading outside first viewport ${JSON.stringify(first)}`);
+      await waitForAssuranceRecordPane(cdp, assurancePath, locale, { origin, assurancePath, evaluatePage: evaluate, sleep });
+      const first=await settledGeometry(() => evaluate(cdp,`(()=>{const r=document.querySelector('[data-assurance-detail-heading]')?.getBoundingClientRect();return {top:r?.top,bottom:r?.bottom,height:innerHeight}})()`), label);
+      requireFirstViewport(first.top, first.bottom, first.height, `${label} default`);
       const records=await evaluate(cdp,`JSON.parse(document.querySelector('[data-assurance-browser]').dataset.config).records`);
       for(const framework of ['iso-27001','iso-42001','wcag-2.2']){
         const candidates=records.filter((record)=>record.framework===framework);
@@ -1422,7 +1434,45 @@ async function liveWebhookReflowAudit(cdp: CdpClient) {
   }
 }
 
-async function main() {
+async function browserFailureAudit(cdp: CdpClient) {
+  const mustFail = async (label: string, action: () => Promise<unknown>, message: string) => {
+    try { await action(); } catch (error) {
+      if (error instanceof Error && error.message.includes(message)) {
+        console.log(`Browser deliberate defect rejected: ${label}`);
+        return;
+      }
+      throw error;
+    }
+    throw new Error(`Browser deliberate defect escaped: ${label}`);
+  };
+  await navigate(cdp, `${origin}/demos?lang=en#d1`);
+  await assertWorkbenchState(cdp, 'd1', 'negative fixture ready');
+  await evaluate(cdp, `document.querySelector('[data-demo-reset]').focus();true`);
+  await mustFail('wrong category focus', async () => requireCategoryFocus(await evaluate(cdp, `(()=>{const selected=document.querySelector('[data-demo-category][aria-selected="true"]');return {selected:selected?.dataset.demoCategory,focused:document.activeElement?.dataset.demoCategory,selectedFocused:document.activeElement===selected}})()`), 'negative focus'), 'does not own keyboard focus');
+  await evaluate(cdp, `(()=>{const selected=document.querySelector('[data-demo-category][aria-selected="true"]');selected.focus();window.__blockedCategoryKey=(event)=>{event.preventDefault();event.stopImmediatePropagation()};selected.addEventListener('keydown',window.__blockedCategoryKey,{capture:true});return true})()`);
+  try {
+    await dispatchKey(cdp, 'ArrowRight');
+    await mustFail('broken category navigation', () => assertWorkbenchState(cdp, 'rest', 'negative navigation', '#rest', 'en', 150), 'workbench mount timed out');
+  } finally { await evaluate(cdp, `document.querySelector('[data-demo-category][aria-selected="true"]').removeEventListener('keydown',window.__blockedCategoryKey,{capture:true});delete window.__blockedCategoryKey;true`); }
+  await evaluate(cdp, `delete document.querySelector('[data-demo-workbench]').dataset.demoMounted;true`);
+  try {
+    await mustFail('missing workbench mount', () => assertWorkbenchState(cdp, 'd1', 'negative mount', '#d1', 'en', 150), 'workbench mount timed out');
+  } finally { await evaluate(cdp, `document.querySelector('[data-demo-workbench]').dataset.demoMounted='true';true`); }
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 375, height: 900, deviceScaleFactor: 1, mobile: true });
+  await navigate(cdp, `${origin}/assurance?lang=ar#ISO27001-A.5.19`);
+  await assertAssurancePane(cdp, 'ISO27001-A.5.19', 'negative layout fixture ready', true);
+  await cdp.call('DOM.enable');
+  await cdp.call('CSS.enable');
+  const { frameTree } = await cdp.call('Page.getFrameTree');
+  const { styleSheetId } = await cdp.call('CSS.createStyleSheet', { frameId: frameTree.frame.id });
+  try {
+    await cdp.call('CSS.setStyleSheetText', { styleSheetId, text: '[data-assurance-detail-heading]{transform:translateY(2000px)!important}' });
+    await mustFail('375px heading outside viewport', () => assertAssurancePane(cdp, 'ISO27001-A.5.19', 'negative layout', true), 'heading outside first viewport');
+  } finally { await cdp.call('CSS.setStyleSheetText', { styleSheetId, text: '' }); }
+  await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
+}
+
+async function runAudit() {
   const pages = publicPages();
   if (!pages.length) throw new Error('Expected application-wide public-page coverage, found no registered public pages');
   if (!pages.some((route) => route.id === 'demos.index')) throw new Error('Application-wide browser coverage is missing the consolidated demos route');
@@ -1500,16 +1550,28 @@ async function main() {
     });
     await cdp.call('Emulation.setDeviceMetricsOverride', { width: 1280, height: 1000, deviceScaleFactor: 1, mobile: false });
 
+    await browserFailureAudit(cdp);
+    if (process.argv.includes('--focused')) {
+      for (let repetition = 1; repetition <= 3; repetition += 1) {
+        await workbenchInteractionAudit(cdp);
+        await assuranceRecordFirstAudit(cdp);
+        console.log(`Focused keyboard/assurance repetition ${repetition}/3 passed`);
+      }
+      return;
+    }
+
     let browserPages = 0;
     let axeRuns = 0;
     const enhancedTargetSummary = [];
     const mergedDemo289Coverage = new Set();
     const mergedDemo289MediaCoverage = new Set();
     const mergedDemo289Findings = [];
-    const mergedDemo289Scope = [...new Set([...pages.map(routePath), ...auditConfig.states.map((state) => state.path)])];
+    const mergedDemo289Scope = [...new Set([...pages.map(routePath), ...auditConfig.states.map((state) => state.path)].map((pathname) => localizedPath(pathname, 'en')))];
+    const renderedVisits = new Set<string>();
     for (const route of pages) {
       const pathname = routePath(route);
       for (const locale of ['en', 'ar']) {
+        renderedVisits.add(localizedPath(pathname, locale));
         const report = await inspectPath(cdp, pathname, locale, `${route.id} ${locale}`, { checkTargetSize: true });
         enhancedTargetSummary.push({ pathname, locale, below44: report.targetSize.below44, total: report.targetSize.total });
         await runMergedDemo289Checks(cdp, pathname, locale, mergedDemo289Coverage, mergedDemo289MediaCoverage, mergedDemo289Findings);
@@ -1520,6 +1582,9 @@ async function main() {
 
     for (const state of auditConfig.states) {
       for (const locale of ['en', 'ar']) {
+        const visit = localizedPath(state.path, locale);
+        if (renderedVisits.has(visit)) continue;
+        renderedVisits.add(visit);
         const report = await inspectPath(cdp, state.path, locale, `${state.name} ${locale}`, { checkTargetSize: true });
         enhancedTargetSummary.push({ pathname: state.path, locale, below44: report.targetSize.below44, total: report.targetSize.total });
         await runMergedDemo289Checks(cdp, state.path, locale, mergedDemo289Coverage, mergedDemo289MediaCoverage, mergedDemo289Findings);
@@ -1639,7 +1704,16 @@ async function main() {
     await terminateProcess(chrome);
     await terminateProcess(wrangler);
     fs.rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+  }
+}
+
+async function main() {
+  const started = Date.now();
+  console.log('site-browser-audit start');
+  try { await runAudit(); }
+  finally {
     if (ownedPersistenceDirectory) fs.rmSync(ownedPersistenceDirectory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+    console.log(`site-browser-audit finished: ${Date.now() - started}ms`);
   }
 }
 

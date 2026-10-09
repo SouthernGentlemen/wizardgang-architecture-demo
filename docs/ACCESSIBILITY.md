@@ -55,6 +55,8 @@ Deterministic repository checks derive public-route coverage from the applicatio
 
 The browser audit starts the repository-built Worker locally, drives Chromium through the DevTools protocol, and uses the locked `axe-core` dependency against rendered pages. The current browser scope includes the canonical public routes, configured state fixtures, English and Arabic/RTL coverage, representative themes, narrow reflow and zoom-equivalent viewports, text-spacing overrides, rendered target geometry, computed contrast rules, focus traversal/visibility/obscuring, reduced motion, and forced-colors emulation.
 
+Browser readiness and stable heading geometry use bounded observations without repairing focus or scrolling a failing heading. Real category keys and assurance keyboard selection retain the same focus and first-viewport assertions, including 375px and Arabic/RTL states. Deliberate browser defects prove wrong focus, missing mount and an out-of-viewport heading fail acceptance.
+
 Automated checks are bounded machine evidence. A clean automated run does not establish that every applicable success criterion has been satisfied.
 
 ### Source and content review

@@ -32,7 +32,7 @@
     "validate:typescript-source-boundary": "node scripts/validate-typescript-source-boundary.ts",
     "test": "vitest run",
     "test:accessibility": "vitest run tests/interface.test.ts tests/wcag-aaa-remediation.test.ts",
-    "test:site-accessibility": "npm run verify:chromium && node scripts/run-site-accessibility-audits.ts",
+    "test:site-accessibility": "npm run verify:chromium && node scripts/site-browser-audit.ts",
     "validate:site-accessibility": "vitest run tests/site-accessibility-i18n.test.ts -t \"site-wide accessibility\"",
     "validate:site-i18n": "vitest run tests/site-accessibility-i18n.test.ts -t \"site-wide localization\"",
     "test:assurance-integrity": "vitest run tests/assurance-integrity.test.ts tests/assurance-semantic-partitions.test.ts tests/assurance-lifecycle.test.ts tests/assurance-publication-policy.test.ts tests/assurance-presentation-consistency.test.ts tests/assurance-registry-completeness.test.ts tests/assurance-record-discovery.test.ts",
