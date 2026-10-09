@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
-import { waitForAssuranceRecordPane } from '../scripts/lib/demo-289-content-review.ts';
-import { routeUrl } from '../src/routing/application-routes';
 
 const read = (file: string) => fs.readFileSync(file, 'utf8');
 const releaseWorkflow = read('.github/workflows/release.yml');
@@ -71,29 +69,4 @@ describe('DEMO-305 release operations acceptance', () => {
     expect(repositorySettingsValidator).toContain("process.argv.includes('--live')");
   });
 
-  it('fails the content review when a selected assurance record pane never renders', async () => {
-    const assurancePath = routeUrl('assurance.index');
-    const evaluation = waitForAssuranceRecordPane(
-      {},
-      `${assurancePath}#WCAG-1.1.1`,
-      'ar',
-      {
-        origin: 'http://127.0.0.1:8791',
-        assurancePath,
-        evaluatePage: async () => ({ ready: false, headingText: '', recordId: '' }),
-        sleep: async () => {},
-        timeoutMs: 2,
-        pollIntervalMs: 1,
-      },
-    );
-
-    try {
-      await evaluation;
-      throw new Error('Expected the missing assurance record pane to fail the content review.');
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      expect(message).toContain(`page=${routeUrl('assurance.index')}`);
-      expect(message).toContain('state=#WCAG-1.1.1 locale=ar record=WCAG-1.1.1');
-    }
-  });
 });

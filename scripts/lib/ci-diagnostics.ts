@@ -172,7 +172,7 @@ export async function runDiagnosticCommands({ commands, cwd = process.cwd(), dia
       durationMs: result.durationMs,
     };
     commandResults.push(record);
-    const completion = `\n===== exit ${result.code}${result.signal ? ` (${result.signal})` : ''}: ${rendered} =====\n`;
+    const completion = `\n===== exit ${result.code}${result.signal ? ` (${result.signal})` : ''}: ${rendered}; ${result.durationMs}ms =====\n`;
     process.stdout.write(completion);
     fs.appendFileSync(fullLogPath, completion);
     if (result.code !== 0) {

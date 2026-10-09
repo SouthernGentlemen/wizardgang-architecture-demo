@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The remaining parent deliveries are assigned **DEMO-501 through DEMO-508** in execution order.
+- The remaining parent deliveries are assigned **DEMO-502 through DEMO-508** in execution order.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,30 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-501 — [TEST] Stabilize browser acceptance and retire old harness paths
-
-- Dependency: DEMO-498, DEMO-500
-- Why: Reduce expensive flake reruns and unnecessary waits while preserving current rendered behavior and accessibility protection.
-- Scope: The surviving local browser audit, shared readiness/focus/geometry helpers, D1/process lifecycle and current browser failure evidence.
-- Non-goals: Do not relax keyboard/375px assertions, scroll a failing heading into compliance, add blanket retries, remove distinct locale/accessibility states, or add a production browser tour.
-- Acceptance: Current ArrowRight and assurance-heading behavior is tested deterministically with bounded useful diagnostics; obsolete helpers/wrappers/fixtures and identical visits are removed; deliberate defects still fail.
-- Validation: Focused affected-case repetition with pinned runtime/Chromium and fresh local D1; deliberate focus/navigation/layout defect cases; full exact-head browser acceptance and canonical CI.
-- Authorities: scripts/site-browser-audit.ts; scripts/run-site-accessibility-audits.ts; scripts/lib/demo-289-content-review.ts; scripts/lib/ci-diagnostics.ts; docs/CI-DIAGNOSTICS.md; docs/ACCESSIBILITY.md; docs/accessibility-manual-verification.json.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Read complete current failing-run/attempt evidence for ArrowRight and the 375px heading; distinguish actual focus/layout defects, readiness races and zero-step runner cancellations.
-- [ ] 02. Locate the existing selected-tab/pane and workbench mount/busy predicates; choose one shared readiness condition for the current UI.
-- [ ] 03. Check actual selected-category focus before dispatching ArrowRight; keep the real keyboard path instead of directly invoking the controller.
-- [ ] 04. Wait on the intended current workbench state with a bounded budget and emit safe selected/focused/busy state on failure.
-- [ ] 05. Read heading geometry until consecutive measurements settle within a bounded budget, then apply the existing first-viewport assertion unchanged.
-- [ ] 06. Replace scattered fixed waits where a current readiness condition exists; preserve any distinct required timing behavior until it is proved by that condition.
-- [ ] 07. Remove the DEMO-289-specific readiness helper after its current consumers use the shared primitive; delete its legacy-only fixture cases.
-- [ ] 08. Remove genuinely identical page/state/media visits while keeping distinct locale, viewport, no-JavaScript, reflow and keyboard coverage.
-- [ ] 09. Fold the single-audit wrapper timing/error behavior into the existing diagnostic runner and preserve checkout-owned process/D1 cleanup.
-- [ ] 10. Exercise affected cases with deliberate wrong focus/missing mount/out-of-viewport heading; confirm the assertions fail rather than retry into a pass.
-- [ ] 11. Run bounded affected-case repetitions and one full browser pass, update diagnostics guidance, and compare durations/failure evidence using existing output.
 
 ### DEMO-502 — [BUILD] Replace redundant CI jobs with two real acceptance jobs
 

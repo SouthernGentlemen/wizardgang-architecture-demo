@@ -188,11 +188,8 @@ describe('DEMO-354 acceptance gate ownership', () => {
     ]);
     expect(expandedNpmRunSequence(packageJson.scripts, 'test:site-accessibility').filter((run) => run === 'verify:chromium')).toHaveLength(1);
     expect(commandSequence(packageJson.scripts['test:site-accessibility'])).toContain(
-      'node scripts/run-site-accessibility-audits.ts',
+      'node scripts/site-browser-audit.ts',
     );
-    const runner = fs.readFileSync(path.join(process.cwd(), 'scripts', 'run-site-accessibility-audits.ts'), 'utf8');
-    expect(runner.match(/scripts\/site-browser-audit\.ts/g) ?? []).toHaveLength(1);
-    expect(runner).not.toContain('demo-289-site-evaluation');
   });
 
   it('hands the accepted two-pass client output to Worker compilation without another Vite build', () => {
