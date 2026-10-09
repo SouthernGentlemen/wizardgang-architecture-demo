@@ -54,9 +54,7 @@ describe('DEMO-395 release and deployment identities', () => {
     expect(release).toContain('$REQUESTED_COMMIT');
     expect(release).toContain('node scripts/release-workflow.ts validate-dispatch');
     expect(release).not.toMatch(/node (?:-p|-e|--input-type)|<<'NODE'/);
-    expect(release).toContain('Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@1493de4ae8b1f43f23559b210d047a288b00fcf1');
     expect(release).toContain('expected_sha: ${{ github.sha }}');
-    expect(existsSync('.github/workflows/deploy.yml')).toBe(false);
     expect(live).not.toContain('git push origin "refs/tags/v$VERSION"');
   });
 });

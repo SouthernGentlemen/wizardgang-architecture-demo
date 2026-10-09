@@ -62,7 +62,6 @@ describe('DEMO-365 exact release reproduction command ownership', () => {
     expect(pkg.scripts['build:client']).toBe('npm run generate:assets');
     expect(pkg.scripts['build:worker']).toContain('wrangler deploy --dry-run --outdir dist/worker');
     expect(pkg.scripts['build:worker']).toContain('npm run validate:worker-bundle');
-    expect(releaseWorkflow).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@1493de4ae8b1f43f23559b210d047a288b00fcf1');
     expect(releaseWorkflow).toContain('expected_sha: ${{ github.sha }}');
     expect(releaseManagement).toContain('does not invoke a second unbound build');
     expect(releaseManagement).toContain('production identity-bound build using `WG_VERSION` and `WG_COMMIT`');

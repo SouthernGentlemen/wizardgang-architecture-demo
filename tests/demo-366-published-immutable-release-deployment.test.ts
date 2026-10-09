@@ -7,7 +7,6 @@ const read = (file: string) => fs.readFileSync(file, 'utf8');
 const pkg = JSON.parse(read('package.json'));
 const releaseWorkflow = read('.github/workflows/release.yml');
 const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
-const vendor = JSON.parse(read('platform/vendor.lock.json'));
 
 describe('DEMO-366 published immutable release deployment boundary', () => {
   it('fails closed instead of exposing raw npm Wrangler production deployment', () => {
@@ -26,15 +25,11 @@ describe('DEMO-366 published immutable release deployment boundary', () => {
     expect(releaseWorkflow.slice(deploy)).toContain('needs: reproduce');
   });
 
-  it('pins deployment to the exact vendored baseline commit and passes exact release identity', () => {
-    expect(vendor.source).toBe('Wizard-Gang/baseline');
-    expect(vendor.commit).toBe('1493de4ae8b1f43f23559b210d047a288b00fcf1');
-    expect(releaseWorkflow).toContain(`uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@${vendor.commit}`);
+  it('passes exact release identity to the shared deploy workflow', () => {
     expect(releaseWorkflow).toContain('worker: demo');
     expect(releaseWorkflow).toContain('tag: ${{ github.ref_name }}');
     expect(releaseWorkflow).toContain('expected_sha: ${{ github.sha }}');
     expect(releaseWorkflow).toContain('secrets: inherit');
-    expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);
   });
 
   it('keeps tagged-source reproduction before publication and deployment', () => {

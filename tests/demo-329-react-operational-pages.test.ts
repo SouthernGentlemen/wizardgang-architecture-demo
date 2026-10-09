@@ -11,8 +11,6 @@ const environment = {
   WG_DB: demoDatabase({ crawler: 'enabled', availability: { verified: 11, operational: 10, intentional: 1 } }),
   GITHUB_REPO_URL: 'https://github.com/Wizard-Gang/wizardgang-architecture-demo',
   GITHUB_BRANCH: 'main',
-  DEMO_ADMIN_USER: 'operator',
-  DEMO_ADMIN_PASSWORD: password,
 } as Env;
 
 afterEach(() => {

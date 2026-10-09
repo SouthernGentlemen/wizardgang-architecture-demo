@@ -7,9 +7,7 @@ const read = (file: string) => fs.readFileSync(file, 'utf8');
 const ACCOUNT_ID_VAR = '--var "CLOUDFLARE_ACCOUNT_ID:$CLOUDFLARE_ACCOUNT_ID"';
 
 describe('DEMO-482 Cloudflare usage reporting receives the account ID at deploy time', () => {
-  it('pins deploy-worker.yml to the vendored baseline commit, which passes the account ID var', () => {
-    const vendor = JSON.parse(read('platform/vendor.lock.json')) as { commit: string };
-    expect(read('.github/workflows/release.yml')).toContain(`uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@${vendor.commit}`);
+  it('deploys through the vendored deploy-worker.yml contract, which passes the account ID var', () => {
     expect(read('platform/deploy/README.md')).toContain(ACCOUNT_ID_VAR);
   });
 

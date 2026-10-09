@@ -89,8 +89,11 @@ function record(deployResult: string, { env = {}, assets = {}, flags = [] as str
 }
 
 describe('DEMO-506 automatic verified deployment record', () => {
-  it('pins deploy-worker.yml to the vendored baseline commit and passes its caller reproduction rule', () => {
-    expect(vendor.commit).toBe('1493de4ae8b1f43f23559b210d047a288b00fcf1');
+  it('owns the one deploy path: deploy-worker.yml at the vendored lock commit, passing its caller reproduction rule', () => {
+    expect(vendor.source).toBe('Wizard-Gang/baseline');
+    expect(vendor.commit).toMatch(/^[0-9a-f]{40}$/);
+    expect(workflow.match(/deploy-worker\.yml@/g)).toHaveLength(1);
+    expect(existsSync('.github/workflows/deploy.yml')).toBe(false);
     expect(job('deploy')).toContain(`uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@${vendor.commit}`);
     expect(job('deploy')).toContain('needs: reproduce');
     expect(job('deploy')).toContain('permissions:\n      actions: read\n      contents: read\n');

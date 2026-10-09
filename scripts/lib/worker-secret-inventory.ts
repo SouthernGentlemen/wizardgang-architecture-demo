@@ -21,19 +21,3 @@ export function forbiddenWorkerSecretVars(
   const protectedNames = new Set([...inventoryNames, ...registryNames, ...secretsStoreNames]);
   return committedVars.filter((name) => protectedNames.has(name));
 }
-
-export function missingRequiredProvisionedWorkerSecrets(
-  provisionedNames: readonly string[],
-  requiredNames: readonly string[],
-): string[] {
-  const provisioned = new Set(provisionedNames);
-  return requiredNames.filter((name) => !provisioned.has(name));
-}
-
-export function undeclaredProvisionedWorkerSecrets(
-  provisionedNames: readonly string[],
-  inventoryNames: readonly string[],
-): string[] {
-  const declared = new Set(inventoryNames);
-  return provisionedNames.filter((name) => !declared.has(name));
-}

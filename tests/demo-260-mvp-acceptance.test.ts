@@ -47,8 +47,6 @@ function environment(offline = false): Env {
     DEPLOYED_VERSION: 'v0.21.0-test',
     DEPLOYED_SHA: 'abcdef0123456789',
     DEPLOYMENT_ENVIRONMENT: 'acceptance',
-    DEMO_ADMIN_USER: 'operator',
-    DEMO_ADMIN_PASSWORD: 'test-admin-password',
     BILLING_DEMO_MONTHLY_BUDGET_USD: '10',
   } as Env;
 }

@@ -12,8 +12,6 @@ function environment(offline = false): Env {
     GITHUB_BRANCH: 'main',
     DEPLOYED_VERSION: 'v0.21.0-test',
     DEPLOYED_SHA: 'abcdef0123456789',
-    DEMO_ADMIN_USER: 'operator',
-    DEMO_ADMIN_PASSWORD: 'test-admin-password',
     WG_DB: demoDatabase({ demo: offline ? 'offline' : 'online', message: 'Acceptance fixture', crawler: 'enabled' }),
   } as Env;
 }

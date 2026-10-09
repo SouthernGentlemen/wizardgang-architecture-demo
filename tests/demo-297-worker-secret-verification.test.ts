@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
-import { forbiddenWorkerSecretVars, missingRequiredProvisionedWorkerSecrets, undeclaredProvisionedWorkerSecrets, workerSecretNameDifferences } from '../scripts/lib/worker-secret-inventory.ts';
+import { forbiddenWorkerSecretVars, workerSecretNameDifferences } from '../scripts/lib/worker-secret-inventory.ts';
 
 const inventory = JSON.parse(fs.readFileSync('config/worker-secrets.json', 'utf8'));
-const release = fs.readFileSync('.github/workflows/release.yml', 'utf8');
 const wrangler = fs.readFileSync('wrangler.jsonc', 'utf8');
 
 describe('DEMO-297 Worker secret verification', () => {
@@ -30,13 +29,9 @@ describe('DEMO-297 Worker secret verification', () => {
     }
   });
 
-  it('uses the shared Secrets Store bindings and the pinned baseline deployment path', () => {
+  it('uses the shared Secrets Store bindings', () => {
     expect(wrangler).toContain('"binding": "WG_OPS_TOKEN"');
     expect(wrangler).toContain('"binding": "WG_SESSION_KEY"');
-    expect(release).toContain('uses: Wizard-Gang/baseline/.github/workflows/deploy-worker.yml@1493de4ae8b1f43f23559b210d047a288b00fcf1');
-    expect(release).toContain('worker: demo');
-    expect(release).toContain('secrets: inherit');
-    expect(fs.existsSync('.github/workflows/deploy.yml')).toBe(false);
   });
 
   it('rejects missing or undeclared Worker secret names in focused inventory fixtures', () => {
@@ -60,14 +55,5 @@ describe('DEMO-297 Worker secret verification', () => {
       ['WG_OPS_TOKEN'],
     )).toEqual(['DEMO_WEBHOOK_SECRET', 'REGISTRY_ONLY', 'WG_OPS_TOKEN']);
     expect(forbiddenWorkerSecretVars(['PUBLIC_CLIENT_ID'], ['DEMO_WEBHOOK_SECRET'], [], ['WG_OPS_TOKEN'])).toEqual([]);
-  });
-
-  it('rejects missing required provisioned names while preserving optional and undeclared reporting', () => {
-    const declared = ['REQUIRED_A', 'REQUIRED_B', 'OPTIONAL'];
-    const required = ['REQUIRED_A', 'REQUIRED_B'];
-    expect(missingRequiredProvisionedWorkerSecrets(['REQUIRED_A'], required)).toEqual(['REQUIRED_B']);
-    expect(missingRequiredProvisionedWorkerSecrets(required, required)).toEqual([]);
-    expect(undeclaredProvisionedWorkerSecrets(['REQUIRED_A', 'EXTRA'], declared)).toEqual(['EXTRA']);
-    expect(undeclaredProvisionedWorkerSecrets(required, declared)).toEqual([]);
   });
 });
