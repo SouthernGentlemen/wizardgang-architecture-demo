@@ -29,8 +29,8 @@ const serverPort = Number(process.env.SITE_AUDIT_PORT || 8787);
 const debugPort = Number(process.env.SITE_AUDIT_DEBUG_PORT || 9222);
 const origin = `http://127.0.0.1:${serverPort}`;
 const localSessionSecret = 'demo-335-local-browser-audit-session-key';
-// A caller may share one migrated directory (CI, Release). Otherwise, such as baseline's deploy-worker
-// verify job, the audit owns a fresh directory and applies the pinned schema itself.
+// A caller may share one migrated directory (CI, Release). Otherwise, such as a standalone local run,
+// the audit owns a fresh directory and applies the pinned schema itself.
 const ownedPersistenceDirectory = process.env.WG_LOCAL_D1_PERSIST_TO ? null : fs.mkdtempSync(path.join(os.tmpdir(), 'wg-site-audit-d1-'));
 const localPersistenceArgs = ['--persist-to', process.env.WG_LOCAL_D1_PERSIST_TO || ownedPersistenceDirectory];
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'];

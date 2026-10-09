@@ -5,23 +5,7 @@ const read = (file: string) => fs.readFileSync(file, 'utf8');
 const releaseWorkflow = read('.github/workflows/release.yml');
 const monitorWorkflow = read('.github/workflows/assurance-monitor.yml');
 const monitorValidator = read('scripts/validate-assurance-operations.ts');
-const releaseManagement = read('docs/RELEASE-MANAGEMENT.md');
-const deployments = read('docs/history/DEPLOYMENTS.md');
 const repositorySettingsValidator = read('scripts/validate-github-repository-settings.ts');
-
-function deploymentRecords(markdown: string) {
-  const headings = [...markdown.matchAll(/^## (DEP-DEMO-\d+)\s*$/gm)];
-  return headings.map((heading, index) => {
-    const bodyStart = heading.index + heading[0].length;
-    const bodyEnd = headings[index + 1]?.index ?? markdown.length;
-    const body = markdown.slice(bodyStart, bodyEnd);
-    const fields: Record<string, string> = {};
-    for (const field of body.matchAll(/^\*\*([^:]+):\*\*\s*(.+)$/gm)) {
-      fields[field[1]] = field[2].trim();
-    }
-    return { id: heading[1], fields };
-  });
-}
 
 describe('DEMO-305 release operations acceptance', () => {
   it('publishes release notes from the annotated tag and GitHub history', () => {
@@ -33,24 +17,6 @@ describe('DEMO-305 release operations acceptance', () => {
     expect(releaseWorkflow).toContain('--notes-start-tag "$PREVIOUS_TAG"');
     expect(releaseWorkflow).toContain('--verify-tag');
     expect(releaseWorkflow).not.toContain(['docs', 'releases'].join('/'));
-  });
-
-  it('keeps deployment records on the documented format and includes v0.24.0', () => {
-    const required = ['Product', 'Release', 'Commit', 'Environment', 'Date', 'URL', 'Changes', 'Validation', 'Previous', 'Rollback'];
-    for (const field of required) expect(releaseManagement).toContain(`- **${field}:**`);
-
-    const records = deploymentRecords(deployments);
-    expect(records.length).toBeGreaterThan(0);
-    for (const record of records) {
-      for (const field of required) {
-        expect(record.fields[field], `${record.id} ${field}`).toBeTruthy();
-      }
-    }
-
-    const v024 = records.find((record) => record.fields.Release === 'v0.24.0');
-    expect(v024?.id).toBe('DEP-DEMO-009');
-    expect(v024?.fields.Commit).toContain('7a7fcda1c058540c82c888f5cd1489de153b68e9');
-    expect(v024?.fields.Validation).toContain('35296310582');
   });
 
   it('keeps the restored monitor identified and externally visible on failure', () => {

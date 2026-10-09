@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "Wizard-Gang/baseline",
-  "commit": "5e3847c8cf0072fa9698aa8e5e141f96e00d73bb",
+  "commit": "1493de4ae8b1f43f23559b210d047a288b00fcf1",
   "files": {
     "conformance/README.md": "7eb1f13decc94c1cf51ccd52efd39220cc16245e8bffe09c5fdbb00d3843af85",
     "conformance/cli.mjs": "4ba4895eade516d7e35824346b4eee73fd0961ac2660657f40b3c00ea1856a7d",
@@ -11,9 +11,10 @@
     "conformance/template.mjs": "3a99444554e89e9b60ff568b144e13311ee190e7973e0216048b230b33915b7f",
     "conformance/vendor.mjs": "6954277896383d47f7b426ae5b7d0602ed72f14f148ffbe5f805b1dffa4d9062",
     "conformance/wrangler.mjs": "b2d0093bb6b470fa11b0491a49bc5b28ae629e0199dcaeced0d02bed84b29e87",
-    "deploy/README.md": "a7145a99213dd68e5211c3da5a805051d1631951aa18bd47013b4b3b119a9d8d",
-    "deploy/index.d.ts": "e6c440b7e191851e31d2440fe4e9d6773fbb4142d1dab2bda17250c24e8ad837",
-    "deploy/verify.mjs": "8f1b32f33d8ac965d8bc1d03a19d8d390e481c1b7ad83125d3ffe3de88a53b8e",
+    "deploy/README.md": "2c3f6ab93e7db61f7e04bee023a7f145e0299825b9470dd9c8a54c9a4109797d",
+    "deploy/evidence.mjs": "c49fcd86982a337d7d01b40ab2e7a3e50089fdb404ec4d1af3faa8f62364eebd",
+    "deploy/index.d.ts": "576ad1d509a65fa9c343864d6705627b11f4bf8d09b01a9f95dd365e28f9b863",
+    "deploy/verify.mjs": "9aa5530a2e248d8243b048a48428aadda891d539a18c45a303732469905fe381",
     "migrations/0001_universal.sql": "73b71827ac4aa38393222b809804091b12f6632e6f9fd4ed4bd5d531971f2cb7",
     "migrations/pins.json": "594b589c4feb043e666f5f6daecac4a9585c96ff7f10bd44cefd750ecb8b85df",
     "wg-edge/README.md": "ef1837856274564a2cead9d9b6d3b906c1e07dd7c98a0e835a9ae2b0f9e0c5e2",
