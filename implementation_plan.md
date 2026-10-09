@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The remaining parent deliveries are assigned **DEMO-505 through DEMO-508** in execution order.
+- The remaining parent deliveries are assigned **DEMO-506 through DEMO-508** in execution order.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,35 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-505 — [BUILD] Deliver the current shared baseline deployment contract
-
-- Dependency: DEMO-502, DEMO-504
-- Why: Remove the duplicate full tagged acceptance run and produce one trustworthy deployment-verification result for automatic recording.
-- Scope: Upstream baseline workflow/verifier contract, exact-tag reproduction inheritance, current production verification and safe structured workflow outputs; retire this demo task only once its upstream prerequisite is actually merged.
-- Non-goals: Never edit vendored platform/ directly; do not use an unchecked caller, legacy fallback full-check mode, self-declared green proof, broader production token, new credential, provisioning or an additional approval.
-- Acceptance: Merged baseline contract verifies trusted completed caller reproduction and exact immutable identity, performs the production build/traffic/version/essential smoke once, exports a safe actual result and retains protected least-privilege deployment.
-- Validation: Baseline-owned focused contract/evidence/verification failure fixtures and exact-head CI; exercise wrong repository/run/head/attempt, absent proof, traffic/version/health/asset failure and redacted output; record the merged upstream pin in controlled delivery evidence, not this queue.
-- Authorities: platform/deploy/README.md; platform/deploy/verify.mjs; platform/vendor.lock.json; upstream baseline .github/workflows/deploy-worker.yml and its repository/secret/deployment authorities; docs/RELEASE-MANAGEMENT.md; SECURITY.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Read authoritative current baseline source/caller contracts in an authorized baseline execution surface; allocate its own controlled identity automatically and respect its queue.
-- [ ] 02. Define the required native caller workflow/run/reproduction identity contract and its safe outputs; do not invent an attestation service.
-- [ ] 03. Implement pure evidence predicates for trusted repository/workflow, completed successful reproduction, exact tag/commit/attempt and current declared toolchain/inputs.
-- [ ] 04. Implement the read-only native Actions evidence adapter with bounded failures and only the permissions needed for those reads.
-- [ ] 05. Verify exact annotated tag, package version, published Release, expected SHA and conformance independently of source acceptance inheritance.
-- [ ] 06. Remove baseline npm run check and duplicate migration/browser/unbound build from the verify handoff; missing proof fails to the single caller reproduction path, not a legacy fallback.
-- [ ] 07. Retain the final production-bound dependency install/build with WG_VERSION/WG_COMMIT and current pin/conformance checks.
-- [ ] 08. Retain protected production approval, per-Worker serialization, no cancellation and provisioning/auto-create disabled.
-- [ ] 09. Keep binding Wrangler structured deployment output to the provider Worker Version ID at sole 100% traffic, with a bounded convergence poll.
-- [ ] 10. Make public app/version/full-commit convergence a bounded observation of that deployment; report challenge/timeout distinctly and never redeploy just to wait for propagation.
-- [ ] 11. Add essential operational health verification to the same verifier and retain identity readiness as information, not proof of an OAuth login.
-- [ ] 12. Add the minimal expected browser-asset availability/identity assertions to the verifier; no second production browser suite.
-- [ ] 13. Emit one compact result only after required observations succeed, with producing run/attempt, tag/full commit, target/time and actual Worker/traffic/check outcomes.
-- [ ] 14. Whitelist safe output fields and reject private account data, credentials or arbitrary raw provider payloads; expose the result through reusable-workflow outputs.
-- [ ] 15. Delete baseline legacy caller/recovery fixtures and update current contract tests/runbook; prove bad evidence and real verification defects still fail.
-- [ ] 16. Deliver the upstream controlled change and verify its authoritative merge/CI; complete this demo parent with evidence of that upstream prerequisite, leaving the vendor adoption to the next task.
 
 ### DEMO-506 — [OPS] Record verified deployment success automatically
 
