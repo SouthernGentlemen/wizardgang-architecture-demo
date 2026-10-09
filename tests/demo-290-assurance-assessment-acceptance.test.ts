@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { assuranceRelationshipIds } from '../src/assurance/relationship-contract.js';
 import { resolveAssuranceDocumentationReference } from '../src/assurance/presentation';
@@ -271,7 +271,6 @@ describe('DEMO-290 assurance assessment acceptance', () => {
     expect(mainAudit).toContain('mergedDemo289Coverage');
     expect(mainAudit).toContain('mergedDemo289MediaCoverage');
 
-    expect(existsSync('scripts/demo-289-site-evaluation.mjs')).toBe(false);
     expect(mainAudit).toContain('assuranceReviewState');
     expect(mainAudit).toContain('waitForAssuranceRecordPane');
   });

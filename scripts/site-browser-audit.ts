@@ -366,14 +366,18 @@ async function inspectCurrentPage(cdp: CdpClient, expectedLocale: string, label:
   return report;
 }
 
-async function inspectPath(cdp: CdpClient, pathname: string, locale: string, label: string, options?: { checkTargetSize?: boolean }) {
-  await navigate(cdp, `${origin}${localizedPath(pathname, locale)}`);
+async function waitForCurrentPageReady(cdp: CdpClient, pathname: string, locale: string, label: string) {
   const url = new URL(pathname, origin);
   if (url.pathname === demosPath) {
     const requestedId = decodeURIComponent(url.hash.slice(1));
     await waitForWorkbenchReady(cdp, workbenchDemos[requestedId] ? requestedId : 'd1', label);
   }
   await waitForAssuranceRecordPane(cdp, pathname, locale, { origin, assurancePath, evaluatePage: evaluate, sleep });
+}
+
+async function inspectPath(cdp: CdpClient, pathname: string, locale: string, label: string, options?: { checkTargetSize?: boolean }) {
+  await navigate(cdp, `${origin}${localizedPath(pathname, locale)}`);
+  await waitForCurrentPageReady(cdp, pathname, locale, label);
   return inspectCurrentPage(cdp, locale, label, options);
 }
 
@@ -1367,6 +1371,7 @@ async function assuranceRecordFirstAudit(cdp: CdpClient) {
 
 async function keyboardSmoke(cdp: CdpClient, pathname: string) {
   await navigate(cdp, `${origin}${localizedPath(pathname, 'en')}`);
+  await waitForCurrentPageReady(cdp, pathname, 'en', `${pathname} keyboard readiness`);
   await evaluate(cdp, `document.body.focus(); document.activeElement?.blur(); true`);
   const visited = [];
   for (let index = 0; index < 8; index += 1) {
@@ -1399,7 +1404,10 @@ async function keyboardSmoke(cdp: CdpClient, pathname: string) {
       timeoutMs: 30_000,
     });
     await dispatchKey(cdp, 'ArrowDown', 'ArrowDown');
-    await loaded;
+    try { await loaded; } catch (error) {
+      const state = await evaluate(cdp, `({lang:document.documentElement.lang,selected:document.querySelector('#global-language')?.selectedIndex,focused:document.activeElement?.id,pathname:location.pathname})`);
+      throw new Error(`${pathname}: language selector navigation failed; state=${JSON.stringify(state)}; ${error instanceof Error ? error.message : String(error)}`);
+    }
     const languageAfter = await evaluate(cdp, `document.querySelector('#global-language')?.selectedIndex ?? null`);
     if (languageAfter === languageBefore) throw new Error(`${pathname}: language selector did not respond to keyboard navigation`);
   }
@@ -1644,8 +1652,6 @@ async function runAudit() {
         axeRuns += 1;
       }
     }
-    const demosPath = manifest.find((route) => route.id === 'demos.index')?.route;
-    if (!demosPath) throw new Error('Missing demos route for shell geometry audit.');
     for (const width of [320, 375, 430, 768, 1280]) {
       await cdp.call('Emulation.setDeviceMetricsOverride', { width, height: 900, deviceScaleFactor: 1, mobile: width < 768 });
       for (const locale of width === 320 ? ['en', 'es', 'fr', 'de', 'ja', 'ar'] : ['en', 'de', 'ar']) {
