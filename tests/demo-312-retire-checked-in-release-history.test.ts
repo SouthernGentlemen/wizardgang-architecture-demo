@@ -42,7 +42,7 @@ describe('DEMO-312 repository release-history retirement', () => {
     const workflow = read('.github/workflows/git-demo.yml');
 
     expect(workflow).toContain('npm version "$VERSION" --no-git-tag-version');
-    expect(workflow).toContain('git add package.json package-lock.json');
+    expect(read('scripts/git-demo-workflow.ts')).toContain("git(['add', 'package.json', 'package-lock.json'])");
     expect(workflow).not.toContain('docs/releases');
   });
 

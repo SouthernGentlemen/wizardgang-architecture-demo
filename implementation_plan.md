@@ -4,7 +4,7 @@
 
 Priority: reduce runtime first, then handoffs/complexity and redundant ownership; explicitly remove legacy support throughout.
 
-- The remaining parent deliveries are assigned **DEMO-502 through DEMO-508** in execution order.
+- The remaining parent deliveries are assigned **DEMO-504 through DEMO-508** in execution order.
 - IDs are assigned by the agent. Reconcile new reservations automatically with authoritative main/open work through the normal delivery process; never ask the owner to calculate IDs or silently renumber published tasks. Start implementation only on the owner's delivery instruction.
 - Work the first open parent task only. Each parent is one controlled delivery/commit/PR; its checkboxes are implementation units, not separate PRs or IDs. Retire only the parent completed by its delivery and preserve the remaining queue.
 - Each checkbox targets roughly **10 minutes of hands-on work**. Dependency installation, CI/runner waits, upstream merge waits and Jacob's approval are outside that estimate. Split an unexpectedly large checkbox within its parent rather than inventing another delivery or weakening validation.
@@ -14,31 +14,6 @@ Priority: reduce runtime first, then handoffs/complexity and redundant ownership
 - Implement baseline-owned work in its owning repository and vendor its merged commit; never patch platform/ independently. Production secrets/settings/traffic are not cleanup targets. Release only one completed authorized batch through Jacob's protected production approval.
 
 ## Open tasks
-
-### DEMO-503 — [BUILD] Use one automatic identity and protected merge path
-
-- Dependency: DEMO-499, DEMO-502
-- Why: Eliminate repeated ID selection, metadata copying and merge-text recovery while retaining exact-head protection.
-- Scope: Shared controlled identity allocation, authoring metadata, PR/squash validation and the current ordinary/live delivery boundary.
-- Non-goals: Do not ask the owner to derive IDs, renumber published identities, bypass protection, rewrite history, add an independent merge service, or duplicate the live controller.
-- Acceptance: Agents allocate identities from authoritative accepted/queued/open reservations; one controlled record supplies PR/squash text; stale base/head or mismatched metadata blocks mutation; current live delivery shares the same predicates.
-- Validation: Current allocator collision/reservation/race cases; moved base/head, non-green checks, title/body drift and suffix cases; dry-run mutation planning; exact-head CI and post-merge identity verification.
-- Authorities: scripts/lib/controlled-pr-identity.ts; scripts/lib/live-release-identity.ts; scripts/validate-pull-request-identity.ts; scripts/lib/git-demo-workflow.ts; scripts/git-demo-workflow.ts; .github/workflows/git-demo.yml; docs/CHANGE-MANAGEMENT.md; AGENTS.md.
-
-#### Subtasks (about 10 minutes each)
-
-- [ ] 01. Extract one allocator from existing live identity logic using accepted IDs, queued IDs and open-PR title/branch reservations; retain the committed repository identity.
-- [ ] 02. Add automatic plan-only identity reservation followed by ordered task assignment so owners never calculate the next ID themselves.
-- [ ] 03. Re-read reservations before branch/PR creation and handle a collision by recomputing before publication; never silently renumber an already-published task.
-- [ ] 04. Define one controlled subject/body record and normalization rule; preserve required change/reason/risk/actual-validation/source/release fields and high-risk forward recovery controls.
-- [ ] 05. Generate the PR title/body from that record, including current request correlation metadata in the same controlled record rather than a parallel narrative.
-- [ ] 06. Use the same record for explicit squash subject/body and avoid including the subject twice in the body.
-- [ ] 07. Share title/body/branch/queue predicates between the ordinary path, PR validator and current live controller.
-- [ ] 08. Re-read mutable PR metadata, current base/head, required checks and mergeability immediately before mutation; require the exact validated head match.
-- [ ] 09. Use one protected squash path and retire the auto-merge-stall/manual-text fallback recipe; repository auto-merge capability need not be disabled merely for cleanup.
-- [ ] 10. Exercise allocation collisions, moved inputs, non-green checks and body/suffix drift with current pure/planned-mutation fixtures; delete historical recovery/template fixtures.
-- [ ] 11. Verify the merged main subject/body and queue transition using existing post-merge evidence; keep branch cleanup and current-main checks.
-- [ ] 12. Update current delivery/controller authorities and interfaces so automatic allocation and the single metadata/merge path are the documented behavior.
 
 ### DEMO-504 — [BUILD] Release each authorized batch without a routine version PR
 

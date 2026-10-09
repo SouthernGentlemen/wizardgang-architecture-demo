@@ -1,28 +1,18 @@
-import { parseControlledSubject, parsePlanTasks } from './controlled-pr-identity.ts';
+import { parsePlanTasks } from './controlled-pr-identity.ts';
 
 export const LIVE_RELEASE_MARKER = 'Live-Release: true';
 export const LIVE_RELEASE_FILES = ['package-lock.json', 'package.json'];
 const titlePattern = /^\[DEMO-(\d{3,})\] \[BUILD\] Demonstrate v(\d+\.\d+\.\d+) release lifecycle$/;
 const branchPattern = /^demo-(\d{3,})-live-v(\d+)-(\d+)-(\d+)-([0-9a-f]{8})$/;
-const sections = ['Change', 'Reason', 'Impact', 'Risk', 'Controls', 'Validation', 'Evidence', 'Source', 'Release'];
+import { controlledSections } from './controlled-record.ts';
 
-export function nextLiveReleaseId(
-  subjects: string[],
-  planMarkdown: string,
-  openPullRequests: Array<{ title: string; headRefName?: string }> = [],
-): string {
-  const accepted = subjects.map(parseControlledSubject).filter(Boolean).map((item) => item.number);
-  const reserved = new Set(parsePlanTasks(planMarkdown).map((item) => item.number));
-  for (const pr of openPullRequests) {
-    const title = parseControlledSubject(pr.title);
-    if (title) reserved.add(title.number);
-    const branch = /^demo-(\d{3,})-/.exec(pr.headRefName || '');
-    if (branch) reserved.add(Number(branch[1]));
-  }
-  let candidate = Math.max(0, ...accepted) + 1;
-  while (reserved.has(candidate)) candidate += 1;
-  return `DEMO-${String(candidate).padStart(3, '0')}`;
+export function liveReleaseCoordinates(title: string, branchName: string) {
+  const match = titlePattern.exec(title);
+  const branch = branchPattern.exec(branchName);
+  if (!match || !branch || match[1] !== branch[1] || match[2] !== `${branch[2]}.${branch[3]}.${branch[4]}`) return null;
+  return { id: `DEMO-${match[1]}`, version: match[2] };
 }
+
 
 function json(value, label, errors) {
   try { return JSON.parse(value); } catch { errors.push(`${label} is not valid JSON.`); return null; }
@@ -56,14 +46,13 @@ export function validateLiveReleaseIdentity({
   const match = titlePattern.exec(title || '');
   if (!match) errors.push('Live release title must be [DEMO-NNN] [BUILD] Demonstrate vX.Y.Z release lifecycle.');
   if (!new RegExp(`(?:^|\\n)${LIVE_RELEASE_MARKER}$`, 'm').test(body)) errors.push(`Live release requires ${LIVE_RELEASE_MARKER}.`);
-  for (const section of sections) {
+  for (const section of controlledSections) {
     if (!new RegExp(`(?:^|\\n)${section}:`, 'm').test(body)) errors.push(`Live release is missing ${section}:`);
   }
   if (!/(?:^|\n)Risk:\s*(?:\n\s*)?(?:Low|Medium|High)\b/m.test(body)) errors.push('Live release requires a Low, Medium, or High risk.');
   if (match && !new RegExp(`(?:^|\\n)Release:\\s*v${match[2].replaceAll('.', '\\.')}\\s*(?:\\n|$)`).test(body)) errors.push('Live release body must name its target version.');
   if (branchName !== null) {
-    const branch = branchPattern.exec(branchName);
-    if (!branch || !match || branch[1] !== match[1] || `${branch[2]}.${branch[3]}.${branch[4]}` !== match[2]) {
+    if (!liveReleaseCoordinates(title, branchName)) {
       errors.push('Live release branch must bind its DEMO ID and hyphenated target version to the title.');
     }
   }

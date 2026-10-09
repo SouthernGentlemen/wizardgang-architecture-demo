@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { describe, expect, it } from 'vitest';
 import {
-  mergedCommit, nextSemanticVersion, planLiveReleaseStart, requireExactBase, requireSuccessfulChecks, verifyLivePullRequest,
+  nextSemanticVersion, planLiveReleaseStart, verifyLivePullRequest,
 } from '../scripts/lib/git-demo-workflow.ts';
 
 const requestId = '123E4567-e89b-12d3-a456-426614174000';
@@ -14,7 +14,6 @@ const pull = {
   headRefName: 'demo-469-live-v0-32-0-123e4567',
   headRefOid: 'a'.repeat(40),
 };
-const passing = ['validate', 'browser'].map((name) => ({ bucket: 'pass', name, workflow: 'CI' }));
 
 describe('DEMO-467 live Git workflow logic', () => {
   it('computes the semantic version, change ID, and controlled branch for start', () => {
@@ -46,26 +45,10 @@ describe('DEMO-467 live Git workflow logic', () => {
     expect(() => verifyLivePullRequest(pull, '00000000-0000-0000-0000-000000000000')).toThrow('request ID does not match');
   });
 
-  it('requires every passing CI check, the unchanged head, and mergeability against current main', () => {
-    expect(() => requireSuccessfulChecks(passing)).not.toThrow();
-    expect(() => requireSuccessfulChecks(passing.slice(1))).toThrow('Required CI validate');
-    expect(() => requireSuccessfulChecks([...passing.slice(0, 1), { bucket: 'pass', name: 'browser', workflow: 'Other' }])).toThrow('Required CI browser');
-    const api = { state: 'open', mergeable: true, head: { sha: 'h' }, base: { sha: 'm' } };
-    expect(() => requireExactBase(api, 'h', 'm')).not.toThrow();
-    for (const changed of [{ ...api, mergeable: null }, { ...api, base: { sha: 'old' } }, { ...api, head: { sha: 'new' } }, { ...api, state: 'closed' }]) {
-      expect(() => requireExactBase(changed, 'h', 'm')).toThrow('revalidate CI');
-    }
-    expect(mergedCommit({ state: 'MERGED', mergeCommit: { oid: 'c' } })).toBe('c');
-    expect(mergedCommit({ state: 'OPEN', mergeCommit: { oid: 'c' } })).toBe('');
-    expect(mergedCommit({ state: 'MERGED', mergeCommit: null })).toBe('');
-  });
-
   it('runs the workflow entrypoint natively from TypeScript', () => {
     const version = spawnSync(process.execPath, ['scripts/git-demo-workflow.ts', 'package-version'], { input: '{"version":"0.31.1"}', encoding: 'utf8' });
     expect(version.status, version.stderr).toBe(0);
     expect(version.stdout).toBe('0.31.1\n');
-    const checks = spawnSync(process.execPath, ['scripts/git-demo-workflow.ts', 'require-checks'], { env: { ...process.env, CHECKS_JSON: '[]' }, encoding: 'utf8' });
-    expect(checks.status).not.toBe(0);
-    expect(checks.stderr).toContain('Required CI validate is not successful');
+
   });
 });

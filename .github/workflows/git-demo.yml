@@ -129,89 +129,24 @@ jobs:
         env:
           VERSION: ${{ steps.release.outputs.version }}
         run: npm version "$VERSION" --no-git-tag-version
-      - name: Commit and push controlled branch
-        env:
-          VERSION: ${{ steps.release.outputs.version }}
-          CHANGE_ID: ${{ steps.release.outputs.change_id }}
-          BRANCH: ${{ steps.release.outputs.branch }}
-        run: |
-          git config user.name "WizardGang Live Demo"
-          git config user.email "live-demo@users.noreply.github.com"
-          git switch -c "$BRANCH"
-          git add package.json package-lock.json
-          git commit -F - <<EOF
-          [$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle
-
-          Change:
-          Increment the semantic version to $VERSION for the live release lifecycle.
-
-          Reason:
-          Demonstrate the repository's real delivery lifecycle from authenticated /demos#webhooks controls.
-
-          Impact:
-          Package version metadata only; release notes are generated from Git/GitHub history after tagging.
-
-          Risk:
-          Medium
-
-          Controls:
-          - Keep the generated branch isolated until CI and the explicit release gate pass.
-          - Keep credentials and tokens in managed secret stores.
-
-          Validation:
-          - Pull-request CI runs the repository's complete validation suite.
-
-          Evidence:
-          - package.json
-          - package-lock.json
-
-          Source:
-          Direct live Git demonstration.
-
-          Release:
-          v$VERSION
-
-          Live-Release: true
-          EOF
-          git push --set-upstream origin "$BRANCH"
-      - name: Open controlled pull request
+      - name: Publish one controlled record
+        id: published
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           VERSION: ${{ steps.release.outputs.version }}
-          CURRENT_VERSION: ${{ steps.release.outputs.current }}
-          CHANGE_ID: ${{ steps.release.outputs.change_id }}
-          BRANCH: ${{ steps.release.outputs.branch }}
-          REQUEST_ID: ${{ inputs.request_id }}
           BUMP: ${{ inputs.bump }}
+          REQUEST_ID: ${{ inputs.request_id }}
           LAST_TAG: ${{ steps.preflight.outputs.last_tag }}
+          COMMITS_FILE: ${{ runner.temp }}/live-release-commits.md
         run: |
-          body_file="$(mktemp)"
-          {
-            echo "## Live Git lifecycle"
-            echo
-            echo "This controlled pull request was requested from authenticated \`/demos#webhooks\` controls. It remains open so the real CI jobs and review gate can be observed before release."
-            echo
-            echo "- Version: \`$VERSION\`"
-            echo "- Previous version: \`$CURRENT_VERSION\`"
-            echo "- Bump: \`$BUMP\`"
-            echo "- Previous release: \`$LAST_TAG\`"
-            echo "- Commits since $LAST_TAG:"
-            cat "$RUNNER_TEMP/live-release-commits.md"
-            echo "- Branch: \`$BRANCH\`"
-            echo "- Request ID: \`$REQUEST_ID\`"
-            echo
-            echo "<!-- git-demo-request:$REQUEST_ID -->"
-          } > "$body_file"
-          gh pr create \
-            --base main \
-            --head "$BRANCH" \
-            --title "[$CHANGE_ID] [BUILD] Demonstrate v$VERSION release lifecycle" \
-            --body-file "$body_file"
+          git config user.name "WizardGang Live Demo"
+          git config user.email "live-demo@users.noreply.github.com"
+          node scripts/git-demo-workflow.ts publish
       - name: Publish start summary
         env:
           VERSION: ${{ steps.release.outputs.version }}
-          CHANGE_ID: ${{ steps.release.outputs.change_id }}
-          BRANCH: ${{ steps.release.outputs.branch }}
+          CHANGE_ID: ${{ steps.published.outputs.change_id }}
+          BRANCH: ${{ steps.published.outputs.branch }}
         run: |
           {
             echo "### Live Git demo started"
@@ -254,6 +189,7 @@ jobs:
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
           permission-pull-requests: write
+          permission-actions: read
           permission-checks: read
           permission-statuses: read
       - name: Check out main
@@ -268,93 +204,15 @@ jobs:
           node-version-file: .node-version
       - name: Use committed npm version
         run: npm install --global npm@12.1.0
-      - name: Verify the exact live demo pull request
-        id: pull
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
-          PULL_REQUEST: ${{ inputs.pull_request }}
-          REQUEST_ID: ${{ inputs.request_id }}
-        run: |
-          pr_json="$(gh pr view "$PULL_REQUEST" --json state,title,body,baseRefName,headRefName,headRefOid)"
-          PR_JSON="$pr_json" node scripts/git-demo-workflow.ts verify-pull
-      - name: Require successful real CI checks
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
-          PULL_REQUEST: ${{ inputs.pull_request }}
-        run: |
-          checks="$(gh pr checks "$PULL_REQUEST" --json bucket,name,workflow)"
-          CHECKS_JSON="$checks" node scripts/git-demo-workflow.ts require-checks
-      - name: Verify reviewed source version
-        env:
-          BRANCH: ${{ steps.pull.outputs.branch }}
-          SHA: ${{ steps.pull.outputs.sha }}
-          VERSION: ${{ steps.pull.outputs.version }}
-        run: |
-          git fetch origin "$BRANCH"
-          test "$(git show "$SHA:package.json" | node scripts/git-demo-workflow.ts package-version)" = "$VERSION"
-          git show -s --format=%B "$SHA" > "$RUNNER_TEMP/live-release-body.txt"
-          grep -qx 'Live-Release: true' "$RUNNER_TEMP/live-release-body.txt"
-      - name: Recheck current main and exact PR head
-        id: base
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
-          PULL_REQUEST: ${{ inputs.pull_request }}
-          SHA: ${{ steps.pull.outputs.sha }}
-        run: |
-          git fetch origin main
-          pr_json="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PULL_REQUEST")"
-          PR_JSON="$pr_json" node scripts/git-demo-workflow.ts recheck-base
-          echo "sha=$(git rev-parse origin/main)" >> "$GITHUB_OUTPUT"
-      - name: Merge without bypassing repository protections
-        env:
-          GH_TOKEN: ${{ steps.app.outputs.token }}
-          PULL_REQUEST: ${{ inputs.pull_request }}
-          SHA: ${{ steps.pull.outputs.sha }}
-          VERSION: ${{ steps.pull.outputs.version }}
-        run: |
-          title="$(git show -s --format=%s "$SHA")"
-          gh pr merge "$PULL_REQUEST" \
-            --squash \
-            --delete-branch \
-            --match-head-commit "$SHA" \
-            --subject "$title" \
-            --body-file "$RUNNER_TEMP/live-release-body.txt"
-      - name: Resolve merged main commit
+      - name: Protected squash through shared delivery path
         id: merge
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           PULL_REQUEST: ${{ inputs.pull_request }}
-        run: |
-          for attempt in $(seq 1 12); do
-            pr_json="$(gh pr view "$PULL_REQUEST" --json state,mergedAt,mergeCommit)"
-            merge_sha="$(PR_JSON="$pr_json" node scripts/git-demo-workflow.ts merged-commit)"
-            if [ -n "$merge_sha" ]; then
-              echo "sha=$merge_sha" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "::error::Pull request did not reach merged state"
-          exit 1
-      - name: Hand validated main to the exact-tag cutter
-        env:
-          VERSION: ${{ steps.pull.outputs.version }}
-          MERGE_SHA: ${{ steps.merge.outputs.sha }}
-          SHA: ${{ steps.pull.outputs.sha }}
-          BASE_SHA: ${{ steps.base.outputs.sha }}
-        run: |
-          git fetch origin main --tags
-          test "$(git rev-parse origin/main)" = "$MERGE_SHA"
-          test "$(git show -s --format=%s "$MERGE_SHA")" = "$(git show -s --format=%s "$SHA")"
-          test "$(git rev-parse "$MERGE_SHA^")" = "$BASE_SHA"
-          test "$(git show "$MERGE_SHA:package.json" | node scripts/git-demo-workflow.ts package-version)" = "$VERSION"
-          git show -s --format=%B "$MERGE_SHA" | grep -qx 'Live-Release: true'
-          if git rev-parse "refs/tags/v$VERSION" >/dev/null 2>&1; then
-            echo "Version tag v$VERSION already exists; the main CI cutter must verify its identity."
-          fi
+          REQUEST_ID: ${{ inputs.request_id }}
+        run: node scripts/git-demo-workflow.ts merge
       - name: Publish release summary
         env:
-          VERSION: ${{ steps.pull.outputs.version }}
           MERGE_SHA: ${{ steps.merge.outputs.sha }}
           PULL_REQUEST: ${{ inputs.pull_request }}
         run: |
@@ -362,6 +220,5 @@ jobs:
             echo "### Live Git demo released"
             echo "- Pull request: #$PULL_REQUEST"
             echo "- Merge commit: $MERGE_SHA"
-            echo "- Target tag: v$VERSION"
             echo "- Successful CI on exact current main cuts or verifies the tag and dispatches Release."
           } >> "$GITHUB_STEP_SUMMARY"
